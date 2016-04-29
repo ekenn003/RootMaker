@@ -1,0 +1,14 @@
+<library file="*.cc" name="RootMakerPlugins">
+<flags EDM_PLUGIN="1"/>
+<use name="CommonTools/UtilAlgos"/>
+<use name="CommonTools/Utils"/>
+<use name="DataFormats/PatCandidates" />
+<use name="FWCore/Framework"/>
+<use name="FWCore/ParameterSet"/>
+<use name="FWCore/PluginManager"/>
+<use name="FWCore/ServiceRegistry"/>
+<use name="PhysicsTools/PatAlgos"/>
+<use name="PhysicsTools/Utilities"/>
+<use name="RecoEgamma/EgammaTools" />
+<use name="RecoEgamma/ElectronIdentification" />
+</library>
