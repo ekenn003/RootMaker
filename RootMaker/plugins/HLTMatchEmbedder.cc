@@ -27,7 +27,7 @@ class HLTMatchEmbedder : public edm::stream::EDProducer<>
     virtual void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
     void endJob() {}
 
-    size_t GetTriggerBit(std::string trigPathString, const edm::TriggerNames& names);
+    size_t GetTriggerBit(std::string trigPathString, const edm::TriggerNames &names);
     int MatchToTriggerObject(T obj, std::string trigPathString, const edm::TriggerNames &names);
 
     // data
@@ -59,13 +59,15 @@ HLTMatchEmbedder<T>::HLTMatchEmbedder(const edm::ParameterSet& iConfig):
 }
 
 template<typename T>
-void HLTMatchEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
+void HLTMatchEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
+{
     output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
     iEvent.getByToken(triggerBitsToken_, triggerBits);
     iEvent.getByToken(triggerObjectsToken_, triggerObjects);
     const edm::TriggerNames& names = iEvent.triggerNames(*triggerBits);
+
     for (size_t c = 0; c < input->size(); ++c) {
         const auto obj = input->at(c);
         T newObj = obj;
@@ -86,7 +88,6 @@ void HLTMatchEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSe
 
         output->push_back(newObj);
     }
-
   iEvent.put(output);
 }
 
@@ -106,32 +107,13 @@ size_t HLTMatchEmbedder<T>::GetTriggerBit(std::string trigPathString, const edm:
         }
     }
     return trigBit;
-////////////////////////////////////////////
-//    std::regex regexp(trigPathString);
-//    size_t trigBit = names.size();
-//    for (size_t i=0; i<names.size(); i++) {
-//        if (std::regex_match(names.triggerName(i), regexp)) {
-//            if (trigBit != names.size()) { // if we match more than one
-//                throw cms::Exception("DuplicateTrigger")
-//                    << "Second trigger matched for \"" << path
-//                    << "\". First: \"" << names.triggerName(trigBit)
-//                    << "\"; second: \"" << names.triggerName(i) << "\"." << std::endl;
-//            }
-//            trigBit = i;
-//        }
-//    }
-//    if (trigBit == names.size()) {
-//        return 9999;
-//    }
-//    return trigBit;
 }
 
 template<typename T>
-int HLTMatchEmbedder<T>::MatchToTriggerObject(T obj, std::string trigPathString, const edm::TriggerNames& names)
+int HLTMatchEmbedder<T>::MatchToTriggerObject(T obj, std::string trigPathString, const edm::TriggerNames &names)
 {
     int matched = 0;
     int trigBit = GetTriggerBit(trigPathString, names);
-    //if (trigBit==9999) return (-1);
     if(trigBit == -1) return (-1);
     std::string pathToMatch = names.triggerName(trigBit);
     for (auto trigObj : *triggerObjects) {
@@ -150,14 +132,13 @@ int HLTMatchEmbedder<T>::MatchToTriggerObject(T obj, std::string trigPathString,
 }
 
 template<typename T>
-void HLTMatchEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
-    //The following says we do not know what parameters are allowed so do no validation
+void HLTMatchEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions &descriptions)
+{
     edm::ParameterSetDescription desc;
     desc.setUnknown();
     descriptions.addDefault(desc);
 }
 
-//define this as a plug-in
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"

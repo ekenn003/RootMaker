@@ -1,6 +1,5 @@
 // PhotonShowerShapeEmbedder.cc
 // embeds photon_nmissinghits
-// embeds photon_gapinfo
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -17,6 +16,7 @@ class PhotonShowerShapeEmbedder : public edm::stream::EDProducer<>
     PhotonShowerShapeEmbedder(const edm::ParameterSet &iConfig);
     virtual ~PhotonShowerShapeEmbedder() {}
     void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
+
   private:
     edm::EDGetTokenT<edm::View<pat::Photon> > photonToken_;
     edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit>>> ebRecHitsToken_;
@@ -41,6 +41,7 @@ void PhotonShowerShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetu
     iEvent.getByToken(eeRecHitsToken_, endcapHits);
     iEvent.getByToken(photonToken_, photons);
     output->reserve(photons->size());
+
     for (size_t i = 0; i < photons->size(); ++i) {
         pat::Photon photon = photons->at(i);
 

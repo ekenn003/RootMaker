@@ -34,20 +34,20 @@
 #include "DataFormats/L1GlobalTrigger/interface/L1GlobalTriggerReadoutRecord.h"
 #include "FWCore/Common/interface/TriggerNames.h"
 
-
 #include "DataFormats/Common/interface/Handle.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
-#include "DataFormats/Math/interface/deltaR.h"
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/LuminosityBlock.h"
+
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "TTree.h"
+#include "DataFormats/Math/interface/deltaR.h"
 
 #include "RootMaker/RootMaker/interface/ObjectCollectionBranches.h"
 #include "RootMaker/RootMaker/interface/VertexCollectionBranches.h"
@@ -62,18 +62,18 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     explicit RootMaker(const edm::ParameterSet&);
     ~RootMaker();
 
-    static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
+    static void fillDescriptions(edm::ConfigurationDescriptions &descriptions);
 
   private:
     virtual void beginJob() override;
     virtual void beginRun(edm::Run const &iRun, edm::EventSetup const&) override;
-    void TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames);
-    virtual void endRun(edm::Run const &iRun, edm::EventSetup const&) override;
     virtual void beginLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm::EventSetup const&) override;
     virtual void analyze(edm::Event const &iEvent, edm::EventSetup const&) override;
     virtual void endLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm::EventSetup const&) override;
+    virtual void endRun(edm::Run const &iRun, edm::EventSetup const&) override;
     virtual void endJob() override;
-    int GetTriggerBit(std::string trigName, const edm::TriggerNames& names);
+    void TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames);
+    int  GetTriggerBit(std::string trigName, const edm::TriggerNames& names);
 
     // tokens
     edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
@@ -98,7 +98,6 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     // branch parameters
     edm::ParameterSet triggerBranches;
     edm::ParameterSet filterBranches;
-
     edm::ParameterSet objectCollections;
     edm::ParameterSet vertexCollections;
 
@@ -134,7 +133,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     TH1D  *drhist;
 
     // info tree branches
-    Int_t   isdata;
+    Bool_t  isdata;
     Int_t   nevents;
     Int_t   nevents_skipped;
     Int_t   nevents_filled;
@@ -235,6 +234,5 @@ void RootMaker::fillDescriptions(edm::ConfigurationDescriptions &descriptions)
     descriptions.addDefault(desc);
 }
 
-// define this as a plugin
 DEFINE_FWK_MODULE(RootMaker);
 #endif

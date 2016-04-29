@@ -83,7 +83,6 @@ void EffectiveAreaEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions &
     descriptions.addDefault(desc);
 }
 
-//define this as a plug-in
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 typedef EffectiveAreaEmbedder<pat::Electron> ElectronEffectiveAreaEmbedder;

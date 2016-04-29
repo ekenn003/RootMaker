@@ -22,19 +22,19 @@ class JetShapeEmbedder : public edm::stream::EDProducer<>
 {
   public:
     JetShapeEmbedder(const edm::ParameterSet &iConfig);
-    virtual ~JetShapeEmbedder(){}
-    void produce(edm::Event& iEvent, const edm::EventSetup &iSetup);
+    virtual ~JetShapeEmbedder() {}
+    void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
 
   private:
-    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > jetToken_;
     edm::EDGetTokenT<pat::PackedCandidateCollection> packedPFCandsToken_;
 };
 
 JetShapeEmbedder::JetShapeEmbedder(const edm::ParameterSet &iConfig):
-    srcToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src"))),
+    jetToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src"))),
     packedPFCandsToken_(consumes<pat::PackedCandidateCollection>(iConfig.getParameter<edm::InputTag>("packedSrc")))
 {
-  produces<pat::JetCollection>();
+    produces<pat::JetCollection>();
 }
 
 void JetShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -42,7 +42,7 @@ void JetShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup
     using namespace TMath;
     std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
     edm::Handle<edm::View<pat::Jet> > jets;
-    iEvent.getByToken(srcToken_, jets);
+    iEvent.getByToken(jetToken_, jets);
 
     edm::Handle<pat::PackedCandidateCollection> packed;
     iEvent.getByToken(packedPFCandsToken_, packed);

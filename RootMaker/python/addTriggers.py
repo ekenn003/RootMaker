@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 ####################################################################################
 ### event HLT and filter matching ##################################################
+### only for event matching! not individual objects. ###############################
 ####################################################################################
 # trigger
 triggerBranches = cms.PSet(

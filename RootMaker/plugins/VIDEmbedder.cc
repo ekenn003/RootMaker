@@ -40,7 +40,6 @@ class VIDEmbedder : public edm::stream::EDProducer<>
     std::auto_ptr<std::vector<T> > out;
 };
 
-
 template<typename T>
 VIDEmbedder<T>::VIDEmbedder(const edm::ParameterSet &iConfig):
     collectionToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src"))),

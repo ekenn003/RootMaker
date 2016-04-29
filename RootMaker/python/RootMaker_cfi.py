@@ -1,13 +1,11 @@
-'''
-RootMaker_cfi.py
-
-This file is imported by RootTree.py
-
-options are registered (initialised) in this file, but
-this file does not know what they are set to in RootTree.py.
-Therefore any actions which depend on the values of options
-must go in RootTree.py and not this file.
-'''
+# RootMaker_cfi.py
+# 
+# This file is imported by RootTree.py
+# 
+# options are registered (initialised) in this file, but
+# this file does not know what they are set to in RootTree.py.
+# Therefore any actions which depend on the values of options
+# must go in RootTree.py and not this file.
 
 import FWCore.ParameterSet.Config as cms
 

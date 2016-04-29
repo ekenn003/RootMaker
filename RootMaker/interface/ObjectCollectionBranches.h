@@ -26,7 +26,7 @@ typedef ObjectCollectionFunction<float> ObjectCollectionFloatFunction;
 class ObjectCollectionBranches
 {
   public:
-    ObjectCollectionBranches(TTree *tree, std::string collectionName,  const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
+    ObjectCollectionBranches(TTree *tree, std::string collectionName, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
     void fill(const edm::Event &iEvent);
     std::string getName() { return collectionName_; }
     UInt_t getCount() { return collectionCount_; }

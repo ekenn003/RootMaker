@@ -21,7 +21,7 @@ class GapInfoEmbedder : public edm::stream::EDProducer<>
     ~GapInfoEmbedder() {}
   private:
     void beginJob() {}
-    virtual void produce(edm::Event& iEvent, const edm::EventSetup &iSetup);
+    virtual void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
     void endJob() {}
 
     edm::EDGetTokenT<edm::View<T> > srcToken_;
@@ -29,7 +29,7 @@ class GapInfoEmbedder : public edm::stream::EDProducer<>
 };
 
 template<typename T>
-GapInfoEmbedder<T>::GapInfoEmbedder(const edm::ParameterSet& iConfig):
+GapInfoEmbedder<T>::GapInfoEmbedder(const edm::ParameterSet &iConfig):
     srcToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src")))
 {
     produces<std::vector<T> >();
@@ -38,7 +38,7 @@ GapInfoEmbedder<T>::GapInfoEmbedder(const edm::ParameterSet& iConfig):
 template<typename T>
 void GapInfoEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-     output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+    output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
     for (size_t c = 0; c < input->size(); ++c) {

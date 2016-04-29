@@ -1,5 +1,6 @@
 // VertexCollectionBranches.cc
 // create functions fo fill branches of reco-vertex-derived classes with ints or floats
+// Original author: Devin Taylor, U. Wisconsin
 #include "RootMaker/RootMaker/interface/VertexCollectionBranches.h"
 
 template<typename T>
@@ -10,7 +11,7 @@ VertexCollectionFunction<T>::VertexCollectionFunction(TTree *tree, std::string f
 }
 
 template<typename T>
-void VertexCollectionFunction<T>::evaluate(const reco::VertexCollection& candidates)
+void VertexCollectionFunction<T>::evaluate(const reco::VertexCollection &candidates)
 {
     values_.clear();
     for (const auto &candidate: candidates) {
@@ -43,7 +44,7 @@ VertexCollectionBranches::VertexCollectionBranches(TTree *tree, std::string coll
 }
 
 // _________________________________________________________________________________
-void VertexCollectionBranches::fill(const edm::Event& iEvent)
+void VertexCollectionBranches::fill(const edm::Event &iEvent)
 {
     edm::Handle<reco::VertexCollection> candidates;
     iEvent.getByToken(collectionToken_, candidates);

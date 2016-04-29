@@ -16,13 +16,13 @@ class BtagEmbedder : public edm::stream::EDProducer<>
     virtual ~BtagEmbedder(){}
     void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
   private:
-    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > jetToken_;
 };
 
 BtagEmbedder::BtagEmbedder(const edm::ParameterSet &iConfig):
-    srcToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src")))
+    jetToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src")))
 {
-  produces<pat::JetCollection>();
+    produces<pat::JetCollection>();
 }
 
 void BtagEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -30,7 +30,7 @@ void BtagEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
     using namespace TMath;
     std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
     edm::Handle<edm::View<pat::Jet> > jets;
-    iEvent.getByToken(srcToken_, jets);
+    iEvent.getByToken(jetToken_, jets);
     output->reserve(jets->size());
 
     for (unsigned int i = 0; i < jets->size(); ++i) {
@@ -49,7 +49,7 @@ void BtagEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
         bool passCMVAv2T = (jet.bDiscriminator("pfCombinedMVAV2BJetTags") > 0.875);
 
         // turn on a different bit in btag for each discriminator.
-        // you can then check whether a certain bit has been turned 
+        // AnalysisTool then checks whether a certain bit has been turned 
         // on by checking "btag & bit"
         // e.g. if passJPT is true, (btag & 3) will return true
         if (passJPL) btag |= 1;

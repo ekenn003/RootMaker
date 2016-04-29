@@ -1,5 +1,6 @@
 // ObjectCollectionBranches.cc
 // create functions fo fill branches of reco-candidate-derived classes with ints or floats
+// Original author: Devin Taylor, U. Wisconsin
 #include "RootMaker/RootMaker/interface/ObjectCollectionBranches.h"
 
 template<typename T>
@@ -44,7 +45,7 @@ ObjectCollectionBranches::ObjectCollectionBranches(TTree *tree, std::string coll
 }
 
 // _________________________________________________________________________________
-void ObjectCollectionBranches::fill(const edm::Event& iEvent)
+void ObjectCollectionBranches::fill(const edm::Event &iEvent)
 {
     edm::Handle<reco::CandidateView> candidates;
     iEvent.getByToken(collectionToken_, candidates);

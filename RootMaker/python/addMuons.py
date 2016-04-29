@@ -2,7 +2,6 @@ import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.objectBase import commonObjectBranches
 
 muonBranches = commonObjectBranches.clone(
-
     # user data from PVEmbedder
     dz     = cms.vstring('userFloat("dz")','F'),
     dzerr  = cms.vstring('dzError','F'),
@@ -103,11 +102,10 @@ muonBranches = commonObjectBranches.clone(
 
 )
 
-def addMuons(process,coll,**kwargs):
-    isMC = kwargs.pop('isMC',False)
+def addMuons(process, coll, **kwargs):
+    isMC = kwargs.pop('isMC', False)
     mSrc = coll['muons']
     pvSrc = coll['vertices']
-
     # customization path
     process.muonCustomization = cms.Path()
 
@@ -120,7 +118,6 @@ def addMuons(process,coll,**kwargs):
         isData = cms.bool(not isMC),
     )
     mSrc = 'mRoch'
-
     process.muonCustomization *= process.mRoch
 
 
@@ -133,7 +130,6 @@ def addMuons(process,coll,**kwargs):
         vertexSrc = cms.InputTag(pvSrc),
     )
     mSrc = 'mPV'
-
     process.muonCustomization *= process.mPV
 
     #####################
@@ -145,9 +141,7 @@ def addMuons(process,coll,**kwargs):
         vertexSrc = cms.InputTag(pvSrc),
     )
     mSrc = 'mID'
-
     process.muonCustomization *= process.mID
-
 
     ##############################
     ### embed trigger matching ###
@@ -158,7 +152,7 @@ def addMuons(process,coll,**kwargs):
         triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
-        labels = cms.vstring(
+        labels = cms.vstring( # needs to match paths
             # single muon
             'matches_IsoMu20',
             'matches_IsoTkMu20',
@@ -168,7 +162,7 @@ def addMuons(process,coll,**kwargs):
             'matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
             'matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
         ),
-        paths = cms.vstring(
+        paths = cms.vstring( # needs to match labels
             # single muon
             'HLT_IsoMu20_v\\[0-9]+',
             'HLT_IsoTkMu20_v\\[0-9]+',
@@ -180,12 +174,9 @@ def addMuons(process,coll,**kwargs):
         ),
     )
     mSrc = 'mTrig'
-
     process.muonCustomization *= process.mTrig
 
     # add to schedule
     process.schedule.append(process.muonCustomization)
-
     coll['muons'] = mSrc
-
     return coll

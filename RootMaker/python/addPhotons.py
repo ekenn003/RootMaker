@@ -25,11 +25,9 @@ photonBranches = commonEgammaBranches.clone(
 
 )
 
-def addPhotons(process,coll,**kwargs):
-    '''Customize photons'''
-    isMC = kwargs.pop('isMC',False)
+def addPhotons(process, coll, **kwargs):
+    isMC = kwargs.pop('isMC', False)
     pSrc = coll['photons']
-
     # customization path
     process.photonCustomization = cms.Path()
 
@@ -41,7 +39,6 @@ def addPhotons(process,coll,**kwargs):
         src = cms.InputTag(pSrc),
     )
     pSrc = 'pGI'
-
     process.photonCustomization *= process.pGI
 
     ####################################
@@ -62,7 +59,6 @@ def addPhotons(process,coll,**kwargs):
             endcapHits = cms.InputTag("reducedEgamma", "reducedEERecHits", "RECO"),
         )
     pSrc = 'pSS'
-
     process.photonCustomization *= process.pSS
 
     #############################
@@ -89,7 +85,5 @@ def addPhotons(process,coll,**kwargs):
 
     # add to schedule
     process.schedule.append(process.photonCustomization)
-
     coll['photons'] = pSrc
-
     return coll

@@ -8,7 +8,6 @@
 #include "FWCore/Framework/interface/stream/EDProducer.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
-
 #include "RecoJets/JetProducers/plugins/PileupJetIdProducer.h"
 #include "RecoJets/JetProducers/interface/MVAJetPuId.h"
 
@@ -18,12 +17,13 @@ class JetIDEmbedder : public edm::stream::EDProducer<>
     JetIDEmbedder(const edm::ParameterSet &iConfig);
     virtual ~JetIDEmbedder(){}
     void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
+
   private:
-    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > jetToken_;
 };
 
 JetIDEmbedder::JetIDEmbedder(const edm::ParameterSet  &iConfig):
-    srcToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src")))
+    jetToken_(consumes<edm::View<pat::Jet> >(iConfig.getParameter<edm::InputTag>("src")))
 {
     produces<pat::JetCollection>();
 }
@@ -32,7 +32,7 @@ void JetIDEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
     std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
     edm::Handle<edm::View<pat::Jet> > jets;
-    iEvent.getByToken(srcToken_, jets);
+    iEvent.getByToken(jetToken_, jets);
     output->reserve(jets->size());
 
     for (unsigned int i = 0; i < jets->size(); ++i) {

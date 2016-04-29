@@ -9,9 +9,8 @@ metBranches = cms.PSet(
     uncorPhi = cms.vstring('uncorPhi','F'),
 )
 
-def addMET(process,coll,**kwargs):
-    '''Customize MET'''
-    isMC = kwargs.pop('isMC',False)
+def addMET(process, coll, **kwargs):
+    isMC = kwargs.pop('isMC', False)
     metSrc = coll['pfmettype1']
     jSrc = coll['ak4pfchsjets']
     pSrc = coll['photons']
@@ -19,7 +18,7 @@ def addMET(process,coll,**kwargs):
     mSrc = coll['muons']
     tSrc = coll['taus']
     pfSrc = coll['packed']
-
+    # customization path
     process.metCustomization = cms.Path()
 
     #################################
@@ -44,5 +43,4 @@ def addMET(process,coll,**kwargs):
     del getattr(process,'slimmedMETs{0}'.format(postfix)).caloMET
 
     metSrc = "slimmedMETs{0}".format(postfix)
-    
     return coll

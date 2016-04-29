@@ -33,10 +33,10 @@ else:
 ### GlobalTag ###
 #################
 # uncomment this section to override the given global tag with the latest one (not recommended)
-envvar = 'mcgt' if options.isMC else 'datagt'
-from Configuration.AlCa.GlobalTag import GlobalTag
-GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
+#envvar = 'mcgt' if options.isMC else 'datagt'
+#from Configuration.AlCa.GlobalTag import GlobalTag
+#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+#process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 
 
@@ -115,42 +115,31 @@ if options.runMetFilter:
         filters += [getattr(process,modName)]
 
 # now do any customization/cleaning
-#from RootMaker.RootMaker.addElectrons import addElectrons
 objectCollections = addElectrons(
     process,
     objectCollections,
     isMC=bool(options.isMC),
 )
-
-#from RootMaker.RootMaker.addMuons import addMuons
 objectCollections = addMuons(
     process,
     objectCollections,
     isMC=bool(options.isMC),
 )
-
-#from RootMaker.RootMaker.addTaus import addTaus
 objectCollections = addTaus(
     process,
     objectCollections,
     isMC=bool(options.isMC),
 )
-
-#from RootMaker.RootMaker.addPhotons import addPhotons
 objectCollections = addPhotons(
     process,
     objectCollections,
     isMC=bool(options.isMC),
 )
-
-#from RootMaker.RootMaker.addJets import addJets
 objectCollections = addJets(
     process,
     objectCollections,
     isMC=bool(options.isMC),
 )
-
-#from RootMaker.RootMaker.addMET import addMET
 objectCollections = addMET(
     process,
     objectCollections,

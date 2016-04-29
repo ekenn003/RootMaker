@@ -26,13 +26,13 @@ class MuonInfoEmbedder : public edm::stream::EDProducer<>
     virtual void produce(edm::Event& iEvent, const edm::EventSetup &iSetup);
     void endJob() {}
 
-    edm::EDGetTokenT<edm::View<pat::Muon> > muonsToken_;
+    edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     edm::EDGetTokenT<reco::VertexCollection> vertexToken_;
     std::auto_ptr<std::vector<pat::Muon> > output;
 };
 
 MuonInfoEmbedder::MuonInfoEmbedder(const edm::ParameterSet& iConfig):
-    muonsToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
+    muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
     vertexToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexSrc")))
 {
     produces<std::vector<pat::Muon> >();
@@ -42,7 +42,7 @@ void MuonInfoEmbedder::produce(edm::Event& iEvent, const edm::EventSetup &iSetup
 {
     output = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
     edm::Handle<edm::View<pat::Muon> > muons;
-    iEvent.getByToken(muonsToken_, muons);
+    iEvent.getByToken(muonToken_, muons);
     edm::Handle<reco::VertexCollection> vertices;
     iEvent.getByToken(vertexToken_, vertices);
 

@@ -18,13 +18,6 @@ electronBranches = commonEgammaBranches.clone(
     ecaldrivenseed     = cms.vstring('ecalDrivenSeed','I'),
     trackerdrivenseed  = cms.vstring('trackerDrivenSeed','I'),
 
-     # shower information
-    fbrems             = cms.vstring('fbrem','F'),
-    numbrems           = cms.vstring('numberOfBrems','F'),
-    scE1x5             = cms.vstring('scE1x5','F'),
-    scE2x5Max          = cms.vstring('scE2x5Max','F'),
-    scE5x5             = cms.vstring('scE5x5','F'),
-
     # track information
     trackchi2   = cms.vstring('gsfTrack().chi2()','F'),
     trackndof   = cms.vstring('gsfTrack().ndof()','F'),
@@ -43,34 +36,39 @@ electronBranches = commonEgammaBranches.clone(
     e2x5 = cms.vstring('e2x5Max','F'),
     e5x5 = cms.vstring('e5x5','F'),
 
+    fbrems   = cms.vstring('fbrem','F'),
+    numbrems = cms.vstring('numberOfBrems','F'),
+
+    # supercluster
+    scE1x5             = cms.vstring('scE1x5','F'),
+    scE2x5Max          = cms.vstring('scE2x5Max','F'),
+    scE5x5             = cms.vstring('scE5x5','F'),
     esuperclusterovertrack    = cms.vstring('eSuperClusterOverP','F'),
     eseedclusterovertrack     = cms.vstring('eSeedClusterOverP','F'),
     deltaetasuperclustertrack = cms.vstring('deltaEtaSuperClusterTrackAtVtx','F'),
     deltaphisuperclustertrack = cms.vstring('deltaPhiSuperClusterTrackAtVtx','F'),
 
     # user data from VIDEmbedder
-    cutBasedVeto                   = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-veto")','I'),
-    cutBasedLoose                  = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")','I'),
-    cutBasedMedium                 = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-medium")','I'),
-    cutBasedTight                  = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-tight")','I'),
-    mvaNonTrigWP90                 = cms.vstring('userInt("mvaEleID-Spring15-25ns-nonTrig-V1-wp90")','I'),
-    mvaNonTrigWP80                 = cms.vstring('userInt("mvaEleID-Spring15-25ns-nonTrig-V1-wp80")','I'),
-    mvaTrigWP90                    = cms.vstring('userInt("mvaEleID-Spring15-25ns-Trig-V1-wp90")','I'),
-    mvaTrigWP80                    = cms.vstring('userInt("mvaEleID-Spring15-25ns-Trig-V1-wp80")','I'),
-    mvaNonTrigValues               = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values")','F'),
-    mvaTrigValues                  = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15Trig25nsV1Values")','F'),
-    mvaNonTrigCategories           = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories")','I'),
-    mvaTrigCategories              = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories")','I'),
+    cutBasedVeto         = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-veto")','I'),
+    cutBasedLoose        = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")','I'),
+    cutBasedMedium       = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-medium")','I'),
+    cutBasedTight        = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-tight")','I'),
+    mvaNonTrigWP90       = cms.vstring('userInt("mvaEleID-Spring15-25ns-nonTrig-V1-wp90")','I'),
+    mvaNonTrigWP80       = cms.vstring('userInt("mvaEleID-Spring15-25ns-nonTrig-V1-wp80")','I'),
+    mvaTrigWP90          = cms.vstring('userInt("mvaEleID-Spring15-25ns-Trig-V1-wp90")','I'),
+    mvaTrigWP80          = cms.vstring('userInt("mvaEleID-Spring15-25ns-Trig-V1-wp80")','I'),
+    mvaNonTrigValues     = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values")','F'),
+    mvaTrigValues        = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15Trig25nsV1Values")','F'),
+    mvaNonTrigCategories = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories")','I'),
+    mvaTrigCategories    = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories")','I'),
 
 )
 
 
-def addElectrons(process,coll,**kwargs):
-    '''Customize electrons'''
-    isMC = kwargs.pop('isMC',False)
+def addElectrons(process, coll, **kwargs):
+    isMC = kwargs.pop('isMC', False)
     eSrc = coll['electrons']
     pvSrc = coll['vertices']
-
     # customization path
     process.electronCustomization = cms.Path()
 
@@ -190,7 +188,6 @@ def addElectrons(process,coll,**kwargs):
         configFile = cms.FileInPath(eaFile), # the effective areas file
     )
     eSrc = 'eEffArea'
-
     process.electronCustomization *= process.eEffArea
 
     ################
@@ -202,7 +199,6 @@ def addElectrons(process,coll,**kwargs):
         vertexSrc = cms.InputTag(pvSrc),
     )
     eSrc = 'ePV'
-
     process.electronCustomization *= process.ePV
 
     ##############################
@@ -215,29 +211,14 @@ def addElectrons(process,coll,**kwargs):
         triggerObjects = cms.InputTag("selectedPatTrigger"),
         deltaR = cms.double(0.5),
         labels = cms.vstring(
-            'matches_Ele12_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele17_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele23_CaloIdL_TrackIdL_IsoVL',
-            'matches_Ele22_eta2p1_WPLoose_Gsf',
-            'matches_Ele23_WPLoose_Gsf',
-            'matches_Ele27_WPLoose_Gsf',
         ),
         paths = cms.vstring(
-            'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\[0-9]+',
-            'HLT_Ele22_eta2p1_WPLoose_Gsf_v\\[0-9]+',
-            'HLT_Ele23_WPLoose_Gsf_v\\[0-9]+',
-            'HLT_Ele27_WPLoose_Gsf_v\\[0-9]+',
         ),
     )
     eSrc = 'eTrig'
-
     process.electronCustomization *= process.eTrig
 
     # add to schedule
     process.schedule.append(process.electronCustomization)
-
     coll['electrons'] = eSrc
-
     return coll

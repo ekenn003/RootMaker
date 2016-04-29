@@ -7,7 +7,6 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/stream/EDProducer.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
-
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
 
@@ -25,7 +24,7 @@ class GenJetEmbedder : public edm::stream::EDProducer<> {
     edm::EDGetTokenT<edm::View<reco::GenJet> > genJetToken_;
     std::auto_ptr<std::vector<T> > out;
     double deltaR;
-    bool   genTauJets;
+    bool   srcIsTaus;
 };
 
 template<typename T>
@@ -33,7 +32,7 @@ GenJetEmbedder<T>::GenJetEmbedder(const edm::ParameterSet& iConfig):
     srcToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src"))),
     genJetToken_(consumes<edm::View<reco::GenJet> >(iConfig.getParameter<edm::InputTag>("genJets"))),
     deltaR(iConfig.getParameter<double>("deltaR")),
-    genTauJets(iConfig.getParameter<bool>("genTauJets"))
+    srcIsTaus(iConfig.getParameter<bool>("srcIsTaus"))
 {
     produces<std::vector<T> >();
 }
@@ -41,10 +40,8 @@ GenJetEmbedder<T>::GenJetEmbedder(const edm::ParameterSet& iConfig):
 template<typename T>
 void GenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
-
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
-
     edm::Handle<edm::View<reco::GenJet> > genJets;
     iEvent.getByToken(genJetToken_, genJets);
 
@@ -57,13 +54,13 @@ void GenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
             // if these gen jets are for taus, only check hadronic gen jets
             // wouldn't want to accidentally match a leptonic gen jet to a tau
             // that would be embarrassing
-            if(genTauJets) {
+            if(srcIsTaus) {
                 bool jetIsLeptonic = false;
                 for (auto jetConstituent: genJets->at(j).getGenConstituents()) {
                     if(abs(jetConstituent->pdgId()) == 11 || abs(jetConstituent->pdgId())==13 || abs(jetConstituent->pdgId())==15) jetIsLeptonic = true;
                 }
                 // if this is for taus and gen jet is leptonic, skip it
-                if(genTauJets && jetIsLeptonic) continue;
+                if(srcIsTaus && jetIsLeptonic) continue;
             }
             double dr = reco::deltaR(obj, genJets->at(j));
             if ((dr < deltaR) && (dr < bestDR)) {
@@ -75,7 +72,6 @@ void GenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
         obj.addUserCand("genJet", genJet);
         out->push_back(obj);
     }
-
     iEvent.put(out);
 }
 

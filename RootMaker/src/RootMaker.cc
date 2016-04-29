@@ -334,7 +334,6 @@ void RootMaker::beginLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm
 
     edm::Handle<LumiSummary> lumiSummary;
     iLumiBlock.getByLabel(edm::InputTag("lumiProducer"), lumiSummary);
-//    iLumiBlock.getByToken(lumiInfoToken_, lumiSummary);
 
     if(lumiSummary.isValid()) {
         lumi_value    = lumiSummary->avgInsDelLumi();
@@ -352,7 +351,8 @@ void RootMaker::endLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm::
 }
 
 // _________________________________________________________________________________
-void RootMaker::endJob() {
+void RootMaker::endJob()
+{
     infotree->Fill();
     std::cerr<<"nevents_skipped = "<<nevents_skipped<<std::endl;
     std::cerr<<"nevents_filled  = "<<nevents_filled<<std::endl;
@@ -363,7 +363,8 @@ void RootMaker::endJob() {
 // GetTriggerBit returns the trigger bit corresponding to the HLT name passed to it.
 // It returns -1 if there is no match and throws an exception if there is more than one match.
 // _________________________________________________________________________________
-int RootMaker::GetTriggerBit(std::string trigName, const edm::TriggerNames& names) {
+int RootMaker::GetTriggerBit(std::string trigName, const edm::TriggerNames &names)
+{
     std::string trigPathString = triggerNamingMap_[trigName];
     std::regex regexp(trigPathString);
     int trigBit = -1;
@@ -379,7 +380,8 @@ int RootMaker::GetTriggerBit(std::string trigName, const edm::TriggerNames& name
 }
 
 // _________________________________________________________________________________
-void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup) {
+void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
+{
     /////////////////////////////////////////
     // Once-per-event stuff /////////////////
     /////////////////////////////////////////
@@ -419,8 +421,6 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     lumi_l1algoprescaletable = (L1trigger->gtFdlWord()).gtPrescaleFactorIndexAlgo();
     //lumi_hltprescaletable = HLTConfiguration.prescaleSet(iEvent, iSetup);
     lumi_hltprescaletable = HLTPrescaleProvider_.prescaleSet(iEvent, iSetup);
-
-
 
     // beamspot
     edm::Handle<BeamSpot> TheBeamSpot;
@@ -561,4 +561,3 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         nevents_skipped++;
     }
 }
-

@@ -2,7 +2,6 @@ import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.objectBase import commonJetTauBranches
 
 jetBranches = commonJetTauBranches.clone(
-
     area = cms.vstring('jetArea','F'),
 
     # user data embedded with ??? these are all like -1 right now
@@ -13,10 +12,10 @@ jetBranches = commonJetTauBranches.clone(
     mcflavour       = cms.vstring('userFloat("mcflavour")','F'),
 
     # user data embedded with BtagEmbedder
-    btag            = cms.vstring('userInt("btag")','I'),
 
 
     # btagging
+    btag = cms.vstring('userInt("btag")','I'),
     pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
     pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
     pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
@@ -74,14 +73,13 @@ jetBranches = commonJetTauBranches.clone(
     chargedfractionmv = cms.vstring('userFloat("chargedfractionmv")','F'),
 )
 
-def addJets(process,coll,**kwargs):
+def addJets(process, coll, **kwargs):
 # note: jet cleaning is defined in RootTree.py
-    isMC = kwargs.pop('isMC',False)
+    isMC = kwargs.pop('isMC', False)
     jSrc = coll['ak4pfchsjets']
     pvSrc = coll['vertices']
     genSrc = coll['genParticles']
     packedSrc = coll['packed']
-
     # customization path
     process.jetCustomization = cms.Path()
 
@@ -157,7 +155,7 @@ def addJets(process,coll,**kwargs):
             "JetGenJetEmbedder",
             src = cms.InputTag(jSrc),
             genJets = cms.InputTag("slimmedGenJets"),
-            genTauJets = cms.bool(False),
+            srcIsTaus = cms.bool(False),
             deltaR = cms.double(0.5),
         )
         jSrc = "jGenJet"
@@ -167,7 +165,5 @@ def addJets(process,coll,**kwargs):
 
     # add to schedule
     process.schedule.append(process.jetCustomization)
-
     coll['ak4pfchsjets'] = jSrc
-
     return coll
