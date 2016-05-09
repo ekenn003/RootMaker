@@ -1,13 +1,16 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.objectBase import commonJetTauBranches
 
+################################################
+################################################
+################################################
 jetBranches = commonJetTauBranches.clone(
     area = cms.vstring('jetArea','F'),
 
     # user data embedded with ??? these are all like -1 right now
     energycorr      = cms.vstring('userFloat("energycorr")','F'),
-    energycorrl7uds = cms.vstring('userFloat("energycorrl7uds")','F'),
-    energycorrl7bottom = cms.vstring('userFloat("energycorrl7bottom")','F'),
+    #energycorrl7uds = cms.vstring('userFloat("energycorrl7uds")','F'),
+    #energycorrl7bottom = cms.vstring('userFloat("energycorrl7bottom")','F'),
     energycorrunc   = cms.vstring('userFloat("energycorrunc")','F'),
     mcflavour       = cms.vstring('userFloat("mcflavour")','F'),
 
@@ -73,6 +76,10 @@ jetBranches = commonJetTauBranches.clone(
     chargedfractionmv = cms.vstring('userFloat("chargedfractionmv")','F'),
 )
 
+
+################################################
+################################################
+################################################
 def addJets(process, coll, **kwargs):
 # note: jet cleaning is defined in RootTree.py
     isMC = kwargs.pop('isMC', False)

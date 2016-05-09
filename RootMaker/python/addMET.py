@@ -1,5 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
+################################################
+################################################
+################################################
 metBranches = cms.PSet(
     ex       = cms.vstring('px()','F'),
     ey       = cms.vstring('py()','F'),
@@ -9,6 +12,9 @@ metBranches = cms.PSet(
     uncorPhi = cms.vstring('uncorPhi','F'),
 )
 
+################################################
+################################################
+################################################
 def addMET(process, coll, **kwargs):
     isMC = kwargs.pop('isMC', False)
     metSrc = coll['pfmettype1']

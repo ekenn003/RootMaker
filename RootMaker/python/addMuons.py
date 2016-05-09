@@ -1,6 +1,9 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.objectBase import commonObjectBranches
 
+################################################
+################################################
+################################################
 muonBranches = commonObjectBranches.clone(
     # user data from PVEmbedder
     dz     = cms.vstring('userFloat("dz")','F'),
@@ -35,6 +38,10 @@ muonBranches = commonObjectBranches.clone(
     innertrack_px           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().px() : 0', 'F'),
     innertrack_py           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().py() : 0', 'F'),
     innertrack_pz           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().pz() : 0', 'F'),
+    innertrack_dxy          = cms.vstring('userFloat("innertrack_dxy")','F'),
+    innertrack_dxyerr       = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().dxyError() : 0', 'F'),
+    innertrack_dz           = cms.vstring('userFloat("innertrack_dz")','F'),
+    innertrack_dzerr        = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().dzError() : 0', 'F'),
     innertrack_chi2         = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().chi2() : -1', 'F'),
     innertrack_ndof         = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().ndof() : -1', 'F'),
     innertrack_charge       = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().charge() : 0', 'F'),
@@ -102,6 +109,9 @@ muonBranches = commonObjectBranches.clone(
 
 )
 
+################################################
+### produce muon collection ####################
+################################################
 def addMuons(process, coll, **kwargs):
     isMC = kwargs.pop('isMC', False)
     mSrc = coll['muons']

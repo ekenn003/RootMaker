@@ -1,6 +1,9 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.objectBase import commonEgammaBranches
 
+################################################
+################################################
+################################################
 electronBranches = commonEgammaBranches.clone(
     # user data from PVEmbedder
     dz     = cms.vstring('userFloat("dz")','F'),
@@ -65,6 +68,9 @@ electronBranches = commonEgammaBranches.clone(
 )
 
 
+################################################
+################################################
+################################################
 def addElectrons(process, coll, **kwargs):
     isMC = kwargs.pop('isMC', False)
     eSrc = coll['electrons']

@@ -33,7 +33,7 @@ from RootMaker.RootMaker.addElectrons import * # electronBranches
 from RootMaker.RootMaker.addPhotons   import * # photonBranches
 from RootMaker.RootMaker.addJets      import * # jetBranches
 from RootMaker.RootMaker.addMET       import * # metBranches
-from RootMaker.RootMaker.addTaus      import * # tauBranches
+from RootMaker.RootMaker.addTaus      import * # tauBranches, TauDiscriminators
 from RootMaker.RootMaker.addVertices  import * # vertexBranches
 
 selections = {
@@ -44,6 +44,7 @@ selections = {
     'ak4pfchsjets' : 'pt>4 && abs(eta)<5.',
 }
 
+from RootMaker.RootMaker.addTaus      import TauDiscriminators
 
 makeroottree = cms.EDAnalyzer("RootMaker",
     isData            = cms.bool(True),
@@ -59,6 +60,7 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     triggerObjects    = cms.InputTag("selectedPatTrigger"),
     triggerPrescales  = cms.InputTag("patTrigger"),
     l1trigger = cms.InputTag("gtDigis"),
+    RecTauDiscriminators = cms.untracked.vstring(TauDiscriminators),
 
     vertices = cms.InputTag("offlineSlimmedPrimaryVertices"),
 
