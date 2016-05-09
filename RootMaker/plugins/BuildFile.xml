@@ -1,7 +1,9 @@
 <library file="*.cc" name="RootMakerPlugins">
 <flags EDM_PLUGIN="1"/>
+<use name="CommonTools/ParticleFlow"/>
 <use name="CommonTools/UtilAlgos"/>
 <use name="CommonTools/Utils"/>
+<use name="DataFormats/Common"/>
 <use name="DataFormats/PatCandidates" />
 <use name="FWCore/Framework"/>
 <use name="FWCore/ParameterSet"/>
