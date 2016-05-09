@@ -11,6 +11,8 @@
 
 #include "RootMaker/RootMaker/plugins/rochcor2015.h"
 
+using namespace std;
+
 class RochCorEmbedder : public edm::stream::EDProducer<> {
   public:
     explicit RochCorEmbedder(const edm::ParameterSet&);
@@ -26,8 +28,8 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
     // data
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     bool isData_;
-    std::auto_ptr<std::vector<pat::Muon> > output;
-    std::auto_ptr<rochcor2015> rmcor;
+    auto_ptr<vector<pat::Muon> > output;
+    auto_ptr<rochcor2015> rmcor;
 };
 
 // constructor
@@ -35,13 +37,13 @@ RochCorEmbedder::RochCorEmbedder(const edm::ParameterSet& iConfig):
     muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
     isData_(iConfig.getParameter<bool>("isData"))
 {
-    rmcor = std::auto_ptr<rochcor2015>(new rochcor2015());
-    produces<std::vector<pat::Muon> >();
+    rmcor = auto_ptr<rochcor2015>(new rochcor2015());
+    produces<vector<pat::Muon> >();
 }
 
 void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    output = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
+    output = auto_ptr<vector<pat::Muon> >(new vector<pat::Muon>);
     edm::Handle<edm::View<pat::Muon> > muons;
     iEvent.getByToken(muonToken_, muons);
 

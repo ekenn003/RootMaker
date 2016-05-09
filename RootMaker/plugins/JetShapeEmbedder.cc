@@ -18,6 +18,8 @@
 #include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+using namespace std;
+
 class JetShapeEmbedder : public edm::stream::EDProducer<>
 {
   public:
@@ -40,7 +42,7 @@ JetShapeEmbedder::JetShapeEmbedder(const edm::ParameterSet &iConfig):
 void JetShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
     using namespace TMath;
-    std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
+    auto_ptr<pat::JetCollection> output(new pat::JetCollection);
     edm::Handle<edm::View<pat::Jet> > jets;
     iEvent.getByToken(jetToken_, jets);
 
@@ -70,7 +72,7 @@ void JetShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup
         float allphiphi2     = 0.;
         float allptsum       = 0.;
 
-        std::vector<reco::CandidatePtr> daughters(jet.daughterPtrVector());
+        vector<reco::CandidatePtr> daughters(jet.daughterPtrVector());
         for (unsigned int id = 0, nd = jet.numberOfDaughters(); id < nd; ++id) {
             const pat::PackedCandidate &con = dynamic_cast<const pat::PackedCandidate &>(*daughters[id]);
             float deta = jet.eta() - con.eta();

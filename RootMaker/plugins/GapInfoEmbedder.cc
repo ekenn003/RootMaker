@@ -13,6 +13,8 @@
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+using namespace std;
+
 template<typename T>
 class GapInfoEmbedder : public edm::stream::EDProducer<>
 {
@@ -25,20 +27,20 @@ class GapInfoEmbedder : public edm::stream::EDProducer<>
     void endJob() {}
 
     edm::EDGetTokenT<edm::View<T> > srcToken_;
-    std::auto_ptr<std::vector<T> > output;
+    auto_ptr<vector<T> > output;
 };
 
 template<typename T>
 GapInfoEmbedder<T>::GapInfoEmbedder(const edm::ParameterSet &iConfig):
     srcToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src")))
 {
-    produces<std::vector<T> >();
+    produces<vector<T> >();
 }
 
 template<typename T>
 void GapInfoEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+    output = auto_ptr<vector<T> >(new vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
     for (size_t c = 0; c < input->size(); ++c) {

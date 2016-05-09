@@ -11,6 +11,8 @@
 #include "RecoJets/JetProducers/plugins/PileupJetIdProducer.h"
 #include "RecoJets/JetProducers/interface/MVAJetPuId.h"
 
+using namespace std;
+
 class JetIDEmbedder : public edm::stream::EDProducer<>
 {
   public:
@@ -30,7 +32,7 @@ JetIDEmbedder::JetIDEmbedder(const edm::ParameterSet  &iConfig):
 
 void JetIDEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
+    auto_ptr<pat::JetCollection> output(new pat::JetCollection);
     edm::Handle<edm::View<pat::Jet> > jets;
     iEvent.getByToken(jetToken_, jets);
     output->reserve(jets->size());

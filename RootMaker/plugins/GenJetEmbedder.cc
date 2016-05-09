@@ -12,6 +12,8 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 
+using namespace std;
+
 template<typename T>
 class GenJetEmbedder : public edm::stream::EDProducer<> {
   public:
@@ -22,7 +24,7 @@ class GenJetEmbedder : public edm::stream::EDProducer<> {
   private:
     edm::EDGetTokenT<edm::View<T> > srcToken_;
     edm::EDGetTokenT<edm::View<reco::GenJet> > genJetToken_;
-    std::auto_ptr<std::vector<T> > out;
+    auto_ptr<vector<T> > out;
     double deltaR;
     bool   srcIsTaus;
 };
@@ -34,12 +36,12 @@ GenJetEmbedder<T>::GenJetEmbedder(const edm::ParameterSet& iConfig):
     deltaR(iConfig.getParameter<double>("deltaR")),
     srcIsTaus(iConfig.getParameter<bool>("srcIsTaus"))
 {
-    produces<std::vector<T> >();
+    produces<vector<T> >();
 }
 
 template<typename T>
 void GenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
-    out = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+    out = auto_ptr<vector<T> >(new vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
     edm::Handle<edm::View<reco::GenJet> > genJets;

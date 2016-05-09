@@ -16,6 +16,8 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "RecoEgamma/EgammaTools/interface/EffectiveAreas.h"
 
+using namespace std;
+
 template<typename T>
 class EffectiveAreaEmbedder : public edm::stream::EDProducer<>
 {
@@ -33,9 +35,9 @@ class EffectiveAreaEmbedder : public edm::stream::EDProducer<>
 
     // data
     edm::EDGetTokenT<edm::View<T> > srcToken_;
-    const std::string label_;
-    const std::string filename_;
-    std::auto_ptr<std::vector<T> > output;
+    const string label_;
+    const string filename_;
+    auto_ptr<vector<T> > output;
     EffectiveAreas effectiveAreas_;
 };
 
@@ -43,16 +45,16 @@ class EffectiveAreaEmbedder : public edm::stream::EDProducer<>
 template<typename T>
 EffectiveAreaEmbedder<T>::EffectiveAreaEmbedder(const edm::ParameterSet& iConfig):
     srcToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src"))),
-    label_(iConfig.exists("label") ? iConfig.getParameter<std::string>("label") : std::string("EffectiveArea")),
+    label_(iConfig.exists("label") ? iConfig.getParameter<string>("label") : string("EffectiveArea")),
     effectiveAreas_((iConfig.getParameter<edm::FileInPath>("configFile")).fullPath())
 {
-    produces<std::vector<T> >();
+    produces<vector<T> >();
 }
 
 template<typename T>
 void EffectiveAreaEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+    output = auto_ptr<vector<T> >(new vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
 

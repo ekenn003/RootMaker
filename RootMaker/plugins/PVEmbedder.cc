@@ -10,9 +10,8 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 #include "DataFormats/PatCandidates/interface/PackedCandidate.h"
-#include "DataFormats/PatCandidates/interface/Electron.h"
-#include "DataFormats/PatCandidates/interface/Muon.h"
-#include "DataFormats/PatCandidates/interface/Tau.h"
+
+using namespace std;
 
 template<typename T>
 class PVEmbedder : public edm::stream::EDProducer<>
@@ -34,7 +33,7 @@ class PVEmbedder : public edm::stream::EDProducer<>
     // data
     edm::EDGetTokenT<edm::View<T> > srcToken_;
     edm::EDGetTokenT<reco::VertexCollection> vertexToken_;
-    std::auto_ptr<std::vector<T> > output;
+    auto_ptr<vector<T> > output;
 };
 
 // constructor
@@ -43,13 +42,13 @@ PVEmbedder<T>::PVEmbedder(const edm::ParameterSet& iConfig):
     srcToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src"))),
     vertexToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexSrc")))
 {
-    produces<std::vector<T> >();
+    produces<vector<T> >();
 }
 
 template<typename T>
 void PVEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+    output = auto_ptr<vector<T> >(new vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
     edm::Handle<reco::VertexCollection> vertices;
@@ -110,6 +109,10 @@ void PVEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions &description
     desc.setUnknown();
     descriptions.addDefault(desc);
 }
+
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
 
 //define this as a plug-in
 typedef PVEmbedder<pat::Electron> ElectronPVEmbedder;

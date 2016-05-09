@@ -9,6 +9,8 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
+using namespace std;
+
 class BtagEmbedder : public edm::stream::EDProducer<>
 {
   public:
@@ -28,7 +30,7 @@ BtagEmbedder::BtagEmbedder(const edm::ParameterSet &iConfig):
 void BtagEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
     using namespace TMath;
-    std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
+    auto_ptr<pat::JetCollection> output(new pat::JetCollection);
     edm::Handle<edm::View<pat::Jet> > jets;
     iEvent.getByToken(jetToken_, jets);
     output->reserve(jets->size());

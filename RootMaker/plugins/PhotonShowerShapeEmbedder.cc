@@ -10,6 +10,8 @@
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
 
+using namespace std;
+
 class PhotonShowerShapeEmbedder : public edm::stream::EDProducer<>
 {
   public:
@@ -33,7 +35,7 @@ PhotonShowerShapeEmbedder::PhotonShowerShapeEmbedder(const edm::ParameterSet &iC
 
 void PhotonShowerShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    std::auto_ptr<pat::PhotonCollection> output(new pat::PhotonCollection);
+    auto_ptr<pat::PhotonCollection> output(new pat::PhotonCollection);
     edm::Handle<edm::View<pat::Photon> > photons;
     edm::Handle<EcalRecHitCollection> barrelHits;
     edm::Handle<EcalRecHitCollection> endcapHits;
@@ -46,7 +48,7 @@ void PhotonShowerShapeEmbedder::produce(edm::Event &iEvent, const edm::EventSetu
         pat::Photon photon = photons->at(i);
 
         EcalClusterLazyTools lazyTools(iEvent, iSetup, ebRecHitsToken_, eeRecHitsToken_);
-        std::vector<float> localcovariances = lazyTools.localCovariances(* (photon.superCluster()->seed()));
+        vector<float> localcovariances = lazyTools.localCovariances(* (photon.superCluster()->seed()));
 
         Float_t sigmaiphiiphi = TMath::Sqrt(localcovariances[2]);
         Float_t sigmaietaiphi = TMath::Sqrt(localcovariances[1]);

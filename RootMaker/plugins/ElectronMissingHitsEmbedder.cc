@@ -9,6 +9,8 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 
+using namespace std;
+
 class ElectronMissingHitsEmbedder : public edm::stream::EDProducer<>
 {
   public:
@@ -27,7 +29,7 @@ ElectronMissingHitsEmbedder::ElectronMissingHitsEmbedder(const edm::ParameterSet
 
 void ElectronMissingHitsEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    std::auto_ptr<pat::ElectronCollection> output(new pat::ElectronCollection);
+    auto_ptr<pat::ElectronCollection> output(new pat::ElectronCollection);
     edm::Handle<edm::View<pat::Electron> > electrons;
     iEvent.getByToken(electronToken_, electrons);
     output->reserve(electrons->size());

@@ -14,6 +14,8 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
+using namespace std;
+
 class MuonInfoEmbedder : public edm::stream::EDProducer<>
 {
   public:
@@ -28,19 +30,19 @@ class MuonInfoEmbedder : public edm::stream::EDProducer<>
 
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     edm::EDGetTokenT<reco::VertexCollection> vertexToken_;
-    std::auto_ptr<std::vector<pat::Muon> > output;
+    auto_ptr<vector<pat::Muon> > output;
 };
 
 MuonInfoEmbedder::MuonInfoEmbedder(const edm::ParameterSet& iConfig):
     muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
     vertexToken_(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertexSrc")))
 {
-    produces<std::vector<pat::Muon> >();
+    produces<vector<pat::Muon> >();
 }
 
 void MuonInfoEmbedder::produce(edm::Event& iEvent, const edm::EventSetup &iSetup)
 {
-    output = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
+    output = auto_ptr<vector<pat::Muon> >(new vector<pat::Muon>);
     edm::Handle<edm::View<pat::Muon> > muons;
     iEvent.getByToken(muonToken_, muons);
     edm::Handle<reco::VertexCollection> vertices;

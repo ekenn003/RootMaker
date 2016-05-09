@@ -13,6 +13,8 @@
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
 #include "DataFormats/Math/interface/deltaR.h"
 
+using namespace std;
+
 template<typename T>
 class HLTMatchEmbedder : public edm::stream::EDProducer<>
 {
@@ -27,8 +29,8 @@ class HLTMatchEmbedder : public edm::stream::EDProducer<>
     virtual void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
     void endJob() {}
 
-    size_t GetTriggerBit(std::string trigPathString, const edm::TriggerNames &names);
-    int MatchToTriggerObject(T obj, std::string trigPathString, const edm::TriggerNames &names);
+    size_t GetTriggerBit(string trigPathString, const edm::TriggerNames &names);
+    int MatchToTriggerObject(T obj, string trigPathString, const edm::TriggerNames &names);
 
     // data
     edm::EDGetTokenT<edm::View<T> > srcToken_;
@@ -37,9 +39,9 @@ class HLTMatchEmbedder : public edm::stream::EDProducer<>
     edm::Handle<edm::TriggerResults> triggerBits;
     edm::Handle<pat::TriggerObjectStandAloneCollection> triggerObjects;
     double deltaR;
-    std::vector<std::string> labels_;
-    std::vector<std::string> paths_;
-    std::auto_ptr<std::vector<T> > output;
+    vector<string> labels_;
+    vector<string> paths_;
+    auto_ptr<vector<T> > output;
 };
 
 // constructor
@@ -49,19 +51,19 @@ HLTMatchEmbedder<T>::HLTMatchEmbedder(const edm::ParameterSet& iConfig):
     triggerBitsToken_(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("triggerResults"))),
     triggerObjectsToken_(consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("triggerObjects"))),
     deltaR(iConfig.getParameter<double>("deltaR")),
-    labels_(iConfig.getParameter<std::vector<std::string> >("labels")),
-    paths_(iConfig.getParameter<std::vector<std::string> >("paths"))
+    labels_(iConfig.getParameter<vector<string> >("labels")),
+    paths_(iConfig.getParameter<vector<string> >("paths"))
 {
     if (labels_.size() != paths_.size()) {
-        throw cms::Exception("SizeMismatch")<<"Mismatch in number of labels ("<<labels_.size()<<") and number of paths ("<<paths_.size()<<")."<<std::endl;
+        throw cms::Exception("SizeMismatch")<<"Mismatch in number of labels ("<<labels_.size()<<") and number of paths ("<<paths_.size()<<")."<<endl;
     }
-    produces<std::vector<T> >();
+    produces<vector<T> >();
 }
 
 template<typename T>
 void HLTMatchEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
-    output = std::auto_ptr<std::vector<T> >(new std::vector<T>);
+    output = auto_ptr<vector<T> >(new vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
     iEvent.getByToken(triggerBitsToken_, triggerBits);
@@ -74,8 +76,8 @@ void HLTMatchEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSe
 
         int hasMatch = 0;
         for (size_t i = 0; i < labels_.size(); i++) {
-            std::string label = labels_.at(i);
-            std::string trigPathString = paths_.at(i);
+            string label = labels_.at(i);
+            string trigPathString = paths_.at(i);
             int match = MatchToTriggerObject(obj, trigPathString, names);
             // add matched
             newObj.addUserInt(label, match);
@@ -94,12 +96,12 @@ void HLTMatchEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSe
 // GetTriggerBit returns the trigger bit corresponding to the HLT name passed to it.
 // It returns -1 if there is no match and throws an exception if there is more than one match.
 template<typename T>
-size_t HLTMatchEmbedder<T>::GetTriggerBit(std::string trigPathString, const edm::TriggerNames &names)
+size_t HLTMatchEmbedder<T>::GetTriggerBit(string trigPathString, const edm::TriggerNames &names)
 {
-    std::regex regexp(trigPathString);
+    regex regexp(trigPathString);
     int trigBit = -1;
     for (unsigned int i = 0; i < names.size(); i++) {
-        if (std::regex_match(names.triggerName(i), regexp)) {
+        if (regex_match(names.triggerName(i), regexp)) {
             if (trigBit != -1) { // if this isn't the first match
                 throw cms::Exception("DuplicateTrigger");
             }
@@ -110,17 +112,17 @@ size_t HLTMatchEmbedder<T>::GetTriggerBit(std::string trigPathString, const edm:
 }
 
 template<typename T>
-int HLTMatchEmbedder<T>::MatchToTriggerObject(T obj, std::string trigPathString, const edm::TriggerNames &names)
+int HLTMatchEmbedder<T>::MatchToTriggerObject(T obj, string trigPathString, const edm::TriggerNames &names)
 {
     int matched = 0;
     int trigBit = GetTriggerBit(trigPathString, names);
     if(trigBit == -1) return (-1);
-    std::string pathToMatch = names.triggerName(trigBit);
+    string pathToMatch = names.triggerName(trigBit);
     for (auto trigObj : *triggerObjects) {
        if(abs(trigObj.pdgId()) != abs(obj.pdgId())) continue;
        if(reco::deltaR(trigObj, obj) > deltaR) continue;
        trigObj.unpackPathNames(names);
-       std::vector<std::string> allPathNames = trigObj.pathNames(false);
+       vector<string> allPathNames = trigObj.pathNames(false);
        for (auto pathName : allPathNames) {
            if(pathName.compare(pathToMatch) == 0) {
                matched = 1;
