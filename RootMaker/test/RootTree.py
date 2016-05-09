@@ -18,6 +18,18 @@ options.maxEvents = 1000
 
 options.runMetFilter = 0
 
+
+
+
+
+
+
+
+
+
+
+# you probably don't have to change anything below here
+
 #####################
 ### setup process ###
 #####################
@@ -33,10 +45,10 @@ else:
 ### GlobalTag ###
 #################
 # uncomment this section to override the given global tag with the latest one (not recommended)
-#envvar = 'mcgt' if options.isMC else 'datagt'
-#from Configuration.AlCa.GlobalTag import GlobalTag
-#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-#process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
+envvar = 'mcgt' if options.isMC else 'datagt'
+from Configuration.AlCa.GlobalTag import GlobalTag
+GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 
 

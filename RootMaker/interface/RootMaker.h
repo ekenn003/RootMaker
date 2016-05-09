@@ -73,13 +73,13 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     virtual void endRun(edm::Run const &iRun, edm::EventSetup const&) override;
     virtual void endJob() override;
     void TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames);
-    int  GetTriggerBit(std::string trigName, const edm::TriggerNames& names);
+    int  GetTriggerBit(string trigName, const edm::TriggerNames& names);
 
     // tokens
     edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
     edm::EDGetTokenT<GenEventInfoProduct> genEventInfoToken_;
     edm::EDGetTokenT<double> rhoToken_;
-    edm::EDGetTokenT<std::vector<PileupSummaryInfo> > PUInfoToken_;
+    edm::EDGetTokenT<vector<PileupSummaryInfo> > PUInfoToken_;
     edm::EDGetTokenT<LumiSummary> lumiInfoToken_;
     edm::EDGetTokenT<edm::TriggerResults> triggerBitsToken_;
     edm::EDGetTokenT<edm::TriggerResults> filterBitsToken_;
@@ -112,6 +112,9 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     vector<string> cMuHLTriggerMatching;
     vector<string> cElHLTriggerMatching;
     vector<string> cTauHLTriggerMatching;
+
+    vector<string> cTauDiscriminators;
+
     vector<string> cPhotonHLTriggerMatching;
     vector<string> cJetHLTriggerMatching;
     vector<pair<unsigned, int> > muontriggers;
@@ -122,6 +125,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     HLTPrescaleProvider HLTPrescaleProvider_;
     HLTConfigProvider HLTConfiguration;
     //*//
+
 
     bool isData_;
 
@@ -156,7 +160,6 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     Char_t run_hlttaunames[10000];
     Char_t run_hltphotonnames[10000];
     Char_t run_hltjetnames[10000];
-    Char_t run_taudiscriminators[10000];
     UInt_t run_hltprescaletablescount;
     UInt_t run_hltprescaletables[10000];
     UInt_t run_hltl1prescaletables[10000];
@@ -166,6 +169,9 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t run_l1techcount;
     UInt_t run_l1techprescaletablescount;
     UInt_t run_l1techprescaletables[10000];
+
+    Char_t run_taudiscriminators[10000];
+
 
     // lumitree branches
     Int_t   lumi_run;
@@ -216,15 +222,15 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     Float_t numtruepileupinteractions;
 
     // trigger
-    std::vector<std::string> myTriggerNames;
-    std::vector<std::string> myFilterNames;
-    std::vector<std::string> triggerBranchStrings;
-    std::map<std::string, std::string> triggerNamingMap_;
-    std::map<std::string, Int_t>       triggerIntMap_;
+    vector<string> myTriggerNames;
+    vector<string> myFilterNames;
+    vector<string> triggerBranchStrings;
+    map<string, string> triggerNamingMap_;
+    map<string, Int_t>  triggerIntMap_;
 
     // collections
-    std::vector<std::unique_ptr<ObjectCollectionBranches> > objectCollectionBranches;
-    std::vector<std::unique_ptr<VertexCollectionBranches> > vertexCollectionBranches;
+    vector<unique_ptr<ObjectCollectionBranches> > objectCollectionBranches;
+    vector<unique_ptr<VertexCollectionBranches> > vertexCollectionBranches;
 };
 
 void RootMaker::fillDescriptions(edm::ConfigurationDescriptions &descriptions)

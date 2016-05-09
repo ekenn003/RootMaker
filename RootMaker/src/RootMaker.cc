@@ -23,6 +23,9 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     cMuHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecMuonHLTriggerMatching")),
     cElHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecElectronHLTriggerMatching")),
     cTauHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecTauHLTriggerMatching")),
+
+    cTauDiscriminators(iConfig.getUntrackedParameter<vector<string> > ("RecTauDiscriminators")),
+
     cPhotonHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecPhotonHLTriggerMatching")),
     cJetHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecJetHLTriggerMatching")),
 
@@ -51,7 +54,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
 
     // set up trees
     edm::Service<TFileService> FS;
-    drhist = FS->make<TH1D> ("drhist", "drhist", 10000, 0., 100.);
+    //drhist = FS->make<TH1D> ("drhist", "drhist", 10000, 0., 100.);
 
     // create info tree
     infotree = FS->make<TTree> ("AC1Binfo", "AC1Binfo", 1);
@@ -70,7 +73,6 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     runtree->Branch("run_hlttaunames", run_hlttaunames, "run_hlttaunames/C");
     runtree->Branch("run_hltphotonnames", run_hltphotonnames, "run_hltphotonnames/C");
     runtree->Branch("run_hltjetnames", run_hltjetnames, "run_hltjetnames/C");
-    runtree->Branch("run_taudiscriminators", run_taudiscriminators, "run_taudiscriminators/C");
     runtree->Branch("run_hltprescaletablescount", &run_hltprescaletablescount, "run_hltprescaletablescount/i");
     runtree->Branch("run_hltprescaletables", run_hltprescaletables, "run_hltprescaletables[run_hltprescaletablescount]/i");
     runtree->Branch("run_hltl1prescaletables", run_hltl1prescaletables, "run_hltl1prescaletables[run_hltprescaletablescount]/i");
@@ -80,6 +82,8 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     runtree->Branch("run_l1techcount", &run_l1techcount, "run_l1techcount/i");
     runtree->Branch("run_l1techprescaletablescount", &run_l1techprescaletablescount, "run_l1techprescaletablescount/i");
     runtree->Branch("run_l1techprescaletables", run_l1techprescaletables, "run_l1techprescaletables[run_l1techprescaletablescount]/i");
+
+    runtree->Branch("run_taudiscriminators", run_taudiscriminators, "run_taudiscriminators/C");
 
     // create lumitree
     lumitree = FS->make<TTree> ("AC1Blumi", "AC1Blumi", 1);
@@ -99,7 +103,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     // create event tree
     tree = FS->make<TTree>("AC1B", "AC1B");
     // once per event branches
-    tree->Branch("isdata", &isdata, "isdata/I");
+    tree->Branch("isdata", &isdata, "isdata/O");
     tree->Branch("event_nr", &event_nr, "event_nr/D");
     tree->Branch("event_run", &event_run, "event_run/i");
     tree->Branch("event_timeunix", &event_timeunix, "event_timeunix/i");
@@ -257,6 +261,12 @@ void RootMaker::beginRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
     TriggerIndexSelection(cPhotonHLTriggerMatching, photontriggers, allphotonnames);
     TriggerIndexSelection(cJetHLTriggerMatching, jettriggers, alljetnames);
 
+    // add tau discriminators. These come from RecTauDiscriminators in addTaus.py
+    string alltaudiscriminators;
+    for (size_t i = 0 ; i < cTauDiscriminators.size() ; i++) {
+        alltaudiscriminators += cTauDiscriminators[i] + string(" ");
+    }
+    strcpy(run_taudiscriminators, alltaudiscriminators.c_str());
 }
 
 
