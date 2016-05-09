@@ -67,6 +67,10 @@ void PVEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
     iEvent.put(output);
 }
 
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
+
 template<> // instructions for electron dz
 double PVEmbedder<pat::Electron>::dz(pat::Electron obj, const reco::Vertex &pv)
 {
@@ -109,10 +113,6 @@ void PVEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions &description
     desc.setUnknown();
     descriptions.addDefault(desc);
 }
-
-#include "DataFormats/PatCandidates/interface/Electron.h"
-#include "DataFormats/PatCandidates/interface/Muon.h"
-#include "DataFormats/PatCandidates/interface/Tau.h"
 
 //define this as a plug-in
 typedef PVEmbedder<pat::Electron> ElectronPVEmbedder;

@@ -28,7 +28,7 @@ TauDiscEmbedder::TauDiscEmbedder(const edm::ParameterSet &iConfig):
     tausToken_(consumes<edm::View<pat::Tau> >(iConfig.getParameter<edm::InputTag>("src"))),
     cTauDiscriminators(iConfig.getUntrackedParameter<vector<string> > ("RecTauDiscriminators"))
 {
-  produces<pat::TauCollection>();
+    produces<pat::TauCollection>();
 }
 
 void TauDiscEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)

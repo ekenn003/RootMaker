@@ -1,5 +1,7 @@
 // MuonInfoEmbedder.cc
 // Embeds muon_trackermuonquality
+// Embeds muon_innertrack_dz
+// Embeds muon_innertrack_dxy
 // Embeds muon_isTightMuon
 // Embeds muon_numberOfMatches
 
@@ -92,6 +94,16 @@ void MuonInfoEmbedder::produce(edm::Event& iEvent, const edm::EventSetup &iSetup
         if(muon.time().direction() == 1) { quality |= 1<<30; } 
         else if(muon.time().direction() == -1) { quality |= 1<<31; }
         newMuon.addUserInt("trackermuonquality", quality);
+
+        // add innertrack_d*
+        Float_t innertrack_dz  = 0.;
+        Float_t innertrack_dxy = 0.;
+        if(muon.innerTrack().isNonnull()) {
+            innertrack_dz  = muon.innerTrack()->dz(pv.position());
+            innertrack_dxy = muon.innerTrack()->dxy(pv.position());
+        }
+        newMuon.addUserFloat("innertrack_dz", innertrack_dz);
+        newMuon.addUserFloat("innertrack_dxy", innertrack_dxy);
 
         // save it
         output->push_back(newMuon);
