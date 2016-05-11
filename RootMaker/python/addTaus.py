@@ -13,6 +13,20 @@ tauBranches = commonJetTauBranches.clone(
     # user data from HLTMatchEmbedder
     trigger = cms.vstring('userInt("trigger")','I'), 
 
+
+    #jet_refisnonnull = cms.vstring('jetRef().isNonnull','I'),
+    #jet_pfrefisnonnull = cms.vstring('pfJetRef().isNonnull','I'),
+    #jet_e = cms.vstring('? (jetRef().isNonnull) ?  : -1','F'),
+    #jet_px
+    #jet_py
+    #jet_pz
+    #jet_hadronicenergy
+    #jet_chargedhadronicenergy
+    #jet_emenergy
+    #jet_chargedemenergy
+    #jet_chargedmulti
+    #jet_neutralmulti
+
     # isolation
     isolationneutralspt  = cms.vstring('tauID("neutralIsoPtSum")','F'),
     isolationneutralsnum = cms.vstring('? (isPFTau) ? isolationPFNeutrHadrCands().size() : -1','I'),
@@ -128,7 +142,7 @@ def addTaus(process,coll,**kwargs):
     isMC = kwargs.pop('isMC', False)
     tSrc = coll['taus']
     pvSrc = coll['vertices']
-    genSrc = coll['genParticles']
+    genSrc = coll['genparticles']
     # customization path
     process.tauCustomization = cms.Path()
 
@@ -171,7 +185,7 @@ def addTaus(process,coll,**kwargs):
         process.tauGenJets = tauGenJets.clone(GenParticles = cms.InputTag(genSrc))
         process.tauCustomization *= process.tauGenJets
         process.tGenJetMatching = cms.EDProducer(
-            "TauGenJetEmbedder",
+            "TauMatchedGenJetEmbedder",
             src = cms.InputTag(tSrc),
             genJets = cms.InputTag("tauGenJets"),
             srcIsTaus = cms.bool(True),

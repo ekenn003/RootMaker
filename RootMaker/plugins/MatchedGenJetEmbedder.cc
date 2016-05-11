@@ -1,4 +1,4 @@
-// GenJetEmbedder.cc
+// MatchedGenJetEmbedder.cc
 // embeds userCand("genJet")
 // Original author: Devin Taylor, U. Wisconsin
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -15,10 +15,10 @@
 using namespace std;
 
 template<typename T>
-class GenJetEmbedder : public edm::stream::EDProducer<> {
+class MatchedGenJetEmbedder : public edm::stream::EDProducer<> {
   public:
-    GenJetEmbedder(const edm::ParameterSet& iConfig);
-    virtual ~GenJetEmbedder(){}
+    MatchedGenJetEmbedder(const edm::ParameterSet& iConfig);
+    virtual ~MatchedGenJetEmbedder(){}
     void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
 
   private:
@@ -30,7 +30,7 @@ class GenJetEmbedder : public edm::stream::EDProducer<> {
 };
 
 template<typename T>
-GenJetEmbedder<T>::GenJetEmbedder(const edm::ParameterSet& iConfig):
+MatchedGenJetEmbedder<T>::MatchedGenJetEmbedder(const edm::ParameterSet& iConfig):
     srcToken_(consumes<edm::View<T> >(iConfig.getParameter<edm::InputTag>("src"))),
     genJetToken_(consumes<edm::View<reco::GenJet> >(iConfig.getParameter<edm::InputTag>("genJets"))),
     deltaR(iConfig.getParameter<double>("deltaR")),
@@ -40,7 +40,7 @@ GenJetEmbedder<T>::GenJetEmbedder(const edm::ParameterSet& iConfig):
 }
 
 template<typename T>
-void GenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
+void MatchedGenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     out = auto_ptr<vector<T> >(new vector<T>);
     edm::Handle<edm::View<T> > input;
     iEvent.getByToken(srcToken_, input);
@@ -79,8 +79,8 @@ void GenJetEmbedder<T>::produce(edm::Event& iEvent, const edm::EventSetup& iSetu
 
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
-typedef GenJetEmbedder<pat::Tau> TauGenJetEmbedder;
-typedef GenJetEmbedder<pat::Jet> JetGenJetEmbedder;
+typedef MatchedGenJetEmbedder<pat::Tau> TauMatchedGenJetEmbedder;
+typedef MatchedGenJetEmbedder<pat::Jet> JetMatchedGenJetEmbedder;
 // nothing we can do about this unfortunate naming
-DEFINE_FWK_MODULE(TauGenJetEmbedder);
-DEFINE_FWK_MODULE(JetGenJetEmbedder);
+DEFINE_FWK_MODULE(TauMatchedGenJetEmbedder);
+DEFINE_FWK_MODULE(JetMatchedGenJetEmbedder);

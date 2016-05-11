@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.objectBase import commonObjectBranches
 
 ################################################
-################################################
+### muon branches ##############################
 ################################################
 muonBranches = commonObjectBranches.clone(
     # user data from PVEmbedder

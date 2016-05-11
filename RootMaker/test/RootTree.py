@@ -1,18 +1,18 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
 
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
 
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
 #process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
 #process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
 
-options.isMC = 0
-#options.isMC = 1
+#options.isMC = 0 # false
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
+
+options.isMC = 1 # true
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
 
 options.maxEvents = 1000
-#options.maxEvents = -1
 
 #options.skipEvents = 20
 
@@ -38,9 +38,6 @@ if options.isMC:
     options.outputFile = 'AC1B_76mc.root'
 else:
     options.outputFile = 'AC1B_76data.root'
-
-
-
 #################
 ### GlobalTag ###
 #################
@@ -69,7 +66,9 @@ process.schedule = cms.Schedule()
 
 # first create objectCollections to analyze
 objectCollections = {
-    'genParticles' : 'prunedGenParticles',
+    'genparticles' : 'prunedGenParticles',
+    'genjets'      : 'slimmedGenJets',
+    'genmet'       : 'slimmedMETs', # genMET is embedded in slimmedMETs
     'electrons'    : 'slimmedElectrons',
     'muons'        : 'slimmedMuons',
     'taus'         : 'slimmedTaus',
@@ -161,29 +160,36 @@ objectCollections = addMET(
 # select desired objects
 from RootMaker.RootMaker.objectTools import collectionFilter, objectCleaner
 for coll in selections:
-    objectCollections[coll] = collectionFilter(process,coll,objectCollections[coll],selections[coll])
+    objectCollections[coll] = collectionFilter(process, coll, objectCollections[coll], selections[coll])
 for coll in cleaning:
-    objectCollections[coll] = objectCleaner(process,coll,objectCollections[coll],objectCollections,cleaning[coll])
+    objectCollections[coll] = objectCleaner(process, coll, objectCollections[coll], objectCollections, cleaning[coll])
 
 # add the analyzer
 process.load("RootMaker.RootMaker.RootMaker_cfi")
 
 process.makeroottree.isData = not options.isMC
 process.makeroottree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
-process.makeroottree.vertexCollections.vertices.collection = objectCollections['vertices']
-#if options.isMC:
-#    from RootMaker.RootMaker.branchTemplates import genParticleBranches 
-#    process.makeroottree.objectCollections.genParticles = cms.PSet(
-#        collection = cms.InputTag(objectCollections['genParticles']),
-#        branches = genParticleBranches,
-#    )
+process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
 process.makeroottree.objectCollections.electrons.collection    = objectCollections['electrons']
 process.makeroottree.objectCollections.muons.collection        = objectCollections['muons']
 process.makeroottree.objectCollections.taus.collection         = objectCollections['taus']
 process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
 process.makeroottree.objectCollections.ak4pfchsjets.collection = objectCollections['ak4pfchsjets']
 process.makeroottree.objectCollections.pfmettype1.collection   = objectCollections['pfmettype1']
-process.makeroottree.rho = objectCollections['rho']
+if options.isMC:
+    from RootMaker.RootMaker.addGenParticles import *
+    process.makeroottree.objectCollections.genparticles = cms.PSet(
+        collection = cms.InputTag(objectCollections['genparticles']),
+        branches = genParticleBranches,
+    )
+    process.makeroottree.objectCollections.genjets = cms.PSet(
+        collection = cms.InputTag(objectCollections['genjets']),
+        branches = genJetBranches,
+    )
+    process.makeroottree.objectCollections.genmet = cms.PSet(
+        collection = cms.InputTag(objectCollections['genmet']),
+        branches = genMETBranches,
+    )
 
 process.makeroottreePath = cms.Path()
 for f in filters:

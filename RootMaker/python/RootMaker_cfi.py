@@ -5,7 +5,7 @@
 # options are registered (initialised) in this file, but
 # this file does not know what they are set to in RootTree.py.
 # Therefore any actions which depend on the values of options
-# must go in RootTree.py and not this file.
+# (eg isMC) must go in RootTree.py and not this file.
 
 import FWCore.ParameterSet.Config as cms
 
@@ -27,15 +27,17 @@ process.options = cms.untracked.PSet(
 )
 
 # load branches
-from RootMaker.RootMaker.addTriggers  import * # triggerBranches, filterBranches
-from RootMaker.RootMaker.addMuons     import * # muonBranches
-from RootMaker.RootMaker.addElectrons import * # electronBranches
-from RootMaker.RootMaker.addPhotons   import * # photonBranches
-from RootMaker.RootMaker.addJets      import * # jetBranches
-from RootMaker.RootMaker.addMET       import * # metBranches
-from RootMaker.RootMaker.addTaus      import * # tauBranches, TauDiscriminators
-from RootMaker.RootMaker.addVertices  import * # vertexBranches
+from RootMaker.RootMaker.addTriggers     import * # triggerBranches, filterBranches
+from RootMaker.RootMaker.addVertices     import * # vertexBranches
+from RootMaker.RootMaker.addMuons        import * # muonBranches
+from RootMaker.RootMaker.addElectrons    import * # electronBranches
+from RootMaker.RootMaker.addJets         import * # jetBranches
+from RootMaker.RootMaker.addMET          import * # metBranches
+from RootMaker.RootMaker.addTaus         import * # tauBranches, TauDiscriminators
+from RootMaker.RootMaker.addPhotons      import * # photonBranches
+from RootMaker.RootMaker.addGenParticles import * # genParticleBranches, genJetBranches, getMETBranches
 
+# default selections (overridden in RootTree.py)
 selections = {
     'electrons'    : 'pt>4 && abs(eta)<5.',
     'muons'        : 'pt>4 && abs(eta)<5.',
@@ -43,8 +45,6 @@ selections = {
     'photons'      : 'pt>4 && abs(eta)<5.',
     'ak4pfchsjets' : 'pt>4 && abs(eta)<5.',
 }
-
-from RootMaker.RootMaker.addTaus      import TauDiscriminators
 
 makeroottree = cms.EDAnalyzer("RootMaker",
     isData            = cms.bool(True),
@@ -59,6 +59,7 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     filterResults     = cms.InputTag("TriggerResults","","PAT"),
     triggerObjects    = cms.InputTag("selectedPatTrigger"),
     triggerPrescales  = cms.InputTag("patTrigger"),
+
     l1trigger = cms.InputTag("gtDigis"),
     RecTauDiscriminators = cms.untracked.vstring(TauDiscriminators),
 

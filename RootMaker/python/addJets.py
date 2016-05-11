@@ -78,21 +78,19 @@ jetBranches = commonJetTauBranches.clone(
 
 
 ################################################
-################################################
+### produce jet collection #####################
 ################################################
 def addJets(process, coll, **kwargs):
 # note: jet cleaning is defined in RootTree.py
     isMC = kwargs.pop('isMC', False)
     jSrc = coll['ak4pfchsjets']
     pvSrc = coll['vertices']
-    genSrc = coll['genParticles']
+    genSrc = coll['genparticles']
     packedSrc = coll['packed']
     # customization path
     process.jetCustomization = cms.Path()
 
-    ######################
-    ### recorrect jets ###
-    ######################
+    # recorrect jets
     from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
     process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
         src = cms.InputTag(jSrc),
@@ -101,20 +99,16 @@ def addJets(process, coll, **kwargs):
                   'L3Absolute'],
         payload = 'AK4PFchs' 
     )
-
     from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
     process.patJetsReapplyJEC = updatedPatJets.clone(
         jetSource = cms.InputTag(jSrc),
         jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
     )
-
     process.jetCustomization *= process.patJetCorrFactorsReapplyJEC
     process.jetCustomization *= process.patJetsReapplyJEC
     jSrc = "patJetsReapplyJEC"
 
-    #################
-    ### embed ids ###
-    #################
+    # embed ids
     process.jID = cms.EDProducer(
         "JetIDEmbedder",
         src = cms.InputTag(jSrc),
@@ -133,9 +127,7 @@ def addJets(process, coll, **kwargs):
     #process.jetCustomization *= process.jpuID
     #jSrc = "jpuID"
 
-    ##################
-    ### embed btag ###
-    ##################
+    # embed btag
     process.jBtag = cms.EDProducer(
         "BtagEmbedder",
         src = cms.InputTag(jSrc),
@@ -143,9 +135,7 @@ def addJets(process, coll, **kwargs):
     process.jetCustomization *= process.jBtag
     jSrc = "jBtag"
 
-    ####################
-    ### embed shapes ###
-    ####################
+    # embed shapes
     process.jShape = cms.EDProducer(
         "JetShapeEmbedder",
         src = cms.InputTag(jSrc),
@@ -154,12 +144,10 @@ def addJets(process, coll, **kwargs):
     process.jetCustomization *= process.jShape
     jSrc = "jShape"
 
-    ######################
-    ### embed gen jets ###
-    ######################
+    # embed gen jets
     if isMC:
         process.jGenJet = cms.EDProducer(
-            "JetGenJetEmbedder",
+            "JetMatchedGenJetEmbedder",
             src = cms.InputTag(jSrc),
             genJets = cms.InputTag("slimmedGenJets"),
             srcIsTaus = cms.bool(False),
@@ -167,7 +155,6 @@ def addJets(process, coll, **kwargs):
         )
         jSrc = "jGenJet"
         process.jetCustomization *= process.jGenJet
-
 
 
     # add to schedule

@@ -111,33 +111,3 @@ commonEgammaBranches = commonObjectBranches.clone(
     ehcaltoweroverecaldepth2 = cms.vstring('? (isElectron) ? hcalDepth2OverEcalBc : hadTowDepth2OverEm','F'),
 
 )
-
-####################################################################################
-### gen particles have these branches in addition to commonBranches ################
-####################################################################################
-genParticleBranches = commonBranches.clone(
-    status                 = cms.vstring('status()','I'),
-    numberOfDaughters      = cms.vstring('numberOfDaughters()','I'),
-    daughter_1             = cms.vstring('? numberOfDaughters()>0 ? daughter(0).pdgId() : 0','I'),
-    daughter_2             = cms.vstring('? numberOfDaughters()>1 ? daughter(1).pdgId() : 0','I'),
-    numberOfMothers        = cms.vstring('numberOfMothers()','I'),
-    mother_1               = cms.vstring('? numberOfMothers()>0 ? mother(0).pdgId() : 0','I'),
-    mother_2               = cms.vstring('? numberOfMothers()>1 ? mother(1).pdgId() : 0','I'),
-    isPrompt               = cms.vstring('isPromptFinalState()','I'),
-    isFromTau              = cms.vstring('isDirectPromptTauDecayProductFinalState()','I'),
-    isPromptDecayed        = cms.vstring('isPromptDecayed()','I'),
-    isFromHadron           = cms.vstring('statusFlags().isDirectHadronDecayProduct()','I'),
-    fromHardProcess        = cms.vstring('fromHardProcessFinalState()','I'),
-    fromHardProcessDecayed = cms.vstring('fromHardProcessDecayed()','I'),
-    fromHardProcessTau     = cms.vstring('isDirectHardProcessTauDecayProductFinalState()','I'),
-)
-
-####################################################################################
-### gen jets have these branches in addition to commonBranches #####################
-####################################################################################
-genJetBranches = commonBranches.clone(
-    emEnergy         = cms.vstring('emEnergy()','F'),
-    hadEnergy        = cms.vstring('hadEnergy()','F'),
-    invisibileEnergy = cms.vstring('invisibleEnergy()','F'),
-    nConstituents    = cms.vstring('nConstituents','I'),
-)
