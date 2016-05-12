@@ -9,13 +9,20 @@
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "DataFormats/METReco/interface/GenMET.h"
 #include "DataFormats/METReco/interface/GenMETFwd.h"
+#include "DataFormats/METReco/interface/MET.h"
+#include "DataFormats/METReco/interface/METFwd.h"
+#include "DataFormats/METReco/interface/PFMET.h"
+#include "DataFormats/METReco/interface/PFMETFwd.h"
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "SimDataFormats/JetMatching/interface/JetFlavourMatching.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "TTree.h"
+#include "DataFormats/Math/interface/deltaR.h"
+
 
 using namespace std;
 using namespace reco;
@@ -24,6 +31,7 @@ class MonteCarloInfo
 {
   public:
     MonteCarloInfo(const edm::ParameterSet &iConfig, TTree *tree, edm::ConsumesCollector cc);
+    ~MonteCarloInfo();
     void AddMonteCarloInfo(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
 
   private:
@@ -33,8 +41,15 @@ class MonteCarloInfo
     edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
     edm::EDGetTokenT<edm::View<pat::PackedGenParticle> > packedGenToken_;
     edm::EDGetTokenT<edm::View<reco::GenParticle> > prunedGenToken_;
+    edm::EDGetTokenT<pat::METCollection> slimmedMETToken_;
 
-    vector<int> testids;
+    //vector<int> motherids;
+    //vector<int> selfids;
+    vector<int> motherids;
+    vector<int> selfids;
+    vector<GenParticle> GenPartons;
+    pair<Int_t, Int_t> HasAnyMother(const GenParticle *particle, vector<int> ids);
+    Int_t HasAnyMother(const GenParticle *particle, int id);
 
     //TTree *tree;
     Float_t genweight;
@@ -44,17 +59,15 @@ class MonteCarloInfo
     Float_t genx2;
     Float_t genScale;
 
-    Int_t   numpileupinteractionsminus;
-    Int_t   numpileupinteractions;
-    Int_t   numpileupinteractionsplus;
-    Float_t numtruepileupinteractions;
+    //Int_t   numpileupinteractionsminus;
+    //Int_t   numpileupinteractions;
+    //Int_t   numpileupinteractionsplus;
+    //Float_t numtruepileupinteractions;
 
     // these are vectors of size one in order to be 
     // consistent with the reconstructed MET
-    vector<Float_t> genmetcalo_ex;
-    vector<Float_t> genmetcalo_ey;
-    vector<Float_t> genmettrue_ex;
-    vector<Float_t> genmettrue_ey;
+    vector<Float_t> genmet_ex;
+    vector<Float_t> genmet_ey;
 
     UInt_t genak4jet_count;
     vector<Float_t> genak4jet_e;

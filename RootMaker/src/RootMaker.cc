@@ -127,17 +127,18 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     tree->Branch("beamspot_zsigma", &beamspot_zsigma, "beamspot_zsigma/F");
     tree->Branch("beamspot_cov", &beamspot_cov, "beamspot_cov[6]/F");
 
-    tree->Branch("genweight", &genweight, "genweight/F");
-    tree->Branch("genid1", &genid1, "genid1/F");
-    tree->Branch("genx1", &genx1, "genx1/F");
-    tree->Branch("genid2", &genid2, "genid2/F");
-    tree->Branch("genx2", &genx2, "genx2/F");
-    tree->Branch("genScale", &genScale, "genScale/F");
+    //tree->Branch("genweight", &genweight, "genweight/F");
+    //tree->Branch("genid1", &genid1, "genid1/F");
+    //tree->Branch("genx1", &genx1, "genx1/F");
+    //tree->Branch("genid2", &genid2, "genid2/F");
+    //tree->Branch("genx2", &genx2, "genx2/F");
+    //tree->Branch("genScale", &genScale, "genScale/F");
     tree->Branch("numpileupinteractionsminus", &numpileupinteractionsminus, "numpileupinteractionsminus/I");
     tree->Branch("numpileupinteractions", &numpileupinteractions, "numpileupinteractions/I");
     tree->Branch("numpileupinteractionsplus", &numpileupinteractionsplus, "numpileupinteractionsplus/I");
     tree->Branch("numtruepileupinteractions", &numtruepileupinteractions, "numtruepileupinteractions/F");
 
+    MCInfo = new MonteCarloInfo(iConfig, tree, consumesCollector());
 /*
 
     tree->Branch("genparticles_count", &genparticles_count, "genparticles_count/i");
@@ -219,7 +220,9 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
 }
 
 // destructor
-RootMaker::~RootMaker() { }
+RootMaker::~RootMaker() {
+    if(MCInfo) delete MCInfo;
+}
 
 // _________________________________________________________________________________
 void RootMaker::beginJob()
@@ -605,8 +608,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     // Fill genparticles, etc. //////////////
     /////////////////////////////////////////
     
-    MonteCarloInfo MCInfo = new MonteCarloInfo(iConfig, tree, consumesCollector());
-    MCInfo.AddMonteCarloInfo(iEvent, true, true, true);
+    MCInfo->AddMonteCarloInfo(iEvent, true, true, true);
 
     /////////////////////////////////////////
     // Decide whether to keep event /////////

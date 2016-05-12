@@ -53,6 +53,7 @@
 
 #include "RootMaker/RootMaker/interface/ObjectCollectionBranches.h"
 #include "RootMaker/RootMaker/interface/VertexCollectionBranches.h"
+#include "RootMaker/RootMaker/interface/MonteCarloInfo.h"
 
 using namespace std;
 using namespace reco;
@@ -271,7 +272,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t genallparticles_daughters[40];
 */
 
-
+    MonteCarloInfo *MCInfo;
     // trigger
     vector<string> myTriggerNames;
     vector<string> myFilterNames;
