@@ -40,14 +40,17 @@ class MonteCarloInfo
     edm::EDGetTokenT<reco::GenJetCollection> genJetsToken_;
     edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
     edm::EDGetTokenT<edm::View<pat::PackedGenParticle> > packedGenToken_;
-    edm::EDGetTokenT<edm::View<reco::GenParticle> > prunedGenToken_;
+    edm::EDGetTokenT<reco::GenParticleCollection> prunedGenToken_;
     edm::EDGetTokenT<pat::METCollection> slimmedMETToken_;
 
-    //vector<int> motherids;
-    //vector<int> selfids;
     vector<int> motherids;
     vector<int> selfids;
     vector<GenParticle> GenPartons;
+
+    UInt_t genallparticlesmother_count;
+    UInt_t genallparticlesdaughter_count;
+
+    UInt_t FindGenParticle(const Candidate *particle);
     pair<Int_t, Int_t> HasAnyMother(const GenParticle *particle, vector<int> ids);
     Int_t HasAnyMother(const GenParticle *particle, int id);
 
@@ -103,9 +106,9 @@ class MonteCarloInfo
     vector<Int_t>   genallparticles_status;
     vector<UInt_t>  genallparticles_motherbeg;
     vector<UInt_t>  genallparticles_daughterbeg;
-    vector<UInt_t>  genallparticlesmother_count;
+    //vector<UInt_t>  genallparticlesmother_count;
     vector<UInt_t>  genallparticles_mothers;
-    vector<UInt_t>  genallparticlesdaughter_count;
+    //vector<UInt_t>  genallparticlesdaughter_count;
     vector<UInt_t>  genallparticles_daughters;
 
 
