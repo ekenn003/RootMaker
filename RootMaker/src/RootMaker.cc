@@ -138,6 +138,54 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     tree->Branch("numpileupinteractionsplus", &numpileupinteractionsplus, "numpileupinteractionsplus/I");
     tree->Branch("numtruepileupinteractions", &numtruepileupinteractions, "numtruepileupinteractions/F");
 
+/*
+
+    tree->Branch("genparticles_count", &genparticles_count, "genparticles_count/i");
+    tree->Branch("genparticles_e", genparticles_e, "genparticles_e[genparticles_count]/F");
+    tree->Branch("genparticles_px", genparticles_px, "genparticles_px[genparticles_count]/F");
+    tree->Branch("genparticles_py", genparticles_py, "genparticles_py[genparticles_count]/F");
+    tree->Branch("genparticles_pz", genparticles_pz, "genparticles_pz[genparticles_count]/F");
+    tree->Branch("genparticles_vx", genparticles_vx, "genparticles_vx[genparticles_count]/F");
+    tree->Branch("genparticles_vy", genparticles_vy, "genparticles_vy[genparticles_count]/F");
+    tree->Branch("genparticles_vz", genparticles_vz, "genparticles_vz[genparticles_count]/F");
+    tree->Branch("genparticles_pdgid", genparticles_pdgid, "genparticles_pdgid[genparticles_count]/I");
+    tree->Branch("genparticles_status", genparticles_status, "genparticles_status[genparticles_count]/I");
+    tree->Branch("genparticles_indirectmother", genparticles_indirectmother, "genparticles_indirectmother[genparticles_count]/I");
+    tree->Branch("genparticles_info", genparticles_info, "genparticles_info[genparticles_count]/i");
+
+    tree->Branch("genallparticles_count", &genallparticles_count, "genallparticles_count/i");
+    tree->Branch("genallparticles_e", genallparticles_e, "genallparticles_e[genallparticles_count]/F");
+    tree->Branch("genallparticles_px", genallparticles_px, "genallparticles_px[genallparticles_count]/F");
+    tree->Branch("genallparticles_py", genallparticles_py, "genallparticles_py[genallparticles_count]/F");
+    tree->Branch("genallparticles_pz", genallparticles_pz, "genallparticles_pz[genallparticles_count]/F");
+    tree->Branch("genallparticles_vx", genallparticles_vx, "genallparticles_vx[genallparticles_count]/F");
+    tree->Branch("genallparticles_vy", genallparticles_vy, "genallparticles_vy[genallparticles_count]/F");
+    tree->Branch("genallparticles_vz", genallparticles_vz, "genallparticles_vz[genallparticles_count]/F");
+    tree->Branch("genallparticles_pdgid", genallparticles_pdgid, "genallparticles_pdgid[genallparticles_count]/I");
+    tree->Branch("genallparticles_status", genallparticles_status, "genallparticles_status[genallparticles_count]/I");
+    tree->Branch("genallparticles_motherbeg", genallparticles_motherbeg, "genallparticles_motherbeg[genallparticles_count]/i");
+    tree->Branch("genallparticles_daughterbeg", genallparticles_daughterbeg, "genallparticles_daughterbeg[genallparticles_count]/i");
+
+    tree->Branch("genallparticlesmother_count", &genallparticlesmother_count, "genallparticlesmother_count/i");
+    tree->Branch("genallparticles_mothers", genallparticles_mothers, "genallparticles_mothers[genallparticlesmother_count]/i");
+
+    tree->Branch("genallparticlesdaughter_count", &genallparticlesdaughter_count, "genallparticlesdaughter_count/i");
+    tree->Branch("genallparticles_daughters", genallparticles_daughters, "genallparticles_daughters[genallparticlesdaughter_count]/i");
+
+    tree->Branch("genmetcalo_ex", &genmetcalo_ex, "genmetcalo_ex/F");
+    tree->Branch("genmetcalo_ey", &genmetcalo_ey, "genmetcalo_ey/F");
+    tree->Branch("genmettrue_ex", &genmettrue_ex, "genmettrue_ex/F");
+    tree->Branch("genmettrue_ey", &genmettrue_ey, "genmettrue_ey/F");
+
+    tree->Branch("genak4jet_count", &genak4jet_count, "genak4jet_count/i");
+    tree->Branch("genak4jet_e", genak4jet_e, "genak4jet_e[genak4jet_count]/F");
+    tree->Branch("genak4jet_px", genak4jet_px, "genak4jet_px[genak4jet_count]/F");
+    tree->Branch("genak4jet_py", genak4jet_py, "genak4jet_py[genak4jet_count]/F");
+    tree->Branch("genak4jet_pz", genak4jet_pz, "genak4jet_pz[genak4jet_count]/F");
+    tree->Branch("genak4jet_einvisible", genak4jet_einvisible, "genak4jet_einvisible[genak4jet_count]/F");
+    tree->Branch("genak4jet_flavour", genak4jet_flavour, "genak4jet_flavour[genak4jet_count]/I");
+    tree->Branch("genak4jet_info", genak4jet_info, "genak4jet_info[genak4jet_count]/i");
+*/
     // add triggers
     for (auto trigName : myTriggerNames) {
         for (auto branch : triggerBranchStrings) {
@@ -169,6 +217,8 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
         objectCollectionBranches.emplace_back(new ObjectCollectionBranches(tree, coll, objectCollections.getParameter<edm::ParameterSet>(coll), consumesCollector()));
     }
 }
+
+// destructor
 RootMaker::~RootMaker() { }
 
 // _________________________________________________________________________________
@@ -571,3 +621,4 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         nevents_skipped++;
     }
 }
+
