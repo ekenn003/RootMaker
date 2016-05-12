@@ -23,8 +23,8 @@ using namespace reco;
 class MonteCarloInfo
 {
   public:
-    MonteCarloInfo(TTree *tree, std::string collectionName, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
-    void AddMonteCarloInfo(bool addGenParticles, bool addAllGenParticles, bool addGenJets);
+    MonteCarloInfo(const edm::ParameterSet &iConfig, TTree *tree, edm::ConsumesCollector cc);
+    void AddMonteCarloInfo(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
 
   private:
     edm::EDGetTokenT<std::vector<PileupSummaryInfo>> PUInfoToken_;
@@ -33,4 +33,69 @@ class MonteCarloInfo
     edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
     edm::EDGetTokenT<edm::View<pat::PackedGenParticle> > packedGenToken_;
     edm::EDGetTokenT<edm::View<reco::GenParticle> > prunedGenToken_;
+
+    vector<int> testids;
+
+    //TTree *tree;
+    Float_t genweight;
+    Float_t genid1;
+    Float_t genx1;
+    Float_t genid2;
+    Float_t genx2;
+    Float_t genScale;
+
+    Int_t   numpileupinteractionsminus;
+    Int_t   numpileupinteractions;
+    Int_t   numpileupinteractionsplus;
+    Float_t numtruepileupinteractions;
+
+    // these are vectors of size one in order to be 
+    // consistent with the reconstructed MET
+    vector<Float_t> genmetcalo_ex;
+    vector<Float_t> genmetcalo_ey;
+    vector<Float_t> genmettrue_ex;
+    vector<Float_t> genmettrue_ey;
+
+    UInt_t genak4jet_count;
+    vector<Float_t> genak4jet_e;
+    vector<Float_t> genak4jet_px;
+    vector<Float_t> genak4jet_py;
+    vector<Float_t> genak4jet_pz;
+    vector<Float_t> genak4jet_einvisible;
+    vector<Int_t>   genak4jet_flavour;
+    vector<UInt_t>  genak4jet_info;
+
+    UInt_t genparticles_count;
+    vector<Float_t> genparticles_e;
+    vector<Float_t> genparticles_px;
+    vector<Float_t> genparticles_py;
+    vector<Float_t> genparticles_pz;
+    vector<Float_t> genparticles_vx;
+    vector<Float_t> genparticles_vy;
+    vector<Float_t> genparticles_vz;
+    vector<Int_t>   genparticles_pdgid;
+    vector<Int_t>   genparticles_status;
+    vector<Int_t>   genparticles_indirectmother;
+    vector<UInt_t>  genparticles_info;
+
+    UInt_t genallparticles_count;
+    vector<Float_t> genallparticles_e;
+    vector<Float_t> genallparticles_px;
+    vector<Float_t> genallparticles_py;
+    vector<Float_t> genallparticles_pz;
+    vector<Float_t> genallparticles_vx;
+    vector<Float_t> genallparticles_vy;
+    vector<Float_t> genallparticles_vz;
+    vector<Int_t>   genallparticles_pdgid;
+    vector<Int_t>   genallparticles_status;
+    vector<UInt_t>  genallparticles_motherbeg;
+    vector<UInt_t>  genallparticles_daughterbeg;
+    vector<UInt_t>  genallparticlesmother_count;
+    vector<UInt_t>  genallparticles_mothers;
+    vector<UInt_t>  genallparticlesdaughter_count;
+    vector<UInt_t>  genallparticles_daughters;
+
+
+
+
 };

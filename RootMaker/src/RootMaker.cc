@@ -514,6 +514,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         bs_position = TheBeamSpot->position();
     }
 
+/*
     /////////////////////////////////////////
     // Generator information ////////////////
     /////////////////////////////////////////
@@ -533,6 +534,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         genx2 = HEPMC->pdf()->x.second;
         genScale = HEPMC->qScale();
     }
+*/
 
     /////////////////////////////////////////
     // Pileup information ///////////////////
@@ -599,6 +601,12 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         coll->fill(iEvent);
     }
 
+    /////////////////////////////////////////
+    // Fill genparticles, etc. //////////////
+    /////////////////////////////////////////
+    
+    MonteCarloInfo MCInfo = new MonteCarloInfo(iConfig, tree, consumesCollector());
+    MCInfo.AddMonteCarloInfo(iEvent, true, true, true);
 
     /////////////////////////////////////////
     // Decide whether to keep event /////////
