@@ -220,31 +220,35 @@ void MonteCarloInfo::AddMonteCarloInfo(const edm::Event &iEvent, bool addGenPart
         if(GenAK4Jets.isValid()) {
             for(GenJetCollection::const_iterator genjet = GenAK4Jets->begin(); genjet != GenAK4Jets->end() ; ++genjet) {
                 if( not(genjet->pt() > 15.) ) continue;
+
                 genak4jet_e.push_back(genjet->energy());
                 genak4jet_px.push_back(genjet->px());
                 genak4jet_py.push_back(genjet->py());
                 genak4jet_pz.push_back(genjet->pz());
                 genak4jet_einvisible.push_back(genjet->invisibleEnergy());
-                genak4jet_flavour.push_back(0);
-                genak4jet_info.push_back(0);
-                double ptmax = 0;
 
+                // loop over the partons to see which flavour the jet is
+                Int_t  flavour = 0;
+                UInt_t info = 0;
+                double ptmax = 0;
                 for(size_t j = 0 ; j < GenPartons.size() ; ++j) {
                     if(deltaR(GenPartons[j], *genjet) < 0.5) {
-                        if(GenPartons[j].pdgId() == 5)           genak4jet_info[genak4jet_count] |= 1<<0;
-                        else if(GenPartons[j].pdgId() == -5)     genak4jet_info[genak4jet_count] |= 1<<1;
-                        else if(GenPartons[j].pdgId() == 4)      genak4jet_info[genak4jet_count] |= 1<<2;
-                        else if(GenPartons[j].pdgId() == -4)     genak4jet_info[genak4jet_count] |= 1<<3;
-                        else if(abs(GenPartons[j].pdgId()) <= 3) genak4jet_info[genak4jet_count] |= 1<<4;
-                        else if(GenPartons[j].pdgId() == 21)     genak4jet_info[genak4jet_count] |= 1<<5;
+                        if(GenPartons[j].pdgId() == 5)           info |= 1<<0;
+                        else if(GenPartons[j].pdgId() == -5)     info |= 1<<1;
+                        else if(GenPartons[j].pdgId() == 4)      info |= 1<<2;
+                        else if(GenPartons[j].pdgId() == -4)     info |= 1<<3;
+                        else if(abs(GenPartons[j].pdgId()) <= 3) info |= 1<<4;
+                        else if(GenPartons[j].pdgId() == 21)     info |= 1<<5;
 
                         if(GenPartons[j].pt() > ptmax) {
                             ptmax = GenPartons[j].pt();
-                            genak4jet_flavour.push_back(GenPartons[j].pdgId());
+                            flavour = GenPartons[j].pdgId();
                         }
 
                     }
                 }
+                genak4jet_flavour.push_back(flavour);
+                genak4jet_info.push_back(info);
 
                 genak4jet_count++;
 
