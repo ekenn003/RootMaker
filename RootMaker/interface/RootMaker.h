@@ -53,7 +53,7 @@
 
 #include "RootMaker/RootMaker/interface/ObjectCollectionBranches.h"
 #include "RootMaker/RootMaker/interface/VertexCollectionBranches.h"
-#include "RootMaker/RootMaker/interface/MonteCarloInfo.h"
+#include "RootMaker/RootMaker/interface/MonteCarloBranches.h"
 
 using namespace std;
 using namespace reco;
@@ -212,67 +212,11 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     Float_t beamspot_zsigma;
     Float_t beamspot_cov[6];
 
-    Float_t genweight;
-    Float_t genid1;
-    Float_t genx1;
-    Float_t genid2;
-    Float_t genx2;
-    Float_t genScale;
-
     UInt_t  numpileupinteractionsminus;
     UInt_t  numpileupinteractions;
     UInt_t  numpileupinteractionsplus;
     Float_t numtruepileupinteractions;
 
-    Float_t genmetcalo_ex;
-    Float_t genmetcalo_ey;
-    Float_t genmettrue_ex;
-    Float_t genmettrue_ey;
-
-/*
-    UInt_t genak4jet_count;
-    Float_t genak4jet_e[40];
-    Float_t genak4jet_px[40];
-    Float_t genak4jet_py[40];
-    Float_t genak4jet_pz[40];
-    Float_t genak4jet_einvisible[40];
-    Int_t genak4jet_flavour[40];
-    UInt_t genak4jet_info[40];
-
-    UInt_t genparticles_count;
-    Float_t genparticles_e[40];
-    Float_t genparticles_px[40];
-    Float_t genparticles_py[40];
-    Float_t genparticles_pz[40];
-    Float_t genparticles_vx[40];
-    Float_t genparticles_vy[40];
-    Float_t genparticles_vz[40];
-    Int_t genparticles_pdgid[40];
-    Int_t genparticles_status[40];
-    Int_t genparticles_indirectmother[40];
-    UInt_t genparticles_info[40];
-
-    UInt_t genallparticles_count;
-    Float_t genallparticles_e[40];
-    Float_t genallparticles_px[40];
-    Float_t genallparticles_py[40];
-    Float_t genallparticles_pz[40];
-    Float_t genallparticles_vx[40];
-    Float_t genallparticles_vy[40];
-    Float_t genallparticles_vz[40];
-    Int_t genallparticles_pdgid[40];
-    Int_t genallparticles_status[40];
-    UInt_t genallparticles_motherbeg[40];
-    UInt_t genallparticles_daughterbeg[40];
-
-    UInt_t genallparticlesmother_count;
-    UInt_t genallparticles_mothers[40];
-
-    UInt_t genallparticlesdaughter_count;
-    UInt_t genallparticles_daughters[40];
-*/
-
-    MonteCarloInfo *MCInfo;
     // trigger
     vector<string> myTriggerNames;
     vector<string> myFilterNames;
@@ -283,6 +227,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     // collections
     vector<unique_ptr<ObjectCollectionBranches> > objectCollectionBranches;
     vector<unique_ptr<VertexCollectionBranches> > vertexCollectionBranches;
+    unique_ptr<MonteCarloBranches> monteCarloBranches;
 };
 
 void RootMaker::fillDescriptions(edm::ConfigurationDescriptions &descriptions)

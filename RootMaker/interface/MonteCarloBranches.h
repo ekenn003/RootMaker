@@ -30,6 +30,7 @@ class MonteCarloBranches
 {
   public:
     MonteCarloBranches(TTree *tree, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
+    ~MonteCarloBranches();
     void fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
 
   private:

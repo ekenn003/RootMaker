@@ -35,6 +35,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     isData_(iConfig.getParameter<bool>("isData"))
 {
     usesResource("TFileService");
+
     // get trigger parameters
     triggerBranchStrings.push_back("Pass");
     triggerBranchStrings.push_back("Prescale");
@@ -127,66 +128,11 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     tree->Branch("beamspot_zsigma", &beamspot_zsigma, "beamspot_zsigma/F");
     tree->Branch("beamspot_cov", &beamspot_cov, "beamspot_cov[6]/F");
 
-    //tree->Branch("genweight", &genweight, "genweight/F");
-    //tree->Branch("genid1", &genid1, "genid1/F");
-    //tree->Branch("genx1", &genx1, "genx1/F");
-    //tree->Branch("genid2", &genid2, "genid2/F");
-    //tree->Branch("genx2", &genx2, "genx2/F");
-    //tree->Branch("genScale", &genScale, "genScale/F");
     tree->Branch("numpileupinteractionsminus", &numpileupinteractionsminus, "numpileupinteractionsminus/I");
     tree->Branch("numpileupinteractions", &numpileupinteractions, "numpileupinteractions/I");
     tree->Branch("numpileupinteractionsplus", &numpileupinteractionsplus, "numpileupinteractionsplus/I");
     tree->Branch("numtruepileupinteractions", &numtruepileupinteractions, "numtruepileupinteractions/F");
 
-    MCInfo = new MonteCarloInfo(iConfig, tree, consumesCollector());
-/*
-
-    tree->Branch("genparticles_count", &genparticles_count, "genparticles_count/i");
-    tree->Branch("genparticles_e", genparticles_e, "genparticles_e[genparticles_count]/F");
-    tree->Branch("genparticles_px", genparticles_px, "genparticles_px[genparticles_count]/F");
-    tree->Branch("genparticles_py", genparticles_py, "genparticles_py[genparticles_count]/F");
-    tree->Branch("genparticles_pz", genparticles_pz, "genparticles_pz[genparticles_count]/F");
-    tree->Branch("genparticles_vx", genparticles_vx, "genparticles_vx[genparticles_count]/F");
-    tree->Branch("genparticles_vy", genparticles_vy, "genparticles_vy[genparticles_count]/F");
-    tree->Branch("genparticles_vz", genparticles_vz, "genparticles_vz[genparticles_count]/F");
-    tree->Branch("genparticles_pdgid", genparticles_pdgid, "genparticles_pdgid[genparticles_count]/I");
-    tree->Branch("genparticles_status", genparticles_status, "genparticles_status[genparticles_count]/I");
-    tree->Branch("genparticles_indirectmother", genparticles_indirectmother, "genparticles_indirectmother[genparticles_count]/I");
-    tree->Branch("genparticles_info", genparticles_info, "genparticles_info[genparticles_count]/i");
-
-    tree->Branch("genallparticles_count", &genallparticles_count, "genallparticles_count/i");
-    tree->Branch("genallparticles_e", genallparticles_e, "genallparticles_e[genallparticles_count]/F");
-    tree->Branch("genallparticles_px", genallparticles_px, "genallparticles_px[genallparticles_count]/F");
-    tree->Branch("genallparticles_py", genallparticles_py, "genallparticles_py[genallparticles_count]/F");
-    tree->Branch("genallparticles_pz", genallparticles_pz, "genallparticles_pz[genallparticles_count]/F");
-    tree->Branch("genallparticles_vx", genallparticles_vx, "genallparticles_vx[genallparticles_count]/F");
-    tree->Branch("genallparticles_vy", genallparticles_vy, "genallparticles_vy[genallparticles_count]/F");
-    tree->Branch("genallparticles_vz", genallparticles_vz, "genallparticles_vz[genallparticles_count]/F");
-    tree->Branch("genallparticles_pdgid", genallparticles_pdgid, "genallparticles_pdgid[genallparticles_count]/I");
-    tree->Branch("genallparticles_status", genallparticles_status, "genallparticles_status[genallparticles_count]/I");
-    tree->Branch("genallparticles_motherbeg", genallparticles_motherbeg, "genallparticles_motherbeg[genallparticles_count]/i");
-    tree->Branch("genallparticles_daughterbeg", genallparticles_daughterbeg, "genallparticles_daughterbeg[genallparticles_count]/i");
-
-    tree->Branch("genallparticlesmother_count", &genallparticlesmother_count, "genallparticlesmother_count/i");
-    tree->Branch("genallparticles_mothers", genallparticles_mothers, "genallparticles_mothers[genallparticlesmother_count]/i");
-
-    tree->Branch("genallparticlesdaughter_count", &genallparticlesdaughter_count, "genallparticlesdaughter_count/i");
-    tree->Branch("genallparticles_daughters", genallparticles_daughters, "genallparticles_daughters[genallparticlesdaughter_count]/i");
-
-    tree->Branch("genmetcalo_ex", &genmetcalo_ex, "genmetcalo_ex/F");
-    tree->Branch("genmetcalo_ey", &genmetcalo_ey, "genmetcalo_ey/F");
-    tree->Branch("genmettrue_ex", &genmettrue_ex, "genmettrue_ex/F");
-    tree->Branch("genmettrue_ey", &genmettrue_ey, "genmettrue_ey/F");
-
-    tree->Branch("genak4jet_count", &genak4jet_count, "genak4jet_count/i");
-    tree->Branch("genak4jet_e", genak4jet_e, "genak4jet_e[genak4jet_count]/F");
-    tree->Branch("genak4jet_px", genak4jet_px, "genak4jet_px[genak4jet_count]/F");
-    tree->Branch("genak4jet_py", genak4jet_py, "genak4jet_py[genak4jet_count]/F");
-    tree->Branch("genak4jet_pz", genak4jet_pz, "genak4jet_pz[genak4jet_count]/F");
-    tree->Branch("genak4jet_einvisible", genak4jet_einvisible, "genak4jet_einvisible[genak4jet_count]/F");
-    tree->Branch("genak4jet_flavour", genak4jet_flavour, "genak4jet_flavour[genak4jet_count]/I");
-    tree->Branch("genak4jet_info", genak4jet_info, "genak4jet_info[genak4jet_count]/i");
-*/
     // add triggers
     for (auto trigName : myTriggerNames) {
         for (auto branch : triggerBranchStrings) {
@@ -217,12 +163,13 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     for (auto coll : collectionNames) {
         objectCollectionBranches.emplace_back(new ObjectCollectionBranches(tree, coll, objectCollections.getParameter<edm::ParameterSet>(coll), consumesCollector()));
     }
+
+    // add monte carlo branches, gen particles
+    monteCarloBranches = std::unique_ptr<MonteCarloBranches>(new MonteCarloBranches(tree, iConfig, consumesCollector()));
 }
 
 // destructor
-RootMaker::~RootMaker() {
-    if(MCInfo) delete MCInfo;
-}
+RootMaker::~RootMaker() {}
 
 // _________________________________________________________________________________
 void RootMaker::beginJob()
@@ -453,7 +400,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     event_rho = *rho;
     lumi_eventsprocessed++;
     nevents++;
-    sum_weights += genweight;
+    //sum_weights += genweight;
 
     // event information
     event_nr              = iEvent.id().event();
@@ -495,12 +442,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     beamspot_xwidth = 0.;
     beamspot_ywidth = 0.;
     beamspot_zsigma = 0.;
-    beamspot_cov[0] = 0.;
-    beamspot_cov[1] = 0.;
-    beamspot_cov[2] = 0.;
-    beamspot_cov[3] = 0.;
-    beamspot_cov[4] = 0.;
-    beamspot_cov[5] = 0.;
+    fill_n(beamspot_cov, 6, 0);
     if(TheBeamSpot.isValid()) {
         beamspot_x = TheBeamSpot->x0();
         beamspot_y = TheBeamSpot->y0();
@@ -517,27 +459,6 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         bs_position = TheBeamSpot->position();
     }
 
-/*
-    /////////////////////////////////////////
-    // Generator information ////////////////
-    /////////////////////////////////////////
-    edm::Handle<GenEventInfoProduct> HEPMC;
-    iEvent.getByToken(genEventInfoToken_, HEPMC);
-    genweight = 0.; if (isdata) genweight = 1.;
-    genid1    = 0.;
-    genx1     = 0.;
-    genid2    = 0.;
-    genx2     = 0.;
-    genScale  = 0.;
-    if (HEPMC.isValid()) {
-        genweight = HEPMC->weight();
-        genid1 = HEPMC->pdf()->id.first;
-        genx1 = HEPMC->pdf()->x.first;
-        genid2 = HEPMC->pdf()->id.second;
-        genx2 = HEPMC->pdf()->x.second;
-        genScale = HEPMC->qScale();
-    }
-*/
 
     /////////////////////////////////////////
     // Pileup information ///////////////////
@@ -607,8 +528,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     /////////////////////////////////////////
     // Fill genparticles, etc. //////////////
     /////////////////////////////////////////
-    
-    MCInfo->AddMonteCarloInfo(iEvent, true, true, true);
+    monteCarloBranches->fill(iEvent, true, true, true);
 
     /////////////////////////////////////////
     // Decide whether to keep event /////////

@@ -2,7 +2,7 @@
 #include "RootMaker/RootMaker/interface/MonteCarloBranches.h"
 
 // _________________________________________________________________________________
-MonteCarloBranches::MonteCarloBranches(const edm::ParameterSet &iConfig, TTree *tree, edm::ConsumesCollector cc):
+MonteCarloBranches::MonteCarloBranches(TTree *tree, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc):
     PUInfoToken_          (cc.consumes<std::vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("pileupSummaryInfo"))),
     genEventInfoToken_    (cc.consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo"))),
     genJetsToken_         (cc.consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("genJets"))),
