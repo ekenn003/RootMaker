@@ -1,8 +1,8 @@
-// MonteCarloInfo.cc
-#include "RootMaker/RootMaker/interface/MonteCarloInfo.h"
+// MonteCarloBranches.cc
+#include "RootMaker/RootMaker/interface/MonteCarloBranches.h"
 
 // _________________________________________________________________________________
-MonteCarloInfo::MonteCarloInfo(const edm::ParameterSet &iConfig, TTree *tree, edm::ConsumesCollector cc):
+MonteCarloBranches::MonteCarloBranches(const edm::ParameterSet &iConfig, TTree *tree, edm::ConsumesCollector cc):
     PUInfoToken_          (cc.consumes<std::vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("pileupSummaryInfo"))),
     genEventInfoToken_    (cc.consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo"))),
     genJetsToken_         (cc.consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("genJets"))),
@@ -37,32 +37,22 @@ MonteCarloInfo::MonteCarloInfo(const edm::ParameterSet &iConfig, TTree *tree, ed
     selfids.push_back(37); // H+
     selfids.push_back(21);
     selfids.push_back(22);
-    // pion
-    selfids.push_back(111);
+    // mesons
+    selfids.push_back(111); // neutral pion
 
     // motherids (formerly testids)
-    motherids.push_back(24);  // 0
-    motherids.push_back(-24); // 1
-    motherids.push_back(22);  // 2
-    motherids.push_back(23);  // 3
-    motherids.push_back(25);  // 4
-    motherids.push_back(35);  // 5
-    motherids.push_back(36);  // 6
-    motherids.push_back(37);  // 7
-    motherids.push_back(-37); // 8
-    motherids.push_back(6);   // 9
-    motherids.push_back(-6);  // 10
-    motherids.push_back(5);   // 11
-    motherids.push_back(-5);  // 12
-    motherids.push_back(32);  // 13
-    motherids.push_back(8);   // 14
-    motherids.push_back(-8);  // 15
-    motherids.push_back(15);  // 16
-    motherids.push_back(-15); // 17
-
-    // gen particle counters
-    genallparticlesmother_count = 0;
-    genallparticlesdaughter_count = 0;
+    motherids.push_back(5);
+    motherids.push_back(6);
+    motherids.push_back(8);
+    motherids.push_back(15);
+    motherids.push_back(22);
+    motherids.push_back(23);
+    motherids.push_back(24);
+    motherids.push_back(25);
+    motherids.push_back(32);
+    motherids.push_back(35);
+    motherids.push_back(36);
+    motherids.push_back(37);
 
     // tree branches
     tree->Branch("genweight", &genweight, "genweight/F");
@@ -72,68 +62,114 @@ MonteCarloInfo::MonteCarloInfo(const edm::ParameterSet &iConfig, TTree *tree, ed
     tree->Branch("genx2",     &genx2,     "genx2/F");
     tree->Branch("genScale",  &genScale,  "genScale/F");
 
-    tree->Branch("genparticles_count",  &genparticles_count,  "genparticles_count/i");
-    tree->Branch("genparticles_e",      &genparticles_e,      "genparticles_e/F");
-    tree->Branch("genparticles_px",     &genparticles_px,     "genparticles_px/F");
-    tree->Branch("genparticles_py",     &genparticles_py,     "genparticles_py/F");
-    tree->Branch("genparticles_pz",     &genparticles_pz,     "genparticles_pz/F");
-    tree->Branch("genparticles_vx",     &genparticles_vx,     "genparticles_vx/F");
-    tree->Branch("genparticles_vy",     &genparticles_vy,     "genparticles_vy/F");
-    tree->Branch("genparticles_vz",     &genparticles_vz,     "genparticles_vz/F");
-    tree->Branch("genparticles_pdgid",  &genparticles_pdgid,  "genparticles_pdgid/I");
-    tree->Branch("genparticles_status", &genparticles_status, "genparticles_status/I");
-    tree->Branch("genparticles_indirectmother", &genparticles_indirectmother, "genparticles_indirectmother/I");
-    tree->Branch("genparticles_info",           &genparticles_info,           "genparticles_info/i");
+    tree->Branch("genparticles_count", &genparticles_count, "genparticles_count/i");
+    tree->Branch("genparticles_e",              &genparticles_e);
+    tree->Branch("genparticles_px",             &genparticles_px);
+    tree->Branch("genparticles_py",             &genparticles_py);
+    tree->Branch("genparticles_pz",             &genparticles_pz);
+    tree->Branch("genparticles_vx",             &genparticles_vx);
+    tree->Branch("genparticles_vy",             &genparticles_vy);
+    tree->Branch("genparticles_vz",             &genparticles_vz);
+    tree->Branch("genparticles_pdgid",          &genparticles_pdgid);
+    tree->Branch("genparticles_status",         &genparticles_status);
+    tree->Branch("genparticles_indirectmother", &genparticles_indirectmother);
+    tree->Branch("genparticles_info",           &genparticles_info);
 
-    tree->Branch("genallparticles_count",       &genallparticles_count,       "genallparticles_count/i");
-    tree->Branch("genallparticles_e",           &genallparticles_e,           "genallparticles_e/F");
-    tree->Branch("genallparticles_px",          &genallparticles_px,          "genallparticles_px/F");
-    tree->Branch("genallparticles_py",          &genallparticles_py,          "genallparticles_py/F");
-    tree->Branch("genallparticles_pz",          &genallparticles_pz,          "genallparticles_pz/F");
-    tree->Branch("genallparticles_vx",          &genallparticles_vx,          "genallparticles_vx/F");
-    tree->Branch("genallparticles_vy",          &genallparticles_vy,          "genallparticles_vy/F");
-    tree->Branch("genallparticles_vz",          &genallparticles_vz,          "genallparticles_vz/F");
-    tree->Branch("genallparticles_pdgid",       &genallparticles_pdgid,       "genallparticles_pdgid/I");
-    tree->Branch("genallparticles_status",      &genallparticles_status,      "genallparticles_status/I");
-    tree->Branch("genallparticles_motherbeg",   &genallparticles_motherbeg,   "genallparticles_motherbeg/i");
-    tree->Branch("genallparticles_daughterbeg", &genallparticles_daughterbeg, "genallparticles_daughterbeg/i");
+    tree->Branch("genallparticles_count",         &genallparticles_count,         "genallparticles_count/i");
     tree->Branch("genallparticlesmother_count",   &genallparticlesmother_count,   "genallparticlesmother_count/i");
-    tree->Branch("genallparticles_mothers",       &genallparticles_mothers,       "genallparticles_mothers/i");
     tree->Branch("genallparticlesdaughter_count", &genallparticlesdaughter_count, "genallparticlesdaughter_count/i");
-    tree->Branch("genallparticles_daughters",     &genallparticles_daughters,     "genallparticles_daughters/i");
+    tree->Branch("genallparticles_e",           &genallparticles_e);
+    tree->Branch("genallparticles_px",          &genallparticles_px);
+    tree->Branch("genallparticles_py",          &genallparticles_py);
+    tree->Branch("genallparticles_pz",          &genallparticles_pz);
+    tree->Branch("genallparticles_vx",          &genallparticles_vx);
+    tree->Branch("genallparticles_vy",          &genallparticles_vy);
+    tree->Branch("genallparticles_vz",          &genallparticles_vz);
+    tree->Branch("genallparticles_pdgid",       &genallparticles_pdgid);
+    tree->Branch("genallparticles_status",      &genallparticles_status);
+    tree->Branch("genallparticles_motherbeg",   &genallparticles_motherbeg);
+    tree->Branch("genallparticles_daughterbeg", &genallparticles_daughterbeg);
+    tree->Branch("genallparticles_mothers",     &genallparticles_mothers);
+    tree->Branch("genallparticles_daughters",   &genallparticles_daughters);
 
-    tree->Branch("genmet_ex",     &genmet_ex,     "genmet_ex/F");
-    tree->Branch("genmet_ey",     &genmet_ey,     "genmet_ey/F");
+    tree->Branch("genmet_ex", &genmet_ex);
+    tree->Branch("genmet_ey", &genmet_ey);
 
-    tree->Branch("genak4jet_count",      &genak4jet_count,      "genak4jet_count/i");
-    tree->Branch("genak4jet_e",          &genak4jet_e,          "genak4jet_e/F");
-    tree->Branch("genak4jet_px",         &genak4jet_px,         "genak4jet_px/F");
-    tree->Branch("genak4jet_py",         &genak4jet_py,         "genak4jet_py/F");
-    tree->Branch("genak4jet_pz",         &genak4jet_pz,         "genak4jet_pz/F");
-    tree->Branch("genak4jet_einvisible", &genak4jet_einvisible, "genak4jet_einvisible/F");
-    tree->Branch("genak4jet_flavour",    &genak4jet_flavour,    "genak4jet_flavour/I");
-    tree->Branch("genak4jet_info",       &genak4jet_info,       "genak4jet_info/i");
+    tree->Branch("genak4jet_count", &genak4jet_count, "genak4jet_count/i");
+    tree->Branch("genak4jet_e",          &genak4jet_e);
+    tree->Branch("genak4jet_px",         &genak4jet_px);
+    tree->Branch("genak4jet_py",         &genak4jet_py);
+    tree->Branch("genak4jet_pz",         &genak4jet_pz);
+    tree->Branch("genak4jet_einvisible", &genak4jet_einvisible);
+    tree->Branch("genak4jet_flavour",    &genak4jet_flavour);
+    tree->Branch("genak4jet_info",       &genak4jet_info);
+
 }
 
 // destructor
-MonteCarloInfo::~MonteCarloInfo()
+MonteCarloBranches::~MonteCarloBranches()
 {
     selfids.erase(selfids.begin());
     motherids.erase(motherids.begin());
 }
 
 // _________________________________________________________________________________
-void MonteCarloInfo::AddMonteCarloInfo(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets)
+void MonteCarloBranches::fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets)
 {
-    /////////////////////////////////////////
-    // Add generator information ////////////
-    /////////////////////////////////////////
+    // reset everything from the last event
     genweight = 1.;
     genid1    = 0.;
     genx1     = 0.;
     genid2    = 0.;
     genx2     = 0.;
     genScale  = 0.;
+
+    genmet_ex.clear();
+    genmet_ey.clear();
+
+    genak4jet_count = 0;
+    genak4jet_e.clear();
+    genak4jet_px.clear();
+    genak4jet_py.clear();
+    genak4jet_pz.clear();
+    genak4jet_einvisible.clear();
+    genak4jet_flavour.clear();
+    genak4jet_info.clear();
+
+    genparticles_count = 0;
+    genparticles_e.clear();
+    genparticles_px.clear();
+    genparticles_py.clear();
+    genparticles_pz.clear();
+    genparticles_vx.clear();
+    genparticles_vy.clear();
+    genparticles_vz.clear();
+    genparticles_pdgid.clear();
+    genparticles_status.clear();
+    genparticles_indirectmother.clear();
+    genparticles_info.clear();
+
+    genallparticles_count = 0;
+    genallparticlesmother_count = 0;
+    genallparticlesdaughter_count = 0;
+    genallparticles_e.clear();
+    genallparticles_px.clear();
+    genallparticles_py.clear();
+    genallparticles_pz.clear();
+    genallparticles_vx.clear();
+    genallparticles_vy.clear();
+    genallparticles_vz.clear();
+    genallparticles_pdgid.clear();
+    genallparticles_status.clear();
+    genallparticles_motherbeg.clear();
+    genallparticles_daughterbeg.clear();
+    genallparticles_mothers.clear();
+    genallparticles_daughters.clear();
+
+
+    /////////////////////////////////////////
+    // Add generator information ////////////
+    /////////////////////////////////////////
     edm::Handle<GenEventInfoProduct> HEPMC;
     iEvent.getByToken(genEventInfoToken_, HEPMC);
     if(HEPMC.isValid()) {
@@ -159,6 +195,7 @@ void MonteCarloInfo::AddMonteCarloInfo(const edm::Event &iEvent, bool addGenPart
             genmet_ey.push_back(0.);
         }
     }
+
 
     /////////////////////////////////////////
     // Add GenJets //////////////////////////
@@ -255,7 +292,6 @@ void MonteCarloInfo::AddMonteCarloInfo(const edm::Event &iEvent, bool addGenPart
 
     }
 
-
     /////////////////////////////////////////
     // Add AllGenParticles //////////////////
     /////////////////////////////////////////
@@ -294,10 +330,15 @@ void MonteCarloInfo::AddMonteCarloInfo(const edm::Event &iEvent, bool addGenPart
         }
     }
 
+
+
+
+
+
 }
 
 // _________________________________________________________________________________
-UInt_t MonteCarloInfo::FindGenParticle(const Candidate *particle) {
+UInt_t MonteCarloBranches::FindGenParticle(const Candidate *particle) {
     for(size_t i = 0 ; i < genallparticles_count ; i++) {
         if(particle->pdgId() == genallparticles_pdgid[i] &&
                 particle->status() == genallparticles_status[i] &&
@@ -311,11 +352,52 @@ UInt_t MonteCarloInfo::FindGenParticle(const Candidate *particle) {
     return (genallparticles_count);
 }
 
+// _________________________________________________________________________________
+Int_t MonteCarloBranches::HasAnyMother(const GenParticle *particle, int id)
+{
+    vector<unsigned> bknummother;
+    vector<const GenParticle *> bkparticle;
+    bknummother.reserve(10);
+    bkparticle.reserve(10);
+    int level = 0;
+    bkparticle.push_back(particle);
+    bknummother.push_back(0);
 
+    unsigned j = 0;
 
+    while(true) {
+        if(j == bkparticle[level]->numberOfMothers()) {
+            level--;
+
+            if(level == -1) { return (0); }
+
+            j = bknummother[level];
+            bkparticle.resize(level+1);
+            bknummother.resize(level+1);
+            continue;
+        }
+
+        if(bkparticle[level]->mother(j)->pdgId() == id) { return (2); }
+
+        if(abs(bkparticle[level]->mother(j)->pdgId()) == abs(id)) { return (1); }
+
+        if(bkparticle[level]->mother(j)->numberOfMothers() > 0) {
+            bknummother[level] = j+1;
+            bkparticle.push_back(dynamic_cast<const GenParticle *>(bkparticle[level]->mother(j)));
+            bknummother.push_back(0);
+            j = 0;
+            level++;
+            continue;
+        }
+
+        j++;
+    }
+
+    return (0);
+}
 
 // _________________________________________________________________________________
-pair<Int_t, Int_t> MonteCarloInfo::HasAnyMother(const GenParticle *particle, vector<int> ids)
+pair<Int_t, Int_t> MonteCarloBranches::HasAnyMother(const GenParticle *particle, vector<int> ids)
 {
     Int_t motherid = 0;
     vector<unsigned> bknummother;
@@ -364,48 +446,4 @@ pair<Int_t, Int_t> MonteCarloInfo::HasAnyMother(const GenParticle *particle, vec
     }
 
     return (pair<Int_t, Int_t> (result, motherid));
-}
-
-// _________________________________________________________________________________
-Int_t MonteCarloInfo::HasAnyMother(const GenParticle *particle, int id)
-{
-    vector<unsigned> bknummother;
-    vector<const GenParticle *> bkparticle;
-    bknummother.reserve(10);
-    bkparticle.reserve(10);
-    int level = 0;
-    bkparticle.push_back(particle);
-    bknummother.push_back(0);
-
-    unsigned j = 0;
-
-    while(true) {
-        if(j == bkparticle[level]->numberOfMothers()) {
-            level--;
-
-            if(level == -1) { return (0); }
-
-            j = bknummother[level];
-            bkparticle.resize(level+1);
-            bknummother.resize(level+1);
-            continue;
-        }
-
-        if(bkparticle[level]->mother(j)->pdgId() == id) { return (2); }
-
-        if(abs(bkparticle[level]->mother(j)->pdgId()) == abs(id)) { return (1); }
-
-        if(bkparticle[level]->mother(j)->numberOfMothers() > 0) {
-            bknummother[level] = j+1;
-            bkparticle.push_back(dynamic_cast<const GenParticle *>(bkparticle[level]->mother(j)));
-            bknummother.push_back(0);
-            j = 0;
-            level++;
-            continue;
-        }
-
-        j++;
-    }
-
-    return (0);
 }

@@ -1,40 +1,39 @@
-// MonteCarloInfo.h
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
+#include "DataFormats/JetReco/interface/GenJetCollection.h"
 #include "DataFormats/METReco/interface/GenMET.h"
 #include "DataFormats/METReco/interface/GenMETFwd.h"
 #include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/METReco/interface/METFwd.h"
 #include "DataFormats/METReco/interface/PFMET.h"
 #include "DataFormats/METReco/interface/PFMETFwd.h"
-#include "DataFormats/JetReco/interface/GenJetCollection.h"
-#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
-#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
-#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
+#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 #include "SimDataFormats/JetMatching/interface/JetFlavourMatching.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
-#include "TTree.h"
-#include "DataFormats/Math/interface/deltaR.h"
 
+#include "DataFormats/Math/interface/deltaR.h"
+#include "TTree.h"
 
 using namespace std;
 using namespace reco;
 
-class MonteCarloInfo
+class MonteCarloBranches
 {
   public:
-    MonteCarloInfo(const edm::ParameterSet &iConfig, TTree *tree, edm::ConsumesCollector cc);
-    ~MonteCarloInfo();
-    void AddMonteCarloInfo(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
+    MonteCarloBranches(TTree *tree, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
+    void fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
 
   private:
+    // data
     edm::EDGetTokenT<std::vector<PileupSummaryInfo>> PUInfoToken_;
     edm::EDGetTokenT<GenEventInfoProduct> genEventInfoToken_;
     edm::EDGetTokenT<reco::GenJetCollection> genJetsToken_;
@@ -47,25 +46,12 @@ class MonteCarloInfo
     vector<int> selfids;
     vector<GenParticle> GenPartons;
 
-    UInt_t genallparticlesmother_count;
-    UInt_t genallparticlesdaughter_count;
-
-    UInt_t FindGenParticle(const Candidate *particle);
-    pair<Int_t, Int_t> HasAnyMother(const GenParticle *particle, vector<int> ids);
-    Int_t HasAnyMother(const GenParticle *particle, int id);
-
-    //TTree *tree;
     Float_t genweight;
     Float_t genid1;
     Float_t genx1;
     Float_t genid2;
     Float_t genx2;
     Float_t genScale;
-
-    //Int_t   numpileupinteractionsminus;
-    //Int_t   numpileupinteractions;
-    //Int_t   numpileupinteractionsplus;
-    //Float_t numtruepileupinteractions;
 
     // these are vectors of size one in order to be 
     // consistent with the reconstructed MET
@@ -85,6 +71,7 @@ class MonteCarloInfo
     vector<Float_t> genparticles_e;
     vector<Float_t> genparticles_px;
     vector<Float_t> genparticles_py;
+
     vector<Float_t> genparticles_pz;
     vector<Float_t> genparticles_vx;
     vector<Float_t> genparticles_vy;
@@ -95,6 +82,8 @@ class MonteCarloInfo
     vector<UInt_t>  genparticles_info;
 
     UInt_t genallparticles_count;
+    UInt_t genallparticlesmother_count;
+    UInt_t genallparticlesdaughter_count;
     vector<Float_t> genallparticles_e;
     vector<Float_t> genallparticles_px;
     vector<Float_t> genallparticles_py;
@@ -106,12 +95,12 @@ class MonteCarloInfo
     vector<Int_t>   genallparticles_status;
     vector<UInt_t>  genallparticles_motherbeg;
     vector<UInt_t>  genallparticles_daughterbeg;
-    //vector<UInt_t>  genallparticlesmother_count;
     vector<UInt_t>  genallparticles_mothers;
-    //vector<UInt_t>  genallparticlesdaughter_count;
     vector<UInt_t>  genallparticles_daughters;
 
-
-
+    // methods
+    UInt_t FindGenParticle(const Candidate *particle);
+    pair<Int_t, Int_t> HasAnyMother(const GenParticle *particle, vector<int> ids);
+    Int_t HasAnyMother(const GenParticle *particle, int id);
 
 };
