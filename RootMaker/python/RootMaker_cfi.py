@@ -35,7 +35,6 @@ from RootMaker.RootMaker.addJets         import * # jetBranches
 from RootMaker.RootMaker.addMET          import * # metBranches
 from RootMaker.RootMaker.addTaus         import * # tauBranches, TauDiscriminators
 from RootMaker.RootMaker.addPhotons      import * # photonBranches
-from RootMaker.RootMaker.addGenParticles import * # genParticleBranches, genJetBranches, getMETBranches
 
 # default selections (overridden in RootTree.py)
 selections = {
@@ -51,6 +50,10 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     # input tags
     genEventInfo      = cms.InputTag("generator"),
     lheEventProduct   = cms.InputTag("externalLHEProducer"),
+    prunedGenParticles = cms.InputTag("prunedGenParticles"),
+    packedGenParticles = cms.InputTag("packedGenParticles"),
+    genJets = cms.InputTag("slimmedGenJets"),
+    slimGenMET = cms.InputTag("slimmedMETs"),
     rho               = cms.InputTag("fixedGridRhoFastjetAll"),
     pileupSummaryInfo = cms.InputTag("slimmedAddPileupInfo"),
     lumiProducer      = cms.InputTag("lumiProducer"),

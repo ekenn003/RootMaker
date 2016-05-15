@@ -176,20 +176,6 @@ process.makeroottree.objectCollections.taus.collection         = objectCollectio
 process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
 process.makeroottree.objectCollections.ak4pfchsjets.collection = objectCollections['ak4pfchsjets']
 process.makeroottree.objectCollections.pfmettype1.collection   = objectCollections['pfmettype1']
-if options.isMC:
-    from RootMaker.RootMaker.addGenParticles import *
-    process.makeroottree.objectCollections.genparticles = cms.PSet(
-        collection = cms.InputTag(objectCollections['genparticles']),
-        branches = genParticleBranches,
-    )
-    process.makeroottree.objectCollections.genjets = cms.PSet(
-        collection = cms.InputTag(objectCollections['genjets']),
-        branches = genJetBranches,
-    )
-    process.makeroottree.objectCollections.genmet = cms.PSet(
-        collection = cms.InputTag(objectCollections['genmet']),
-        branches = genMETBranches,
-    )
 
 process.makeroottreePath = cms.Path()
 for f in filters:
