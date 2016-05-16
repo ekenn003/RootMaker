@@ -1,57 +1,96 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing('analysis')
+# set defaults:
+options.register('overrideGT', False)
+options.register('skipEvents', 0)
+options.register('isMC', False)
+options.register('recGenParticles', False)
+options.register('recAllGenParticles', False)
+options.register('recGenJets', False)
+#options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
+options.register('runMetFilter', 0)
 
 
+##############################
+### Global tag ###############
+##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
 #process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
 #process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
 
-#options.isMC = 0 # false
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
+options.isMC = 1 # true (default is false)
 
-options.isMC = 1 # true
+
+
+# uncomment this line to override the given global tag with the latest one (not recommended)
+options.overrideGT = 1 # true (default is false)
+
+##############################
+### Input files ##############
+##############################
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
 options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
 
-options.maxEvents = 1000
+#############################
+## Running options ##########
+#############################
+
+options.maxEvents = 100
 
 #options.skipEvents = 20
 
 options.runMetFilter = 0
 
 
+options.recGenParticles = 1 # true (default is False)
+#options.recAllGenParticles = 1 # true (default is False)
+options.recGenJets = 1 # true (default is False)
 
 
 
+#############################################################
+### you probably don't have to change anything below here ###
+#############################################################
 
+#############################
+### PROCESS #################
+#############################
+process = cms.Process("ROOTMAKER")
 
+process.load('Configuration.Geometry.GeometryRecoDB_cff')
+process.load('Configuration.StandardSequences.MagneticField_38T_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+process.load('Configuration.StandardSequences.Services_cff')
 
+process.options = cms.untracked.PSet(
+    allowUnscheduled = cms.untracked.bool(True),
+)
 
-
-
-# you probably don't have to change anything below here
-
-#####################
-### setup process ###
-#####################
-
+#############################
+### Output file #############
+#############################
 if options.isMC:
     options.outputFile = 'AC1B_76mc.root'
 else:
     options.outputFile = 'AC1B_76data.root'
-#################
-### GlobalTag ###
-#################
-# uncomment this section to override the given global tag with the latest one (not recommended)
-envvar = 'mcgt' if options.isMC else 'datagt'
-from Configuration.AlCa.GlobalTag import GlobalTag
-GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
+
+
+################################
+### Override global tag ########
+################################
+if options.overrideGT:
+    envvar = 'mcgt' if options.isMC else 'datagt'
+    from Configuration.AlCa.GlobalTag import GlobalTag
+    GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+    process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 
 
-#############################
-### Setup rest of running ###
-#############################
+################################
+### Run options ################
+################################
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
@@ -64,22 +103,10 @@ process.TFileService = cms.Service("TFileService",
 )
 process.schedule = cms.Schedule()
 
-# first create objectCollections to analyze
-objectCollections = {
-    'genparticles' : 'prunedGenParticles',
-    'genjets'      : 'slimmedGenJets',
-    'genmet'       : 'slimmedMETs', # genMET is embedded in slimmedMETs
-    'electrons'    : 'slimmedElectrons',
-    'muons'        : 'slimmedMuons',
-    'taus'         : 'slimmedTaus',
-    'photons'      : 'slimmedPhotons',
-    'ak4pfchsjets' : 'slimmedJets',
-    'pfmettype1'   : 'slimmedMETs',
-    'rho'          : 'fixedGridRhoFastjetAll',
-    'vertices'     : 'offlineSlimmedPrimaryVertices',
-    'packed'       : 'packedPFCandidates',
-}
 
+################################
+### Selections definitions #####
+################################
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
@@ -90,6 +117,9 @@ selections = {
     'ak4pfchsjets' : 'pt>4 && abs(eta)<5.',
 }
 
+################################
+### Cleaning definitions #######
+################################
 # selection for cleaning (objects should match final selection)
 cleaning = {
     # clean jets agains electrons, muons, and taus with dR of 0.3
@@ -109,9 +139,11 @@ cleaning = {
     },
 }
 
+################################
+### Filters ####################
+################################
 # filters
 filters = []
-
 # met filters
 if options.runMetFilter:
     from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
@@ -125,7 +157,9 @@ if options.runMetFilter:
         setattr(process,modName,mod)
         filters += [getattr(process,modName)]
 
-# now do any customization/cleaning
+################################
+### Add object collections #####
+################################
 objectCollections = addElectrons(
     process,
     objectCollections,
@@ -157,18 +191,27 @@ objectCollections = addMET(
     isMC=bool(options.isMC),
 )
 
-# select desired objects
+################################
+### Select/clean objects #######
+################################
 from RootMaker.RootMaker.objectTools import collectionFilter, objectCleaner
 for coll in selections:
     objectCollections[coll] = collectionFilter(process, coll, objectCollections[coll], selections[coll])
 for coll in cleaning:
     objectCollections[coll] = objectCleaner(process, coll, objectCollections[coll], objectCollections, cleaning[coll])
 
-# add the analyzer
+################################
+### Load the analyzer ##########
+################################
 process.load("RootMaker.RootMaker.RootMaker_cfi")
 
 process.makeroottree.isData = not options.isMC
+process.makeroottree.addGenParticles    = bool(options.recGenParticles)
+process.makeroottree.addAllGenParticles = bool(options.recAllGenParticles)
+process.makeroottree.addGenJets         = bool(options.recGenJets)
+
 process.makeroottree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
+# send collections again in case they've been modified:
 process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
 process.makeroottree.objectCollections.electrons.collection    = objectCollections['electrons']
 process.makeroottree.objectCollections.muons.collection        = objectCollections['muons']
@@ -177,11 +220,17 @@ process.makeroottree.objectCollections.photons.collection      = objectCollectio
 process.makeroottree.objectCollections.ak4pfchsjets.collection = objectCollections['ak4pfchsjets']
 process.makeroottree.objectCollections.pfmettype1.collection   = objectCollections['pfmettype1']
 
+################################
+### Path #######################
+################################
 process.makeroottreePath = cms.Path()
 for f in filters:
     process.makeroottreePath += f
 process.makeroottreePath += process.makeroottree
 process.schedule.append(process.makeroottreePath)
-process.schedule.append(process.makeroottreePath)
 
+
+################################
+### debugging ##################
+################################
 print process.GlobalTag.globaltag
