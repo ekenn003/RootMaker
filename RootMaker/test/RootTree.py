@@ -20,7 +20,8 @@ options.register('runMetFilter', 0)
 #process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
 #process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
 
-options.isMC = 1 # true (default is false)
+options.isMC = 0 # false
+#options.isMC = 1 # true
 
 
 
@@ -30,29 +31,50 @@ options.overrideGT = 1 # true (default is false)
 ##############################
 ### Input files ##############
 ##############################
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 100
+options.maxEvents = 1000
 
 #options.skipEvents = 20
 
 options.runMetFilter = 0
 
-
-options.recGenParticles = 1 # true (default is False)
-#options.recAllGenParticles = 1 # true (default is False)
-options.recGenJets = 1 # true (default is False)
+# include gen particles? (if !isMC they will be False anyway)
+if options.isMC:
+    options.recGenParticles = 1 # true (default is False)
+    #options.recAllGenParticles = 1 # true (default is False)
+    options.recGenJets = 1 # true (default is False)
 
 
 
 #############################################################
 ### you probably don't have to change anything below here ###
 #############################################################
+
+#############################
+### Object sources ##########
+#############################
+# define input tags given for objectCollections
+objectCollections = {
+    'prunedgen'    : 'prunedGenParticles',
+    'packedgen'    : 'packedGenParticles',
+    'genjets'      : 'slimmedGenJets',
+    'genmet'       : 'slimmedMETs', # genMET is embedded in slimmedMETs
+    'electrons'    : 'slimmedElectrons',
+    'muons'        : 'slimmedMuons',
+    'taus'         : 'slimmedTaus',
+    'photons'      : 'slimmedPhotons',
+    'ak4pfchsjets' : 'slimmedJets',
+    'pfmettype1'   : 'slimmedMETs',
+    'rho'          : 'fixedGridRhoFastjetAll',
+    'vertices'     : 'offlineSlimmedPrimaryVertices',
+    'packed'       : 'packedPFCandidates',
+}
 
 #############################
 ### PROCESS #################

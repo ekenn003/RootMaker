@@ -1,5 +1,6 @@
 # RootMaker_cfi.py
 # This file is imported by RootTree.py
+# This is all default stuff - you shouldn't have to change anything in this file. 
 import FWCore.ParameterSet.Config as cms
 
 # load branches
@@ -12,23 +13,6 @@ from RootMaker.RootMaker.addMET          import * # metBranches
 from RootMaker.RootMaker.addTaus         import * # tauBranches, TauDiscriminators
 from RootMaker.RootMaker.addPhotons      import * # photonBranches
 
-# define input tags given for objectCollections
-objectCollections = {
-    'prunedgen'    : 'prunedGenParticles',
-    'packedgen'    : 'packedGenParticles',
-    'genjets'      : 'slimmedGenJets',
-    'genmet'       : 'slimmedMETs', # genMET is embedded in slimmedMETs
-    'electrons'    : 'slimmedElectrons',
-    'muons'        : 'slimmedMuons',
-    'taus'         : 'slimmedTaus',
-    'photons'      : 'slimmedPhotons',
-    'ak4pfchsjets' : 'slimmedJets',
-    'pfmettype1'   : 'slimmedMETs',
-    'rho'          : 'fixedGridRhoFastjetAll',
-    'vertices'     : 'offlineSlimmedPrimaryVertices',
-    'packed'       : 'packedPFCandidates',
-}
-
 makeroottree = cms.EDAnalyzer("RootMaker",
     # configuration
     isData            = cms.bool(True),
@@ -40,15 +24,15 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     # generator info
     genEventInfo       = cms.InputTag("generator"),
     lheEventProduct    = cms.InputTag("externalLHEProducer"),
-    prunedGenParticles = cms.InputTag(objectCollections['prunedgen']),
-    packedGenParticles = cms.InputTag(objectCollections['packedgen']),
-    genJets            = cms.InputTag(objectCollections['genjets']),
-    slimGenMET         = cms.InputTag(objectCollections['genmet']),
+    prunedGenParticles = cms.InputTag("prunedGenParticles"),
+    packedGenParticles = cms.InputTag("packedGenParticles"),
+    genJets            = cms.InputTag("slimmedGenJets"),
+    slimGenMET         = cms.InputTag("slimmedMETs"),
 
     # event info
     pileupSummaryInfo = cms.InputTag("slimmedAddPileupInfo"),
-    rho               = cms.InputTag(objectCollections['rho']),
-    vertices          = cms.InputTag(objectCollections['vertices']),
+    rho               = cms.InputTag("fixedGridRhoFastjetAll"),
+    vertices          = cms.InputTag("offlineSlimmedPrimaryVertices"),
     lumiProducer      = cms.InputTag("lumiProducer"),
     beamSpot          = cms.InputTag("offlineBeamSpot", "", "RECO"),
 
@@ -65,36 +49,36 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     # tau discriminators defined in python/addTaus.py
     RecTauDiscriminators = cms.untracked.vstring(TauDiscriminators),
 
-    # object collections
+    # set default object collections (overridden by "objectCollections" in RootTree.py)
     vertexCollections = cms.PSet(
         vertices = cms.PSet(
-            collection = cms.InputTag(objectCollections['vertices']),
+            collection = cms.InputTag("offlineSlimmedPrimaryVertices"),
             branches = vertexBranches,
         ),
     ),
     objectCollections = cms.PSet(
         electrons = cms.PSet(
-            collection = cms.InputTag(objectCollections['electrons']),
+            collection = cms.InputTag("slimmedElectrons"),
             branches = electronBranches,
         ),
         muons = cms.PSet(
-            collection = cms.InputTag(objectCollections['muons']),
+            collection = cms.InputTag("slimmedMuons"),
             branches = muonBranches,
         ),
         taus = cms.PSet(
-            collection = cms.InputTag(objectCollections['taus']),
+            collection = cms.InputTag("slimmedTaus"),
             branches = tauBranches,
         ),
         photons = cms.PSet(
-            collection = cms.InputTag(objectCollections['photons']),
+            collection = cms.InputTag("slimmedPhotons"),
             branches = photonBranches,
         ),
         ak4pfchsjets = cms.PSet(
-            collection = cms.InputTag(objectCollections['ak4pfchsjets']),
+            collection = cms.InputTag("slimmedJets"),
             branches = jetBranches,
         ),
         pfmettype1 = cms.PSet(
-            collection = cms.InputTag(objectCollections['pfmettype1']),
+            collection = cms.InputTag("slimmedMETs"),
             branches = metBranches,
         ),
     ),
