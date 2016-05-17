@@ -76,7 +76,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     virtual void endRun(edm::Run const &iRun, edm::EventSetup const&) override;
     virtual void endJob() override;
     void TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames);
-    int  GetTriggerBit(string trigName, const edm::TriggerNames& names);
+    //int  GetTriggerBit(string trigName, const edm::TriggerNames& names);
 
     // tokens
     edm::EDGetTokenT<LHEEventProduct> lheEventProductToken_;
@@ -108,9 +108,6 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     vector<string> cHLTriggerNamesSelection;
     vector<unsigned> HLTriggerIndexSelection;
 
-
-    // variables
-
     //*// these will be removed soon
     vector<string> cMuHLTriggerMatching;
     vector<string> cElHLTriggerMatching;
@@ -131,6 +128,10 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
 
 
     bool isData_;
+    bool addGenParticles;
+    bool addAllGenParticles;
+    bool addGenJets;
+
 
     // trees
     TTree *infotree;
@@ -144,7 +145,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     Int_t   nevents;
     Int_t   nevents_skipped;
     Int_t   nevents_filled;
-    Float_t sum_weights;
+    Float_t sumweights;
 
     // data
     math::XYZPoint pv_position;
@@ -172,9 +173,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t run_l1techcount;
     UInt_t run_l1techprescaletablescount;
     UInt_t run_l1techprescaletables[10000];
-
     Char_t run_taudiscriminators[10000];
-
 
     // lumitree branches
     Int_t   lumi_run;

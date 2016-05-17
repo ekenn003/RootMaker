@@ -32,7 +32,10 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
 
     HLTPrescaleProvider_(iConfig, consumesCollector(), *this),
 
-    isData_(iConfig.getParameter<bool>("isData"))
+    isData_(iConfig.getParameter<bool>("isData")),
+    addGenParticles(iConfig.getParameter<bool>("addGenParticles")),
+    addAllGenParticles(iConfig.getParameter<bool>("addAllGenParticles")),
+    addGenJets(iConfig.getParameter<bool>("addGenJets"))
 {
     usesResource("TFileService");
 
@@ -62,7 +65,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     infotree->Branch("nevents", &nevents, "nevents/I");
     infotree->Branch("nevents_skipped", &nevents_skipped, "nevents_skipped/I");
     infotree->Branch("nevents_filled", &nevents_filled, "nevents_filled/I");
-    infotree->Branch("sum_weights", &sum_weights, "sum_weights/F");
+    infotree->Branch("sumweights", &sumweights, "sumweights/F");
 
     // create run tree
     runtree = FS->make<TTree> ("AC1Brun", "AC1Brun", 1);
@@ -83,7 +86,6 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     runtree->Branch("run_l1techcount", &run_l1techcount, "run_l1techcount/i");
     runtree->Branch("run_l1techprescaletablescount", &run_l1techprescaletablescount, "run_l1techprescaletablescount/i");
     runtree->Branch("run_l1techprescaletables", run_l1techprescaletables, "run_l1techprescaletables[run_l1techprescaletablescount]/i");
-
     runtree->Branch("run_taudiscriminators", run_taudiscriminators, "run_taudiscriminators/C");
 
     // create lumitree
@@ -100,6 +102,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     lumitree->Branch("lumi_hltprescaletable", &lumi_hltprescaletable, "lumi_hltprescaletable/i");
     lumitree->Branch("lumi_l1algoprescaletable", &lumi_l1algoprescaletable, "lumi_l1algoprescaletable/i");
     lumitree->Branch("lumi_l1techprescaletable", &lumi_l1techprescaletable, "lumi_l1techprescaletable/i");
+
 
     // create event tree
     tree = FS->make<TTree>("AC1B", "AC1B");
@@ -143,7 +146,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
             tree->Branch(branchName.c_str(), &triggerIntMap_[branchName], branchLeaf.c_str());
         }
     }
-
+/*
     // add filters
     for (auto trigName : myFilterNames) {
         Int_t branchVal;
@@ -157,7 +160,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     for (auto coll : vertexCollectionNames) {
         vertexCollectionBranches.emplace_back(new VertexCollectionBranches(tree, coll, vertexCollections.getParameter<edm::ParameterSet>(coll), consumesCollector()));
     }
-
+*/
     // add collections
     auto collectionNames = objectCollections.getParameterNames();
     for (auto coll : collectionNames) {
@@ -179,7 +182,7 @@ void RootMaker::beginJob()
     nevents = 0;
     nevents_skipped = 0;
     nevents_filled = 0;
-    sum_weights = 0;
+    sumweights = 0;
 }
 
 // _________________________________________________________________________________
@@ -273,6 +276,7 @@ void RootMaker::beginRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
 // _________________________________________________________________________________
 void RootMaker::TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames)
 {
+
     triggers.clear();
     allnames.clear();
     boost::cmatch what;
@@ -370,24 +374,6 @@ void RootMaker::endJob()
     std::cerr<<"isData = "<<isdata<<std::endl;
 }
 
-// GetTriggerBit returns the trigger bit corresponding to the HLT name passed to it.
-// It returns -1 if there is no match and throws an exception if there is more than one match.
-// _________________________________________________________________________________
-int RootMaker::GetTriggerBit(std::string trigName, const edm::TriggerNames &names)
-{
-    std::string trigPathString = triggerNamingMap_[trigName];
-    std::regex regexp(trigPathString);
-    int trigBit = -1;
-    for (size_t i = 0; i < names.size(); i++) {
-        if (std::regex_match(names.triggerName(i), regexp)) {
-            if (trigBit != -1) { // if this isn't the first match
-                throw cms::Exception("DuplicateTrigger");
-            }
-            trigBit = i;
-        }
-    }
-    return trigBit;
-}
 
 // _________________________________________________________________________________
 void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -395,12 +381,15 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     /////////////////////////////////////////
     // Once-per-event stuff /////////////////
     /////////////////////////////////////////
-    edm::Handle<double> rho;
-    iEvent.getByToken(rhoToken_, rho);
-    event_rho = *rho;
+
+    // proliferate event counters
     lumi_eventsprocessed++;
     nevents++;
-    //sum_weights += genweight;
+
+    edm::Handle<GenEventInfoProduct> genEventInfo;
+    iEvent.getByToken(genEventInfoToken_, genEventInfo);
+    if (genEventInfo.isValid())sumweights += genEventInfo->weight();
+    else sumweights += 1.;
 
     // event information
     event_nr              = iEvent.id().event();
@@ -408,6 +397,10 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     event_timeunix        = iEvent.time().unixTime();
     event_timemicrosec    = iEvent.time().microsecondOffset();
     event_luminosityblock = iEvent.getLuminosityBlock().luminosityBlock();
+
+    edm::Handle<double> rho;
+    iEvent.getByToken(rhoToken_, rho);
+    event_rho = *rho;
 
     // old: will be removed soon
     edm::Handle<L1GlobalTriggerReadoutRecord> L1trigger;
@@ -478,7 +471,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
             }
         }
     }
-
+/*
     /////////////////////////////////////////
     // EXPLICIT trigger decisions ///////////
     /////////////////////////////////////////
@@ -512,36 +505,38 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
             triggerIntMap_[trigName] = filterBits->accept(trigBit);
         }
     }
-
+*/
     /////////////////////////////////////////
     // Fill vertices and objects branches ///
     /////////////////////////////////////////
     // add vertices
-    for ( auto &coll : vertexCollectionBranches ) {
+    for (auto &coll : vertexCollectionBranches) {
         coll->fill(iEvent);
     }
     // add collections
-    for ( auto &coll : objectCollectionBranches ) {
+    for (auto &coll : objectCollectionBranches) {
         coll->fill(iEvent);
     }
 
     /////////////////////////////////////////
     // Fill genparticles, etc. //////////////
     /////////////////////////////////////////
-    monteCarloBranches->fill(iEvent, true, true, true);
+    monteCarloBranches->fill(iEvent, addGenParticles, addAllGenParticles, addGenJets);
 
     /////////////////////////////////////////
     // Decide whether to keep event /////////
     /////////////////////////////////////////
     // decide if we store it
     // for example, require at least 1 muon
-    bool keepevent = true;
+    //
+    //
+    //
+    bool keepevent = false;
     for ( auto &coll : objectCollectionBranches ) {
         std::string name = coll->getName();
         UInt_t count = coll->getCount();
-        if(not (name == "muons" && count > 0) ) {
-            // uncomment the lines below to only keep events with at least 1 muon
-            //keepevent = false;
+        if( (name == "muons" && count > 1) ) {
+            keepevent = true;
         }
     }
     if (keepevent) {
