@@ -8,17 +8,19 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "TTree.h"
 
+using namespace std;
+
 template<typename T>
 class VertexCollectionFunction
 {
   public:
-    VertexCollectionFunction(TTree *tree, std::string functionName, std::string functionString);
+    VertexCollectionFunction(TTree *tree, string functionName, string functionString);
     void evaluate(const reco::VertexCollection &candidates);
 
   private:
     StringObjectFunction<reco::Vertex, true> function_;
     TBranch *vectorBranch_;
-    std::vector<T> values_;
+    vector<T> values_;
 };
 
 typedef VertexCollectionFunction<int> VertexCollectionIntFunction;
@@ -27,15 +29,15 @@ typedef VertexCollectionFunction<float> VertexCollectionFloatFunction;
 class VertexCollectionBranches
 {
   public:
-    VertexCollectionBranches(TTree *tree, std::string collectionName, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
+    VertexCollectionBranches(TTree *tree, string collectionName, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
     void fill(const edm::Event &iEvent);
-    std::string getLowercaseSingular(std::string collectionName);
+    string getLowercaseSingular(string collectionName);
 
   private:
     edm::EDGetTokenT<reco::VertexCollection> collectionToken_;
     edm::ParameterSet branches_;
-    std::vector<std::unique_ptr<VertexCollectionFloatFunction> > floatFunctions_;
-    std::vector<std::unique_ptr<VertexCollectionIntFunction> > intFunctions_;
+    vector<unique_ptr<VertexCollectionFloatFunction> > floatFunctions_;
+    vector<unique_ptr<VertexCollectionIntFunction> > intFunctions_;
     TBranch *collectionCountBranch_;
     UInt_t collectionCount_;
 };
