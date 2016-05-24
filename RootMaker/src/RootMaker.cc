@@ -9,18 +9,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
 
     vertexCollections(iConfig.getParameter<edm::ParameterSet>("vertexCollections")),
     objectCollections(iConfig.getParameter<edm::ParameterSet>("objectCollections")),
-    isData_(iConfig.getParameter<bool>("isData")),
-
-    cTauDiscriminators(iConfig.getUntrackedParameter<vector<string> > ("RecTauDiscriminators"))
-
-    //cHLTriggerNamesSelection(iConfig.getUntrackedParameter<vector<string> > ("HLTriggerSelection")),
-    //cMuHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecMuonHLTriggerMatching")),
-    //cElHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecElectronHLTriggerMatching")),
-    //cTauHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecTauHLTriggerMatching")),
-    //cPhotonHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecPhotonHLTriggerMatching")),
-    //cJetHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecJetHLTriggerMatching")),
-
-    //HLTPrescaleProvider_(iConfig, consumesCollector(), *this)
+    isData_(iConfig.getParameter<bool>("isData"))
 {
     usesResource("TFileService");
 
@@ -34,7 +23,6 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     infotree->Branch("nevents_skipped", &nevents_skipped, "nevents_skipped/i");
     infotree->Branch("nevents_filled",  &nevents_filled,  "nevents_filled/i");
     infotree->Branch("sumweights",      &sumweights,      "sumweights/F");
-    infotree->Branch("taudiscriminators", taudiscriminators, "taudiscriminators/C");
 
     // create run tree
     runtree = FS->make<TTree> ("AC1Brun", "AC1Brun", 1);
@@ -106,12 +94,6 @@ void RootMaker::beginJob()
     nevents_skipped = 0;
     nevents_filled = 0;
     sumweights = 0;
-    // add tau discriminators. These come from RecTauDiscriminators in addTaus.py
-    string alltaudiscriminators;
-    for (size_t i = 0 ; i < cTauDiscriminators.size() ; i++) {
-        alltaudiscriminators += cTauDiscriminators[i] + string(" ");
-    }
-    strcpy(taudiscriminators, alltaudiscriminators.c_str());
 }
 
 // _________________________________________________________________________________

@@ -94,25 +94,6 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     // configuration
     bool isData_;
 
-    vector<string> cTauDiscriminators;
-
-    //vector<string> cHLTriggerNamesSelection;
-    //vector<unsigned> HLTriggerIndexSelection;
-    //vector<string> cMuHLTriggerMatching;
-    //vector<string> cElHLTriggerMatching;
-    //vector<string> cTauHLTriggerMatching;
-    //vector<string> cPhotonHLTriggerMatching;
-    //vector<string> cJetHLTriggerMatching;
-    //vector<pair<unsigned, int> > muontriggers;
-    //vector<pair<unsigned, int> > electrontriggers;
-    //vector<pair<unsigned, int> > tautriggers;
-    //vector<pair<unsigned, int> > photontriggers;
-    //vector<pair<unsigned, int> > jettriggers;
-    //HLTPrescaleProvider HLTPrescaleProvider_;
-    //HLTConfigProvider HLTConfiguration;
-
-
-
     // trees
     TTree *infotree;
     TTree *runtree;
@@ -130,7 +111,6 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t  nevents_skipped;
     UInt_t  nevents_filled;
     Float_t sumweights;
-    Char_t taudiscriminators[10000];
 
     // runtree branches
     UInt_t run_number;

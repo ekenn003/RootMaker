@@ -46,9 +46,6 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     triggerBranches   = triggerBranches,
     filterBranches    = filterBranches,
 
-    # tau discriminators defined in python/addTaus.py
-    RecTauDiscriminators = cms.untracked.vstring(TauDiscriminators),
-
     # set default object collections (overridden by "objectCollections" in RootTree.py)
     vertexCollections = cms.PSet(
         vertices = cms.PSet(
@@ -82,21 +79,4 @@ makeroottree = cms.EDAnalyzer("RootMaker",
             branches = metBranches,
         ),
     ),
-
-    HLTriggerSelection = cms.untracked.vstring(),
-
-    # Which triggers will be available for matching (going to move this to addMuons, etc.):
-    RecMuonHLTriggerMatching = cms.untracked.vstring(
-        'HLT_IsoMu20_v.*:FilterTrue', 
-        'HLT_IsoTkMu20_v.*:FilterTrue'
-    ),
-    RecElectronHLTriggerMatching = cms.untracked.vstring(
-    ),
-    RecPhotonHLTriggerMatching = cms.untracked.vstring(
-    ),
-    RecTauHLTriggerMatching = cms.untracked.vstring(
-    ),
-    RecJetHLTriggerMatching = cms.untracked.vstring(
-    ),
-
 )
