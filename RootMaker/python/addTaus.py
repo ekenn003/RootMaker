@@ -6,9 +6,9 @@ from RootMaker.RootMaker.objectBase import commonJetTauBranches
 ################################################
 tauBranches = commonJetTauBranches.clone(
     # user data embedded from PVEmbedder
-    dz  = cms.vstring('userFloat("dz")','F'),
+    dz     = cms.vstring('userFloat("dz")','F'),
     dzerr  = cms.vstring('dzError','F'),
-    dxy = cms.vstring('userFloat("dxy")','F'),
+    dxy    = cms.vstring('userFloat("dxy")','F'),
     dxyerr = cms.vstring('dxyError','F'),
     # user data from HLTMatchEmbedder
     trigger = cms.vstring('userInt("trigger")','I'), 
@@ -42,7 +42,6 @@ tauBranches = commonJetTauBranches.clone(
     neutralIsoPtSumWeight = cms.vstring('tauID("neutralIsoPtSumWeight")','F'),
     footprintCorrection   = cms.vstring('tauID("footprintCorrection")','F'),
     puCorrPtSum           = cms.vstring('tauID("puCorrPtSum")','F'),
-
 )
 
 ################################################
@@ -142,7 +141,7 @@ def addTaus(process,coll,**kwargs):
     isMC = kwargs.pop('isMC', False)
     tSrc = coll['taus']
     pvSrc = coll['vertices']
-    genSrc = coll['genparticles']
+    genSrc = coll['prunedgen']
     # customization path
     process.tauCustomization = cms.Path()
 

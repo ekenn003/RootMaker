@@ -7,9 +7,9 @@ from RootMaker.RootMaker.objectBase import commonEgammaBranches
 electronBranches = commonEgammaBranches.clone(
     # user data from PVEmbedder
     dz     = cms.vstring('userFloat("dz")','F'),
-    dzerr  = cms.vstring('gsfTrack().dzError()','I'),
+    dzerr  = cms.vstring('gsfTrack().dzError()','F'),
     dxy    = cms.vstring('userFloat("dxy")','F'),
-    dxyerr = cms.vstring('gsfTrack().dxyError()','I'),
+    dxyerr = cms.vstring('gsfTrack().dxyError()','F'),
 
     correctedecalenergy              = cms.vstring('ecalEnergy','F'),
 
@@ -24,7 +24,7 @@ electronBranches = commonEgammaBranches.clone(
     # track information
     trackchi2   = cms.vstring('gsfTrack().chi2()','F'),
     trackndof   = cms.vstring('gsfTrack().ndof()','F'),
-    nhits       = cms.vstring('gsfTrack().numberOfValidHits()','F'),
+    nhits       = cms.vstring('gsfTrack().numberOfValidHits()','I'),
     npixelhits    = cms.vstring('gsfTrack().hitPattern().numberOfValidPixelHits()','I'),
     npixellayers  = cms.vstring('gsfTrack().hitPattern().pixelLayersWithMeasurement()','I'),
     nstriplayers  = cms.vstring('gsfTrack().hitPattern().stripLayersWithMeasurement()','I'),
@@ -64,7 +64,6 @@ electronBranches = commonEgammaBranches.clone(
     mvaTrigValues        = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15Trig25nsV1Values")','F'),
     mvaNonTrigCategories = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories")','I'),
     mvaTrigCategories    = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories")','I'),
-
 )
 
 

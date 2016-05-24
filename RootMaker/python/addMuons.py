@@ -15,7 +15,8 @@ muonBranches = commonObjectBranches.clone(
     trackermuonquality      = cms.vstring('userInt("trackermuonquality")','I'),
     numchamberswithsegments = cms.vstring('userInt("numberOfMatches")','I'),
     numchambers             = cms.vstring('numberOfChambers','I'),
-    nummatchedstations      = cms.vstring('numberOfMatchedStations','F'),
+    nummatchedstations      = cms.vstring('numberOfMatchedStations','I'),
+    numvalidmuonhits = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().hitPattern().numberOfValidMuonHits() : -1', 'I'),
 
     ecalenergy = cms.vstring('calEnergy().em','F'),
     hcalenergy = cms.vstring('calEnergy().had','F'),
@@ -32,7 +33,6 @@ muonBranches = commonObjectBranches.clone(
     pterror          = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ptError() : 0', 'F'),
     chi2             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().chi2() : -1', 'F'),
     ndof             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ndof() : -1', 'F'),
-    numvalidmuonhits = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().hitPattern().numberOfValidMuonHits() : -1', 'F'),
 
     hasinnertrack           = cms.vstring('innerTrack().isNonnull()','I'),
     innertrack_px           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().px() : 0', 'F'),
@@ -44,19 +44,19 @@ muonBranches = commonObjectBranches.clone(
     innertrack_dzerr        = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().dzError() : 0', 'F'),
     innertrack_chi2         = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().chi2() : -1', 'F'),
     innertrack_ndof         = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().ndof() : -1', 'F'),
-    innertrack_charge       = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().charge() : 0', 'F'),
-    innertrack_nhits        = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().numberOfValidHits() : -1', 'F'),
-    innertrack_nmissinghits = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().numberOfLostHits() : -1', 'F'),
-    innertrack_npixelhits   = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().numberOfValidPixelHits() : -1', 'F'),
-    innertrack_npixellayers = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().pixelLayersWithMeasurement() : -1', 'F'),
-    innertrack_nstriplayers = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().stripLayersWithMeasurement() : -1', 'F'),
+    innertrack_charge       = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().charge() : 0', 'I'),
+    innertrack_nhits        = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().numberOfValidHits() : -1', 'I'),
+    innertrack_nmissinghits = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().numberOfLostHits() : -1', 'I'),
+    innertrack_npixelhits   = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().numberOfValidPixelHits() : -1', 'I'),
+    innertrack_npixellayers = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().pixelLayersWithMeasurement() : -1', 'I'),
+    innertrack_nstriplayers = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().stripLayersWithMeasurement() : -1', 'I'),
 
     hasoutertrack          = cms.vstring('outerTrack().isNonnull()','I'),
     outertrack_px          = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().px() : 0', 'F'),
     outertrack_py          = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().py() : 0', 'F'),
     outertrack_pz          = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().pz() : 0', 'F'),
-    outertrack_hits        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().numberOfValidHits() : -1', 'F'),
-    outertrack_missinghits = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().numberOfLostHits() : -1', 'F'),
+    outertrack_hits        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().numberOfValidHits() : -1', 'I'),
+    outertrack_missinghits = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().numberOfLostHits() : -1', 'I'),
     outertrack_chi2        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().chi2() : -1', 'F'),
     outertrack_ndof        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().ndof() : -1', 'F'),
 
@@ -78,7 +78,7 @@ muonBranches = commonObjectBranches.clone(
     pfisolationr4_sumphotonethighthreshold        = cms.vstring('pfIsolationR04().sumPhotonEtHighThreshold','F'),
 
     isolationr3track    = cms.vstring('trackIso()','F'),
-    isolationr3ntrack   = cms.vstring('isolationR03().nTracks','F'),
+    isolationr3ntrack   = cms.vstring('isolationR03().nTracks','I'),
     isolationr3ecal     = cms.vstring('isolationR03().emEt','F'), # same as ecalIso()
     isolationr3hcal     = cms.vstring('isolationR03().hadEt','F'), # same as hcalIso()
 
@@ -105,8 +105,6 @@ muonBranches = commonObjectBranches.clone(
     matches_IsoTkMu27                         = cms.vstring('userInt("matches_IsoTkMu27")','I'),
     matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ   = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ")','I'),
     matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ")','I'),
-
-
 )
 
 ################################################

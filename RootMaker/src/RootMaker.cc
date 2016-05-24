@@ -1,174 +1,97 @@
 #include "RootMaker/RootMaker/interface/RootMaker.h"
 
 RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
-    lheEventProductToken_(consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("lheEventProduct"))),
-    genEventInfoToken_(consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo"))),
-    rhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("rho"))),
-    PUInfoToken_(consumes<std::vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("pileupSummaryInfo"))),
-    lumiInfoToken_(consumes<LumiSummary>(iConfig.getParameter<edm::InputTag>("lumiProducer"))),
-    triggerBitsToken_(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("triggerResults"))),
-    filterBitsToken_(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("filterResults"))),
-    triggerObjectsToken_(consumes<pat::TriggerObjectStandAloneCollection>(iConfig.getParameter<edm::InputTag>("triggerObjects"))),
-    triggerPrescalesToken_(consumes<pat::PackedTriggerPrescales>(iConfig.getParameter<edm::InputTag>("triggerPrescales"))),
+    genEventInfoToken_ (consumes<GenEventInfoProduct>(iConfig.getParameter<edm::InputTag>("genEventInfo"))),
+    rhoToken_          (consumes<double>(iConfig.getParameter<edm::InputTag>("rho"))),
+    PUInfoToken_       (consumes<vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("pileupSummaryInfo"))),
+    l1TriggerToken_    (consumes<L1GlobalTriggerReadoutRecord>(iConfig.getParameter<edm::InputTag>("l1trigger"))),
+    beamSpotToken_     (consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpot"))),
 
-    l1TriggerToken_(consumes<L1GlobalTriggerReadoutRecord>(iConfig.getParameter<edm::InputTag>("l1trigger"))),
-    beamSpotToken_(consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpot"))),
-
-    triggerBranches(iConfig.getParameter<edm::ParameterSet>("triggerBranches")),
-    filterBranches(iConfig.getParameter<edm::ParameterSet>("filterBranches")),
-    objectCollections(iConfig.getParameter<edm::ParameterSet>("objectCollections")),
     vertexCollections(iConfig.getParameter<edm::ParameterSet>("vertexCollections")),
-
-    cHLTriggerNamesSelection(iConfig.getUntrackedParameter<vector<string> > ("HLTriggerSelection")),
-    cMuHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecMuonHLTriggerMatching")),
-    cElHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecElectronHLTriggerMatching")),
-    cTauHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecTauHLTriggerMatching")),
-
-    cTauDiscriminators(iConfig.getUntrackedParameter<vector<string> > ("RecTauDiscriminators")),
-
-    cPhotonHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecPhotonHLTriggerMatching")),
-    cJetHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecJetHLTriggerMatching")),
-
-
-    HLTPrescaleProvider_(iConfig, consumesCollector(), *this),
-
+    objectCollections(iConfig.getParameter<edm::ParameterSet>("objectCollections")),
     isData_(iConfig.getParameter<bool>("isData")),
-    addGenParticles(iConfig.getParameter<bool>("addGenParticles")),
-    addAllGenParticles(iConfig.getParameter<bool>("addAllGenParticles")),
-    addGenJets(iConfig.getParameter<bool>("addGenJets"))
+
+    cTauDiscriminators(iConfig.getUntrackedParameter<vector<string> > ("RecTauDiscriminators"))
+
+    //cHLTriggerNamesSelection(iConfig.getUntrackedParameter<vector<string> > ("HLTriggerSelection")),
+    //cMuHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecMuonHLTriggerMatching")),
+    //cElHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecElectronHLTriggerMatching")),
+    //cTauHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecTauHLTriggerMatching")),
+    //cPhotonHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecPhotonHLTriggerMatching")),
+    //cJetHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> > ("RecJetHLTriggerMatching")),
+
+    //HLTPrescaleProvider_(iConfig, consumesCollector(), *this)
 {
     usesResource("TFileService");
 
-    // get trigger parameters
-    triggerBranchStrings.push_back("Pass");
-    triggerBranchStrings.push_back("Prescale");
-    myTriggerNames = triggerBranches.getParameterNames();
-    for (auto trig : myTriggerNames) {
-        edm::ParameterSet trigPSet = triggerBranches.getParameter<edm::ParameterSet>(trig);
-        std::string trigString = trigPSet.getParameter<std::string>("path");
-        triggerNamingMap_.insert(std::pair<std::string, std::string>(trig,trigString));
-    }
-    // get filter parameters
-    myFilterNames = filterBranches.getParameterNames();
-    for (auto trig : myFilterNames) {
-        edm::ParameterSet trigPSet = filterBranches.getParameter<edm::ParameterSet>(trig);
-        std::string trigString = trigPSet.getParameter<std::string>("path");
-        triggerNamingMap_.insert(std::pair<std::string, std::string>(trig,trigString));
-    }
-
     // set up trees
     edm::Service<TFileService> FS;
-    //drhist = FS->make<TH1D> ("drhist", "drhist", 10000, 0., 100.);
 
     // create info tree
     infotree = FS->make<TTree> ("AC1Binfo", "AC1Binfo", 1);
-    infotree->Branch("nevents", &nevents, "nevents/I");
-    infotree->Branch("nevents_skipped", &nevents_skipped, "nevents_skipped/I");
-    infotree->Branch("nevents_filled", &nevents_filled, "nevents_filled/I");
-    infotree->Branch("sumweights", &sumweights, "sumweights/F");
+    infotree->Branch("isdata",          &isdata,          "isdata/O");
+    infotree->Branch("nevents",         &nevents,         "nevents/i");
+    infotree->Branch("nevents_skipped", &nevents_skipped, "nevents_skipped/i");
+    infotree->Branch("nevents_filled",  &nevents_filled,  "nevents_filled/i");
+    infotree->Branch("sumweights",      &sumweights,      "sumweights/F");
+    infotree->Branch("taudiscriminators", taudiscriminators, "taudiscriminators/C");
 
     // create run tree
     runtree = FS->make<TTree> ("AC1Brun", "AC1Brun", 1);
-    runtree->Branch("run_number", &run_number, "run_number/i");
-    runtree->Branch("run_hltcount", &run_hltcount, "run_hltcount/i");
-    runtree->Branch("run_hltnames", run_hltnames, "run_hltnames/C");
-    runtree->Branch("run_hltmunames", run_hltmunames, "run_hltmunames/C");
-    runtree->Branch("run_hltelnames", run_hltelnames, "run_hltelnames/C");
-    runtree->Branch("run_hlttaunames", run_hlttaunames, "run_hlttaunames/C");
-    runtree->Branch("run_hltphotonnames", run_hltphotonnames, "run_hltphotonnames/C");
-    runtree->Branch("run_hltjetnames", run_hltjetnames, "run_hltjetnames/C");
-    runtree->Branch("run_hltprescaletablescount", &run_hltprescaletablescount, "run_hltprescaletablescount/i");
-    runtree->Branch("run_hltprescaletables", run_hltprescaletables, "run_hltprescaletables[run_hltprescaletablescount]/i");
-    runtree->Branch("run_hltl1prescaletables", run_hltl1prescaletables, "run_hltl1prescaletables[run_hltprescaletablescount]/i");
-    runtree->Branch("run_l1algocount", &run_l1algocount, "run_l1algocount/i");
-    runtree->Branch("run_l1algoprescaletablescount", &run_l1algoprescaletablescount, "run_l1algoprescaletablescount/i");
-    runtree->Branch("run_l1algoprescaletables", run_l1algoprescaletables, "run_l1algoprescaletables[run_l1algoprescaletablescount]/i");
-    runtree->Branch("run_l1techcount", &run_l1techcount, "run_l1techcount/i");
-    runtree->Branch("run_l1techprescaletablescount", &run_l1techprescaletablescount, "run_l1techprescaletablescount/i");
-    runtree->Branch("run_l1techprescaletables", run_l1techprescaletables, "run_l1techprescaletables[run_l1techprescaletablescount]/i");
-    runtree->Branch("run_taudiscriminators", run_taudiscriminators, "run_taudiscriminators/C");
+    runtree->Branch("run_number",   &run_number,     "run_number/i");
 
     // create lumitree
     lumitree = FS->make<TTree> ("AC1Blumi", "AC1Blumi", 1);
-    lumitree->Branch("lumi_run", &lumi_run, "lumi_run/i");
-    lumitree->Branch("lumi_block", &lumi_block, "lumi_block/i");
-    lumitree->Branch("lumi_value", &lumi_value, "lumi_value/F");
+    lumitree->Branch("lumi_run",      &lumi_run,      "lumi_run/i");
+    lumitree->Branch("lumi_block",    &lumi_block,    "lumi_block/i");
+    lumitree->Branch("lumi_value",    &lumi_value,    "lumi_value/F");
     lumitree->Branch("lumi_valueerr", &lumi_valueerr, "lumi_valueerr/F");
     lumitree->Branch("lumi_livefrac", &lumi_livefrac, "lumi_livefrac/F");
     lumitree->Branch("lumi_deadfrac", &lumi_deadfrac, "lumi_deadfrac/F");
-    lumitree->Branch("lumi_quality", &lumi_quality, "lumi_quality/i");
+    lumitree->Branch("lumi_quality",  &lumi_quality,  "lumi_quality/i");
     lumitree->Branch("lumi_eventsprocessed", &lumi_eventsprocessed, "lumi_eventsprocessed/i");
-    lumitree->Branch("lumi_eventsfiltered", &lumi_eventsfiltered, "lumi_eventsfiltered/i");
-    lumitree->Branch("lumi_hltprescaletable", &lumi_hltprescaletable, "lumi_hltprescaletable/i");
-    lumitree->Branch("lumi_l1algoprescaletable", &lumi_l1algoprescaletable, "lumi_l1algoprescaletable/i");
-    lumitree->Branch("lumi_l1techprescaletable", &lumi_l1techprescaletable, "lumi_l1techprescaletable/i");
-
+    lumitree->Branch("lumi_eventsfiltered",  &lumi_eventsfiltered,  "lumi_eventsfiltered/i");
+    lumitree->Branch("lumi_sumweights",      &lumi_sumweights,      "lumi_sumweights/i");
 
     // create event tree
     tree = FS->make<TTree>("AC1B", "AC1B");
     // once per event branches
-    tree->Branch("isdata", &isdata, "isdata/O");
-    tree->Branch("event_nr", &event_nr, "event_nr/D");
-    tree->Branch("event_run", &event_run, "event_run/i");
-    tree->Branch("event_timeunix", &event_timeunix, "event_timeunix/i");
-    tree->Branch("event_timemicrosec", &event_timemicrosec, "event_timemicrosec/i");
+    tree->Branch("isdata",                &isdata,                "isdata/O");
+    tree->Branch("event_nr",              &event_nr,              "event_nr/l");
+    tree->Branch("event_run",             &event_run,             "event_run/i");
+    tree->Branch("event_timeunix",        &event_timeunix,        "event_timeunix/i");
+    tree->Branch("event_timemicrosec",    &event_timemicrosec,    "event_timemicrosec/i");
     tree->Branch("event_luminosityblock", &event_luminosityblock, "event_luminosityblock/i");
-    tree->Branch("event_rho", &event_rho, "event_rho/F");
-// old
-    tree->Branch("errors", &errors, "errors/i");
-    tree->Branch("trigger_level1bits", &trigger_level1bits, "trigger_level1bits[8]/b");
-    tree->Branch("trigger_level1", &trigger_level1, "trigger_level1[128]/b");
-    tree->Branch("trigger_HLT", &trigger_HLT, "trigger_HLT[128]/b");
+    tree->Branch("event_rho",             &event_rho,             "event_rho/F");
 
-
-
-
-    tree->Branch("beamspot_x", &beamspot_x, "beamspot_x/F");
-    tree->Branch("beamspot_y", &beamspot_y, "beamspot_y/F");
-    tree->Branch("beamspot_z", &beamspot_z, "beamspot_z/F");
+    tree->Branch("beamspot_x",      &beamspot_x,      "beamspot_x/F");
+    tree->Branch("beamspot_y",      &beamspot_y,      "beamspot_y/F");
+    tree->Branch("beamspot_z",      &beamspot_z,      "beamspot_z/F");
     tree->Branch("beamspot_xwidth", &beamspot_xwidth, "beamspot_xwidth/F");
     tree->Branch("beamspot_ywidth", &beamspot_ywidth, "beamspot_ywidth/F");
     tree->Branch("beamspot_zsigma", &beamspot_zsigma, "beamspot_zsigma/F");
-    tree->Branch("beamspot_cov", &beamspot_cov, "beamspot_cov[6]/F");
+    tree->Branch("beamspot_cov",    &beamspot_cov,    "beamspot_cov[6]/F");
 
     tree->Branch("numpileupinteractionsminus", &numpileupinteractionsminus, "numpileupinteractionsminus/I");
-    tree->Branch("numpileupinteractions", &numpileupinteractions, "numpileupinteractions/I");
-    tree->Branch("numpileupinteractionsplus", &numpileupinteractionsplus, "numpileupinteractionsplus/I");
-    tree->Branch("numtruepileupinteractions", &numtruepileupinteractions, "numtruepileupinteractions/F");
+    tree->Branch("numpileupinteractions",      &numpileupinteractions,      "numpileupinteractions/I");
+    tree->Branch("numpileupinteractionsplus",  &numpileupinteractionsplus,  "numpileupinteractionsplus/I");
+    tree->Branch("numtruepileupinteractions",  &numtruepileupinteractions,  "numtruepileupinteractions/F");
 
-    // add triggers
-    for (auto trigName : myTriggerNames) {
-        for (auto branch : triggerBranchStrings) {
-            std::string branchName = trigName + branch;
-            Int_t branchVal;
-            triggerIntMap_.insert(std::pair<std::string, Int_t>(branchName,branchVal));
-            std::string branchLeaf = branchName + "/I";
-            tree->Branch(branchName.c_str(), &triggerIntMap_[branchName], branchLeaf.c_str());
-        }
-    }
-/*
-    // add filters
-    for (auto trigName : myFilterNames) {
-        Int_t branchVal;
-        triggerIntMap_.insert(std::pair<std::string, Int_t>(trigName,branchVal));
-        std::string branchLeaf = trigName + "/I";
-        tree->Branch(trigName.c_str(), &triggerIntMap_[trigName], branchLeaf.c_str());
-    }
+    // make trigger branches (these will be removed soon)
+    triggerBranches = unique_ptr<TriggerBranches>(new TriggerBranches(tree, iConfig, consumesCollector()));
 
-    // add vertices
+    // make vertex branches
     auto vertexCollectionNames = vertexCollections.getParameterNames();
     for (auto coll : vertexCollectionNames) {
         vertexCollectionBranches.emplace_back(new VertexCollectionBranches(tree, coll, vertexCollections.getParameter<edm::ParameterSet>(coll), consumesCollector()));
     }
-*/
-    // add collections
+    // make collection branches
     auto collectionNames = objectCollections.getParameterNames();
     for (auto coll : collectionNames) {
         objectCollectionBranches.emplace_back(new ObjectCollectionBranches(tree, coll, objectCollections.getParameter<edm::ParameterSet>(coll), consumesCollector()));
     }
-
-    // add monte carlo branches, gen particles
-    monteCarloBranches = std::unique_ptr<MonteCarloBranches>(new MonteCarloBranches(tree, iConfig, consumesCollector()));
+    // make monte carlo branches, gen particles
+    monteCarloBranches = unique_ptr<MonteCarloBranches>(new MonteCarloBranches(tree, iConfig, consumesCollector()));
 }
 
 // destructor
@@ -183,6 +106,12 @@ void RootMaker::beginJob()
     nevents_skipped = 0;
     nevents_filled = 0;
     sumweights = 0;
+    // add tau discriminators. These come from RecTauDiscriminators in addTaus.py
+    string alltaudiscriminators;
+    for (size_t i = 0 ; i < cTauDiscriminators.size() ; i++) {
+        alltaudiscriminators += cTauDiscriminators[i] + string(" ");
+    }
+    strcpy(taudiscriminators, alltaudiscriminators.c_str());
 }
 
 // _________________________________________________________________________________
@@ -193,8 +122,7 @@ void RootMaker::beginRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
     /////////////////////////////////////////
     // DYNAMIC trigger decisions ////////////
     /////////////////////////////////////////
-    // these are old - I haven't decided whether to keep them yet
-
+/*
     // L1 prescales /////////////////////////
     edm::ESHandle<L1GtPrescaleFactors> l1GtPfAlgo;
     iSetup.get<L1GtPrescaleFactorsAlgoTrigRcd>().get(l1GtPfAlgo);
@@ -258,21 +186,15 @@ void RootMaker::beginRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
     string alltaunames;
     string allphotonnames;
     string alljetnames;
-    TriggerIndexSelection(cMuHLTriggerMatching, muontriggers, allmuonnames);
-    TriggerIndexSelection(cElHLTriggerMatching, electrontriggers, allelectronnames);
-    TriggerIndexSelection(cTauHLTriggerMatching, tautriggers, alltaunames);
-    TriggerIndexSelection(cPhotonHLTriggerMatching, photontriggers, allphotonnames);
-    TriggerIndexSelection(cJetHLTriggerMatching, jettriggers, alljetnames);
-
-    // add tau discriminators. These come from RecTauDiscriminators in addTaus.py
-    string alltaudiscriminators;
-    for (size_t i = 0 ; i < cTauDiscriminators.size() ; i++) {
-        alltaudiscriminators += cTauDiscriminators[i] + string(" ");
-    }
-    strcpy(run_taudiscriminators, alltaudiscriminators.c_str());
+    TriggerIndexSelection(cMuHLTriggerMatching,     muontriggers,     allmuonnames);
+    TriggerIndexSelection(cElHLTriggerMatching,     electrontriggers, allelectronnames);
+    TriggerIndexSelection(cTauHLTriggerMatching,    tautriggers,      alltaunames);
+    TriggerIndexSelection(cPhotonHLTriggerMatching, photontriggers,   allphotonnames);
+    TriggerIndexSelection(cJetHLTriggerMatching,    jettriggers,      alljetnames);
+*/
 }
 
-
+/*
 // _________________________________________________________________________________
 void RootMaker::TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames)
 {
@@ -302,12 +224,6 @@ void RootMaker::TriggerIndexSelection(vector<string> configstring, vector<pair<u
                         allnames += HLTConfiguration.triggerName(i) + string(":") + ModuleLabels[u] + string(" ");
                         triggers.push_back(pair<unsigned, int> (TriggerIndex, u));
 
-                        //if (cdebug) {
-                        //    cout<<"triggers.size() = "<<triggers.size()<< ": "<<endl;
-                        //    cout<<"HLTConfiguration.triggerName("<<i<<") = "<<HLTConfiguration.triggerName(i)<<endl;
-                        //    cout<<"TriggerIndex = "<<TriggerIndex<<endl;
-                        //    cout<<"ModuleLabels["<<u<<"] = "<<ModuleLabels[u]<<"\n"<<endl;
-                        //}
                         if("hltL1sL1DoubleMu10MuOpen" == ModuleLabels[u]) {
                             allnames += HLTConfiguration.triggerName(i) + string(":") + ModuleLabels[u] + string("gt10 ");
                             triggers.push_back(pair<unsigned, int> (TriggerIndex, -1*u));
@@ -326,8 +242,7 @@ void RootMaker::TriggerIndexSelection(vector<string> configstring, vector<pair<u
         cout << "ERROR: more than 32 triggers to match" << endl;
     }
 }
-
-
+*/
 
 // _________________________________________________________________________________
 void RootMaker::endRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
@@ -338,14 +253,19 @@ void RootMaker::endRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
 // _________________________________________________________________________________
 void RootMaker::beginLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm::EventSetup const &iSetup)
 {
-    lumi_run      = iLumiBlock.run();
-    lumi_block    = iLumiBlock.luminosityBlock();
+    // reset values 
+    lumi_eventsprocessed = 0;
+    lumi_eventsfiltered  = 0;
+    lumi_sumweights      = 0;
     lumi_value    = -1.;
     lumi_valueerr = -1.;
     lumi_livefrac = -1.;
     lumi_deadfrac = -1.;
     lumi_quality  = 0;
 
+    // set lumi values
+    lumi_run   = iLumiBlock.run();
+    lumi_block = iLumiBlock.luminosityBlock();
     edm::Handle<LumiSummary> lumiSummary;
     iLumiBlock.getByLabel(edm::InputTag("lumiProducer"), lumiSummary);
 
@@ -368,10 +288,10 @@ void RootMaker::endLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm::
 void RootMaker::endJob()
 {
     infotree->Fill();
-    std::cerr<<"nevents_skipped = "<<nevents_skipped<<std::endl;
-    std::cerr<<"nevents_filled  = "<<nevents_filled<<std::endl;
-    std::cerr<<"nevents total   = "<<nevents<<std::endl;
-    std::cerr<<"isData = "<<isdata<<std::endl;
+    cerr<<"nevents_skipped = "<<nevents_skipped<<endl;
+    cerr<<"nevents_filled  = "<<nevents_filled<<endl;
+    cerr<<"nevents total   = "<<nevents<<endl;
+    cerr<<"isData = "<<isdata<<endl;
 }
 
 
@@ -379,30 +299,39 @@ void RootMaker::endJob()
 void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
     /////////////////////////////////////////
-    // Once-per-event stuff /////////////////
+    // Proliferate event/weight counters ////
     /////////////////////////////////////////
-
-    // proliferate event counters
     lumi_eventsprocessed++;
     nevents++;
 
     edm::Handle<GenEventInfoProduct> genEventInfo;
     iEvent.getByToken(genEventInfoToken_, genEventInfo);
-    if (genEventInfo.isValid())sumweights += genEventInfo->weight();
-    else sumweights += 1.;
+    if (genEventInfo.isValid()) {
+        sumweights += genEventInfo->weight();
+        lumi_sumweights += genEventInfo->weight();
+    } else {
+        sumweights += 1.;
+        lumi_sumweights += 1.;
+    }
 
-    // event information
+    /////////////////////////////////////////
+    // Event information ////////////////////
+    /////////////////////////////////////////
     event_nr              = iEvent.id().event();
     event_run             = iEvent.id().run();
     event_timeunix        = iEvent.time().unixTime();
     event_timemicrosec    = iEvent.time().microsecondOffset();
     event_luminosityblock = iEvent.getLuminosityBlock().luminosityBlock();
-
+    // rho
     edm::Handle<double> rho;
     iEvent.getByToken(rhoToken_, rho);
     event_rho = *rho;
 
-    // old: will be removed soon
+    /////////////////////////////////////////
+    // Trigger branches /////////////////////
+    /////////////////////////////////////////
+    triggerBranches->fill(iEvent);
+/*
     edm::Handle<L1GlobalTriggerReadoutRecord> L1trigger;
     iEvent.getByToken(l1TriggerToken_, L1trigger);
     const TechnicalTriggerWord &L1triggerbits = L1trigger->technicalTriggerWord();
@@ -422,20 +351,19 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     }
     lumi_l1techprescaletable = (L1trigger->gtFdlWord()).gtPrescaleFactorIndexTech();
     lumi_l1algoprescaletable = (L1trigger->gtFdlWord()).gtPrescaleFactorIndexAlgo();
-    //lumi_hltprescaletable = HLTConfiguration.prescaleSet(iEvent, iSetup);
     lumi_hltprescaletable = HLTPrescaleProvider_.prescaleSet(iEvent, iSetup);
-
-    // beamspot
+*/
+    /////////////////////////////////////////
+    // Beamspot /////////////////////////////
+    /////////////////////////////////////////
     edm::Handle<BeamSpot> TheBeamSpot;
     iEvent.getByToken(beamSpotToken_, TheBeamSpot);
 
-    beamspot_x = 0.;
-    beamspot_y = 0.;
-    beamspot_z = 0.;
-    beamspot_xwidth = 0.;
-    beamspot_ywidth = 0.;
-    beamspot_zsigma = 0.;
+    beamspot_x = 0.;      beamspot_y = 0.;      beamspot_z = 0.;
+    beamspot_xwidth = 0.; beamspot_ywidth = 0.; beamspot_zsigma = 0.;
+    // reset covariance matrix
     fill_n(beamspot_cov, 6, 0);
+    // fill
     if(TheBeamSpot.isValid()) {
         beamspot_x = TheBeamSpot->x0();
         beamspot_y = TheBeamSpot->y0();
@@ -456,10 +384,10 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     /////////////////////////////////////////
     // Pileup information ///////////////////
     /////////////////////////////////////////
-    edm::Handle<std::vector<PileupSummaryInfo> > PUInfo;
+    edm::Handle<vector<PileupSummaryInfo> > PUInfo;
     iEvent.getByToken(PUInfoToken_, PUInfo);
     if(PUInfo.isValid()) {
-        for(std::vector<PileupSummaryInfo>::const_iterator PVI = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
+        for(vector<PileupSummaryInfo>::const_iterator PVI = PUInfo->begin(); PVI != PUInfo->end(); ++PVI) {
             int BX = PVI->getBunchCrossing();
             if (BX == -1) {
                 numpileupinteractionsminus = PVI->getPU_NumInteractions();
@@ -471,69 +399,34 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
             }
         }
     }
-/*
-    /////////////////////////////////////////
-    // EXPLICIT trigger decisions ///////////
-    /////////////////////////////////////////
-    iEvent.getByToken(triggerBitsToken_, triggerBits);
-    iEvent.getByToken(filterBitsToken_, filterBits);
-    iEvent.getByToken(triggerObjectsToken_, triggerObjects);
-    iEvent.getByToken(triggerPrescalesToken_, triggerPrescales);
-    const edm::TriggerNames& names = iEvent.triggerNames(*triggerBits);
-    // triggers
-    for (auto trigName : myTriggerNames) {
-        size_t trigBit = RootMaker::GetTriggerBit(trigName,names);
-        std::string passString = trigName + "Pass";
-        std::string prescaleString = trigName + "Prescale";
-        if (trigBit==9999) {
-            triggerIntMap_[passString] = -1;
-            triggerIntMap_[prescaleString] = -1;
-        }
-        else {
-            triggerIntMap_[passString] = triggerBits->accept(trigBit);
-            triggerIntMap_[prescaleString] = triggerPrescales->getPrescaleForIndex(trigBit);
-        }
-    }
-    // filters
-    const edm::TriggerNames& filters = iEvent.triggerNames(*filterBits);
-    for (auto trigName : myFilterNames) {
-        size_t trigBit = RootMaker::GetTriggerBit(trigName,filters);
-        if (trigBit==9999) {
-            triggerIntMap_[trigName] = -1;
-        }
-        else {
-            triggerIntMap_[trigName] = filterBits->accept(trigBit);
-        }
-    }
-*/
+
     /////////////////////////////////////////
     // Fill vertices and objects branches ///
     /////////////////////////////////////////
     // add vertices
-    for (auto &coll : vertexCollectionBranches) {
-        coll->fill(iEvent);
+    for (auto &collBranches : vertexCollectionBranches) {
+        collBranches->fill(iEvent);
     }
     // add collections
-    for (auto &coll : objectCollectionBranches) {
-        coll->fill(iEvent);
+    for (auto &collBranches : objectCollectionBranches) {
+        collBranches->fill(iEvent);
     }
 
     /////////////////////////////////////////
     // Fill genparticles, etc. //////////////
     /////////////////////////////////////////
-    monteCarloBranches->fill(iEvent, addGenParticles, addAllGenParticles, addGenJets);
+    monteCarloBranches->fill(iEvent);
 
     /////////////////////////////////////////
     // Decide whether to keep event /////////
     /////////////////////////////////////////
     // decide if we store it
     // for example, require at least 1 muon
-    //
-    //
-    //
-    bool keepevent = false;
-    for ( auto &coll : objectCollectionBranches ) {
-        std::string name = coll->getName();
+
+    //bool keepevent = false;
+    bool keepevent = true;
+    for (auto &coll : objectCollectionBranches) {
+        string name = coll->getName();
         UInt_t count = coll->getCount();
         if( (name == "muons" && count > 1) ) {
             keepevent = true;

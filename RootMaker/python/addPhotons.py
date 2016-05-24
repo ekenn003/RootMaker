@@ -17,12 +17,11 @@ photonBranches = commonEgammaBranches.clone(
 
     # more isolation
     isolationr3trackhollow  = cms.vstring('trkSumPtHollowConeDR03','F'),
-    isolationr3ntrack       = cms.vstring('nTrkSolidConeDR03','F'),
-    isolationr3ntrackhollow = cms.vstring('nTrkHollowConeDR03','F'),
+    isolationr3ntrack       = cms.vstring('nTrkSolidConeDR03','I'),
+    isolationr3ntrackhollow = cms.vstring('nTrkHollowConeDR03','I'),
     isolationr4trackhollow  = cms.vstring('trkSumPtHollowConeDR04','F'),
-    isolationr4ntrack       = cms.vstring('nTrkSolidConeDR04','F'),
-    isolationr4ntrackhollow = cms.vstring('nTrkHollowConeDR04','F'),
-
+    isolationr4ntrack       = cms.vstring('nTrkSolidConeDR04','I'),
+    isolationr4ntrackhollow = cms.vstring('nTrkHollowConeDR04','I'),
 )
 
 def addPhotons(process, coll, **kwargs):

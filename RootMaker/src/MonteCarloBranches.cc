@@ -9,7 +9,11 @@ MonteCarloBranches::MonteCarloBranches(TTree *tree, const edm::ParameterSet &iCo
     lheEventProductToken_ (cc.consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("lheEventProduct"))),
     packedGenToken_       (cc.consumes<edm::View<pat::PackedGenParticle> >(iConfig.getParameter<edm::InputTag>("packedGenParticles"))),
     prunedGenToken_       (cc.consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("prunedGenParticles"))),
-    slimmedMETToken_      (cc.consumes<pat::METCollection>(iConfig.getParameter<edm::InputTag>("slimGenMET")))
+    slimmedMETToken_      (cc.consumes<pat::METCollection>(iConfig.getParameter<edm::InputTag>("slimGenMET"))),
+
+    addGenParticles    (iConfig.getParameter<bool>("addGenParticles")),
+    addAllGenParticles (iConfig.getParameter<bool>("addAllGenParticles")),
+    addGenJets         (iConfig.getParameter<bool>("addGenJets"))
 {
     // leptons
     selfids.push_back(11); // e-
@@ -114,7 +118,8 @@ MonteCarloBranches::~MonteCarloBranches()
 }
 
 // _________________________________________________________________________________
-void MonteCarloBranches::fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets)
+//void MonteCarloBranches::fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets)
+void MonteCarloBranches::fill(const edm::Event &iEvent)
 {
     // reset everything from the last event
     genweight = 1.;

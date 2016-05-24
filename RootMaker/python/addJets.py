@@ -85,7 +85,7 @@ def addJets(process, coll, **kwargs):
     isMC = kwargs.pop('isMC', False)
     jSrc = coll['ak4pfchsjets']
     pvSrc = coll['vertices']
-    genSrc = coll['genparticles']
+    genSrc = coll['prunedgen']
     packedSrc = coll['packed']
     # customization path
     process.jetCustomization = cms.Path()

@@ -31,7 +31,8 @@ class MonteCarloBranches
   public:
     MonteCarloBranches(TTree *tree, const edm::ParameterSet &iConfig, edm::ConsumesCollector cc);
     ~MonteCarloBranches();
-    void fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
+    //void fill(const edm::Event &iEvent, bool addGenParticles, bool addAllGenParticles, bool addGenJets);
+    void fill(const edm::Event &iEvent);
 
   private:
     // data
@@ -42,6 +43,10 @@ class MonteCarloBranches
     edm::EDGetTokenT<edm::View<pat::PackedGenParticle> > packedGenToken_;
     edm::EDGetTokenT<reco::GenParticleCollection> prunedGenToken_;
     edm::EDGetTokenT<pat::METCollection> slimmedMETToken_;
+
+    bool addGenParticles;
+    bool addAllGenParticles;
+    bool addGenJets;
 
     vector<int> motherids;
     vector<int> selfids;
@@ -72,7 +77,6 @@ class MonteCarloBranches
     vector<Float_t> genparticles_e;
     vector<Float_t> genparticles_px;
     vector<Float_t> genparticles_py;
-
     vector<Float_t> genparticles_pz;
     vector<Float_t> genparticles_vx;
     vector<Float_t> genparticles_vy;

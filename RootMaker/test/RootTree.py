@@ -20,8 +20,8 @@ options.register('runMetFilter', 0)
 #process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
 #process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
 
-options.isMC = 0 # false
-#options.isMC = 1 # true
+#options.isMC = 0 # false
+options.isMC = 1 # true
 
 
 
@@ -31,14 +31,15 @@ options.overrideGT = 1 # true (default is false)
 ##############################
 ### Input files ##############
 ##############################
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 1000
+options.maxEvents = 10000
 
 #options.skipEvents = 20
 
@@ -47,7 +48,7 @@ options.runMetFilter = 0
 # include gen particles? (if !isMC they will be False anyway)
 if options.isMC:
     options.recGenParticles = 1 # true (default is False)
-    #options.recAllGenParticles = 1 # true (default is False)
+    options.recAllGenParticles = 1 # true (default is False)
     options.recGenJets = 1 # true (default is False)
 
 
@@ -124,6 +125,39 @@ process.TFileService = cms.Service("TFileService",
     fileName = cms.string(options.outputFile),
 )
 process.schedule = cms.Schedule()
+
+###########################
+### Profiling utilities ###
+###########################
+#process.ProfilerService = cms.Service (
+#      "ProfilerService",
+#       firstEvent = cms.untracked.int32(2),
+#       lastEvent = cms.untracked.int32(500),
+#       paths = cms.untracked.vstring('schedule') 
+#)
+#
+#process.SimpleMemoryCheck = cms.Service(
+#    "SimpleMemoryCheck",
+#    ignoreTotal = cms.untracked.int32(1)
+#)
+
+# To use IgProf's neat memory profiling tools, uncomment the following 
+# lines then run this cfg with igprof like so:
+#      $ igprof -d -mp -z -o igprof.mp.gz cmsRun ... 
+# this will create a memory profile every 250 events so you can track use
+# Turn the profile into text with
+#      $ igprof-analyse -d -v -g -r MEM_LIVE igprof.yourOutputFile.gz > igreport_live.res
+# To do a performance profile instead of a memory profile, change -mp to -pp
+# in the first command and remove  -r MEM_LIVE from the second
+# For interpretation of the output, see http://igprof.org/text-output-format.html
+
+#from IgTools.IgProf.IgProfTrigger import igprof
+#process.load("IgTools.IgProf.IgProfTrigger")
+#process.igprofPath = cms.Path(process.igprof)
+#process.igprof.reportEventInterval     = cms.untracked.int32(250)
+#process.igprof.reportToFileAtBeginJob  = cms.untracked.string("|gzip -c>igprof.begin-job.gz")
+#process.igprof.reportToFileAtEvent = cms.untracked.string("|gzip -c>igprof.%I.%E.%L.%R.event.gz")
+#process.schedule.append(process.igprofPath)
 
 
 ################################
