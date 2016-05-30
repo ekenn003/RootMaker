@@ -23,10 +23,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     infotree->Branch("nevents_skipped", &nevents_skipped, "nevents_skipped/i");
     infotree->Branch("nevents_filled",  &nevents_filled,  "nevents_filled/i");
     infotree->Branch("sumweights",      &sumweights,      "sumweights/F");
-
-    // create run tree
-    runtree = FS->make<TTree> ("AC1Brun", "AC1Brun", 1);
-    runtree->Branch("run_number",   &run_number,     "run_number/i");
+    infotree->Branch("CMSSW_version",   &CMSSW_version);
 
     // create lumitree
     lumitree = FS->make<TTree> ("AC1Blumi", "AC1Blumi", 1);
@@ -40,6 +37,7 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     lumitree->Branch("lumi_eventsprocessed", &lumi_eventsprocessed, "lumi_eventsprocessed/i");
     lumitree->Branch("lumi_eventsfiltered",  &lumi_eventsfiltered,  "lumi_eventsfiltered/i");
     lumitree->Branch("lumi_sumweights",      &lumi_sumweights,      "lumi_sumweights/i");
+    lumitree->Branch("lumi_nevents",         &lumi_nevents,         "lumi_nevents/i");
 
     // create event tree
     tree = FS->make<TTree>("AC1B", "AC1B");
@@ -99,137 +97,11 @@ void RootMaker::beginJob()
 // _________________________________________________________________________________
 void RootMaker::beginRun(edm::Run const &iRun, edm::EventSetup const &iSetup) 
 {
-    run_number = iRun.run();
-    
-    /////////////////////////////////////////
-    // DYNAMIC trigger decisions ////////////
-    /////////////////////////////////////////
-/*
-    // L1 prescales /////////////////////////
-    edm::ESHandle<L1GtPrescaleFactors> l1GtPfAlgo;
-    iSetup.get<L1GtPrescaleFactorsAlgoTrigRcd>().get(l1GtPfAlgo);
-    unsigned numl1algo = (l1GtPfAlgo.product()->gtPrescaleFactors())[0].size();
-    unsigned numl1algotables = (l1GtPfAlgo.product()->gtPrescaleFactors()).size();
-    run_l1algoprescaletablescount = numl1algo*numl1algotables;
-    run_l1algocount = numl1algo;
-    if(l1GtPfAlgo.isValid()) {
-        for(size_t i = 0 ; i < numl1algotables ; i++) {
-            for(size_t j = 0 ; j < numl1algo ; j++) {
-                run_l1algoprescaletables[j+numl1algo*i] = (l1GtPfAlgo.product()->gtPrescaleFactors())[i][j];
-            }
-        }
-    }
-
-    edm::ESHandle<L1GtPrescaleFactors> l1GtPfTech;
-    iSetup.get<L1GtPrescaleFactorsTechTrigRcd>().get(l1GtPfTech);
-    unsigned numl1tech = (l1GtPfTech.product()->gtPrescaleFactors())[0].size();
-    unsigned numl1techtables = (l1GtPfTech.product()->gtPrescaleFactors()).size();
-    run_l1techprescaletablescount = numl1tech*numl1techtables;
-    run_l1techcount = numl1tech;
-    if(l1GtPfTech.isValid()) {
-        for(size_t i = 0 ; i < numl1techtables ; i++) {
-            for(size_t j = 0 ; j < numl1tech ; j++) {
-                run_l1techprescaletables[j+numl1tech*i] = (l1GtPfTech.product()->gtPrescaleFactors())[i][j];
-            }
-        }
-    }
-
-
-    // HLT names and prescales //////////////
-    bool changed = true;
-    HLTConfigProvider HLTConfiguration;
-    HLTConfiguration.init(iRun, iSetup, "HLT", changed);
-    run_hltcount = HLTConfiguration.size();
-
-    boost::cmatch what;
-    vector<boost::regex> trigregexes;
-
-    // these come from the option "HLTriggerSelection" in the config file. It's normally empty
-    for(size_t i = 0 ; i < cHLTriggerNamesSelection.size() ; i++) {
-        trigregexes.push_back(boost::regex(cHLTriggerNamesSelection[i].c_str()));
-    }
-
-    string allnames;
-
-    for(size_t i = 0 ; i < HLTConfiguration.size() ; i++) {
-        unsigned TriggerIndex = HLTConfiguration.triggerIndex(HLTConfiguration.triggerName(i));
-
-        for(size_t j = 0 ; j < trigregexes.size() ; j++) {
-            if(boost::regex_match(HLTConfiguration.triggerName(i).c_str(), what, trigregexes[j])) {
-                HLTriggerIndexSelection.push_back(TriggerIndex);
-            }
-        }
-
-        allnames += HLTConfiguration.triggerName(i) + string(" ");
-    }
-
-    string allmuonnames;
-    string allelectronnames;
-    string alltaunames;
-    string allphotonnames;
-    string alljetnames;
-    TriggerIndexSelection(cMuHLTriggerMatching,     muontriggers,     allmuonnames);
-    TriggerIndexSelection(cElHLTriggerMatching,     electrontriggers, allelectronnames);
-    TriggerIndexSelection(cTauHLTriggerMatching,    tautriggers,      alltaunames);
-    TriggerIndexSelection(cPhotonHLTriggerMatching, photontriggers,   allphotonnames);
-    TriggerIndexSelection(cJetHLTriggerMatching,    jettriggers,      alljetnames);
-*/
 }
-
-/*
-// _________________________________________________________________________________
-void RootMaker::TriggerIndexSelection(vector<string> configstring, vector<pair<unsigned, int> > &triggers, string &allnames)
-{
-
-    triggers.clear();
-    allnames.clear();
-    boost::cmatch what;
-    vector<pair<boost::regex, bool> > regexes;
-
-    for(size_t i = 0 ; i < configstring.size() ; i++) {
-        vector<string> strs;
-        boost::split(strs, configstring[i], boost::is_any_of(":"));
-        bool dofilter = false;
-        if(strs.size() == 2 && strs[1] == "FilterTrue") {
-            dofilter = true;
-        }
-        regexes.push_back(pair<boost::regex, bool> (boost::regex(strs[0].c_str()), dofilter));
-    }
-
-    for(size_t i = 0 ; i < HLTConfiguration.size() ; i++) {
-        unsigned TriggerIndex = HLTConfiguration.triggerIndex(HLTConfiguration.triggerName(i));
-        const vector<string> &ModuleLabels(HLTConfiguration.moduleLabels(TriggerIndex));
-        for(size_t j = 0 ; j < regexes.size() ; j++) {
-            if(boost::regex_match(HLTConfiguration.triggerName(i).c_str(), what, regexes[j].first) && triggers.size() < 32) {
-                for(int u = ModuleLabels.size()-1 ; u >= 0 ; u--) {
-                    if(HLTConfiguration.saveTags(ModuleLabels[u])) {
-                        allnames += HLTConfiguration.triggerName(i) + string(":") + ModuleLabels[u] + string(" ");
-                        triggers.push_back(pair<unsigned, int> (TriggerIndex, u));
-
-                        if("hltL1sL1DoubleMu10MuOpen" == ModuleLabels[u]) {
-                            allnames += HLTConfiguration.triggerName(i) + string(":") + ModuleLabels[u] + string("gt10 ");
-                            triggers.push_back(pair<unsigned, int> (TriggerIndex, -1*u));
-                        }
-
-                        if(regexes[j].second == false) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if(triggers.size() == 32) {
-        cout << "ERROR: more than 32 triggers to match" << endl;
-    }
-}
-*/
 
 // _________________________________________________________________________________
 void RootMaker::endRun(edm::Run const &iRun, edm::EventSetup const &iSetup)
 {
-    runtree->Fill();
 }
 
 // _________________________________________________________________________________
@@ -238,7 +110,8 @@ void RootMaker::beginLuminosityBlock(edm::LuminosityBlock const &iLumiBlock, edm
     // reset values 
     lumi_eventsprocessed = 0;
     lumi_eventsfiltered  = 0;
-    lumi_sumweights      = 0;
+    lumi_sumweights      = 0.;
+    lumi_nevents         = 0;
     lumi_value    = -1.;
     lumi_valueerr = -1.;
     lumi_livefrac = -1.;
@@ -280,6 +153,12 @@ void RootMaker::endJob()
 // _________________________________________________________________________________
 void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
+    // get CMSSW version used to produce the first event in the job
+    // (should be the same in every event, so overwrite it every time)
+    if (nevents == 0) {
+        CMSSW_version = (iEvent.processHistory().rbegin())->releaseVersion();
+    }
+
     /////////////////////////////////////////
     // Proliferate event/weight counters ////
     /////////////////////////////////////////
@@ -295,6 +174,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
         sumweights += 1.;
         lumi_sumweights += 1.;
     }
+    lumi_nevents++;
 
     /////////////////////////////////////////
     // Event information ////////////////////
@@ -313,28 +193,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     // Trigger branches /////////////////////
     /////////////////////////////////////////
     triggerBranches->fill(iEvent);
-/*
-    edm::Handle<L1GlobalTriggerReadoutRecord> L1trigger;
-    iEvent.getByToken(l1TriggerToken_, L1trigger);
-    const TechnicalTriggerWord &L1triggerbits = L1trigger->technicalTriggerWord();
-    for(int i  = 0  ; i < 8 ; i++) {
-        trigger_level1bits[i] = 0;
-    }
-    for(size_t i = 0 ; i < min(unsigned(L1triggerbits.size()), unsigned(64)) ; i++) {
-        trigger_level1bits[i/8] |= (Byte_t)L1triggerbits[i] << (i%8);
-    }
-    //L1TriggerAlgos
-    const DecisionWord &L1triggeralgos = L1trigger->decisionWord();
-    for(int i = 0  ; i < 128 ; i++) {
-        trigger_level1[i] = 0;
-    }
-    for(size_t i = 0 ; i < min(unsigned(L1triggeralgos.size()), unsigned(1024)) ; i++) {
-        trigger_level1[i/8] |= (Byte_t)L1triggeralgos[i] << (i%8);
-    }
-    lumi_l1techprescaletable = (L1trigger->gtFdlWord()).gtPrescaleFactorIndexTech();
-    lumi_l1algoprescaletable = (L1trigger->gtFdlWord()).gtPrescaleFactorIndexAlgo();
-    lumi_hltprescaletable = HLTPrescaleProvider_.prescaleSet(iEvent, iSetup);
-*/
+
     /////////////////////////////////////////
     // Beamspot /////////////////////////////
     /////////////////////////////////////////

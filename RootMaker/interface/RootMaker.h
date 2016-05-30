@@ -96,7 +96,6 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
 
     // trees
     TTree *infotree;
-    TTree *runtree;
     TTree *lumitree;
     TTree *tree;
 
@@ -111,9 +110,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t  nevents_skipped;
     UInt_t  nevents_filled;
     Float_t sumweights;
-
-    // runtree branches
-    UInt_t run_number;
+    TString CMSSW_version;
 
     // lumitree branches
     UInt_t  lumi_run;
@@ -127,6 +124,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t  lumi_eventsprocessed;
     UInt_t  lumi_eventsfiltered;
     UInt_t  lumi_sumweights;
+    UInt_t  lumi_nevents;
 
     // once per event branches
     ULong64_t event_nr;
