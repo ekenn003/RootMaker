@@ -18,20 +18,18 @@ jetBranches = commonJetTauBranches.clone(
 
 
     # btagging
-    btag = cms.vstring('userInt("btag")','I'),
-    pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
-    pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
-    pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
-    # these will be removed once i make sure that btagembedder is working
-    passJPL     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.245 ? 1 : 0','I'),
-    passJPM     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.515 ? 1 : 0','I'),
-    passJPT     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.760 ? 1 : 0','I'),
-    passCSVv2L  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.460 ? 1 : 0','I'),
-    passCSVv2M  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.800 ? 1 : 0','I'),
-    passCSVv2T  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.935 ? 1 : 0','I'),
-    passCMVAv2L = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > -0.715 ? 1 : 0','I'),
-    passCMVAv2M = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.185 ? 1 : 0','I'),
-    passCMVAv2T = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.875 ? 1 : 0','I'),
+    btag_pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
+    btag_pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
+    btag_pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
+    btag_passJPL     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.245 ? 1 : 0','I'),
+    btag_passJPM     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.515 ? 1 : 0','I'),
+    btag_passJPT     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.760 ? 1 : 0','I'),
+    btag_passCSVv2L  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.460 ? 1 : 0','I'),
+    btag_passCSVv2M  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.800 ? 1 : 0','I'),
+    btag_passCSVv2T  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.935 ? 1 : 0','I'),
+    btag_passCMVAv2L = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > -0.715 ? 1 : 0','I'),
+    btag_passCMVAv2M = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.185 ? 1 : 0','I'),
+    btag_passCMVAv2T = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.875 ? 1 : 0','I'),
 
     # energies
     hadronicenergy        = cms.vstring('chargedHadronEnergy + neutralHadronEnergy','F'),
@@ -126,14 +124,6 @@ def addJets(process, coll, **kwargs):
 
     #process.jetCustomization *= process.jpuID
     #jSrc = "jpuID"
-
-    # embed btag
-    process.jBtag = cms.EDProducer(
-        "BtagEmbedder",
-        src = cms.InputTag(jSrc),
-    )
-    process.jetCustomization *= process.jBtag
-    jSrc = "jBtag"
 
     # embed shapes
     process.jShape = cms.EDProducer(
