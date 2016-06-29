@@ -8,8 +8,8 @@ Still missing:
 Recipe:
 
     # setup environment
-    cmsrel CMSSW_8_0_9
-    cd CMSSW_8_0_9/src
+    cmsrel CMSSW_8_0_12
+    cd CMSSW_8_0_12/src
     cmsenv
     git cms-init
     
