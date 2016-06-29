@@ -20,8 +20,8 @@ options.register('runMetFilter', 0)
 #process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
 #process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
 
-#options.isMC = 0 # false
-options.isMC = 1 # true
+#options.isMC = 0 # data
+options.isMC = 1 # monte carlo
 
 
 
@@ -39,7 +39,7 @@ options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4
 ## Running options ##########
 #############################
 
-options.maxEvents = 10000
+#options.maxEvents = 10000
 
 #options.skipEvents = 20
 
@@ -166,11 +166,11 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>4 && abs(eta)<5.',
-    'muons'        : 'pt>4 && abs(eta)<5.',
-    'taus'         : 'pt>4 && abs(eta)<5.',
-    'photons'      : 'pt>4 && abs(eta)<5.',
-    'ak4pfchsjets' : 'pt>4 && abs(eta)<5.',
+    'electrons'    : 'pt>7 && abs(eta)<5.',
+    'muons'        : 'pt>7 && abs(eta)<5.',
+    'taus'         : 'pt>12 && abs(eta)<5.',
+    'photons'      : 'pt>7 && abs(eta)<5.',
+    'ak4pfchsjets' : 'pt>7 && abs(eta)<5.',
 }
 
 ################################
@@ -178,21 +178,6 @@ selections = {
 ################################
 # selection for cleaning (objects should match final selection)
 cleaning = {
-    # clean jets agains electrons, muons, and taus with dR of 0.3
-    'ak4pfchsjets' : {
-        'electrons' : {
-            'cut' : 'pt > 10 && abs(eta) < 2.5',
-            'dr'  : 0.3,
-        },
-        'muons' : {
-            'cut' : 'pt > 10 && abs(eta) < 2.4 && isMediumMuon && trackIso/pt < 0.3 && userFloat("dxy") < 0.02 && userFloat("dz") < 0.14 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt < 0.15',
-            'dr'  : 0.3,
-        },
-        'taus' : {
-            'cut' : 'pt > 20 && abs(eta) < 2.3 && tauID("decayModeFinding")',
-            'dr'  : 0.3,
-        },
-    },
 }
 
 ################################
