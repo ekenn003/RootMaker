@@ -26,6 +26,11 @@ triggerBranches = cms.PSet(
     Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.PSet(
         path = cms.string('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\[0-9]+'),
     ),
+
+    # prescaled trigger for debugging
+    Mu8_TrkIsoVVL_dbg = cms.PSet(
+        path = cms.string('HLT_Mu8_TrkIsoVVL_v\\[0-9]+'),
+    ),
 )
 
 # filters
