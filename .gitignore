@@ -67,3 +67,5 @@ target/
 # scram things
 *__init__.py
 .*
+
+*.root
