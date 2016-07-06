@@ -44,14 +44,6 @@ tauBranches = commonJetTauBranches.clone(
     chargedIsoPtSum              = cms.vstring('tauID("chargedIsoPtSum")','F'),
 
     # tau discriminators
-    # against electron mva5
-    tdisc_againstElectronVLooseMVA5   = cms.vstring('tauID("againstElectronVLooseMVA5")','I'), 
-    tdisc_againstElectronLooseMVA5    = cms.vstring('tauID("againstElectronLooseMVA5")','I'),
-    tdisc_againstElectronMediumMVA5   = cms.vstring('tauID("againstElectronMediumMVA5")','I'),
-    tdisc_againstElectronTightMVA5    = cms.vstring('tauID("againstElectronTightMVA5")','I'),
-    tdisc_againstElectronVTightMVA5   = cms.vstring('tauID("againstElectronVTightMVA5")','I'),
-    tdisc_againstElectronMVA5category = cms.vstring('tauID("againstElectronMVA5category")','I'),
-    tdisc_againstElectronMVA5raw      = cms.vstring('tauID("againstElectronMVA5raw")','F'),
     # against electron mva6
     tdisc_againstElectronVLooseMVA6   = cms.vstring('tauID("againstElectronVLooseMVA6")','I'),
     tdisc_againstElectronLooseMVA6    = cms.vstring('tauID("againstElectronLooseMVA6")','I'),
@@ -59,39 +51,39 @@ tauBranches = commonJetTauBranches.clone(
     tdisc_againstElectronTightMVA6    = cms.vstring('tauID("againstElectronTightMVA6")','I'),
     tdisc_againstElectronVTightMVA6   = cms.vstring('tauID("againstElectronVTightMVA6")','I'),
     tdisc_againstElectronMVA6category = cms.vstring('tauID("againstElectronMVA6category")','I'),
-    tdisc_againstElectronMVA6raw      = cms.vstring('tauID("againstElectronMVA6raw")','F'),
+    tdisc_againstElectronMVA6raw      = cms.vstring('tauID("againstElectronMVA6Raw")','F'),
     # against muon
     tdisc_againstMuonLoose3 = cms.vstring('tauID("againstMuonLoose3")','I'),
     tdisc_againstMuonTight3 = cms.vstring('tauID("againstMuonTight3")','I'),
-    # pileup weighted cut-based isolation discriminators
-    tdisc_byLoosePileupWeightedIsolation3Hits  = cms.vstring('tauID("byLoosePileupWeightedIsolation3Hits")','I'),
-    tdisc_byMediumPileupWeightedIsolation3Hits = cms.vstring('tauID("byMediumPileupWeightedIsolation3Hits")','I'),
-    tdisc_byTightPileupWeightedIsolation3Hits  = cms.vstring('tauID("byTightPileupWeightedIsolation3Hits")','I'),
+    ## pileup weighted cut-based isolation discriminators
+    #tdisc_byLoosePileupWeightedIsolation3Hits  = cms.vstring('tauID("byLoosePileupWeightedIsolation3Hits")','I'),
+    #tdisc_byMediumPileupWeightedIsolation3Hits = cms.vstring('tauID("byMediumPileupWeightedIsolation3Hits")','I'),
+    #tdisc_byTightPileupWeightedIsolation3Hits  = cms.vstring('tauID("byTightPileupWeightedIsolation3Hits")','I'),
     # combined isolation dB corr 3 hits
     tdisc_byLooseCombinedIsolationDeltaBetaCorr3Hits  = cms.vstring('tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")','I'),
     tdisc_byMediumCombinedIsolationDeltaBetaCorr3Hits = cms.vstring('tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")', 'I'),
     tdisc_byTightCombinedIsolationDeltaBetaCorr3Hits  = cms.vstring('tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")','I'),
     tdisc_byCombinedIsolationDeltaBetaCorrRaw3Hits    = cms.vstring('tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits")','I'),
-    # New Tau Isolation Discriminators with cone size DeltaR = 0.3 7_6_x
-    tdisc_byLooseCombinedIsolationDeltaBetaCorr3HitsdR03  = cms.vstring('tauID("byLooseCombinedIsolationDeltaBetaCorr3HitsdR03")','I'),
-    tdisc_byMediumCombinedIsolationDeltaBetaCorr3HitsdR03 = cms.vstring('tauID("byMediumCombinedIsolationDeltaBetaCorr3HitsdR03")', 'I'),
-    tdisc_byTightCombinedIsolationDeltaBetaCorr3HitsdR03  = cms.vstring('tauID("byTightCombinedIsolationDeltaBetaCorr3HitsdR03")','I'),
-    # BDT based tau ID discriminator based on isolation Pt sums plus tau lifetime information, trained on 1-prong, "2-prong" and 3-prong tau candidates 
-    tdisc_byVLooseIsolationMVA3newDMwLT  = cms.vstring('tauID("byVLooseIsolationMVA3newDMwLT")','I'),
-    tdisc_byLooseIsolationMVA3newDMwLT   = cms.vstring('tauID("byLooseIsolationMVA3newDMwLT")','I'),
-    tdisc_byMediumIsolationMVA3newDMwLT  = cms.vstring('tauID("byMediumIsolationMVA3newDMwLT")', 'I'),
-    tdisc_byTightIsolationMVA3newDMwLT   = cms.vstring('tauID("byTightIsolationMVA3newDMwLT")','I'),
-    tdisc_byVTightIsolationMVA3newDMwLT  = cms.vstring('tauID("byVTightIsolationMVA3newDMwLT")', 'I'),
-    tdisc_byVVTightIsolationMVA3newDMwLT = cms.vstring('tauID("byVVTightIsolationMVA3newDMwLT")', 'I'),
-    tdisc_byIsolationMVA3newDMwLTraw     = cms.vstring('tauID("byIsolationMVA3newDMwLTraw")','F'),
-    # BDT based tau ID discriminator based on isolation Pt sums plus tau lifetime information, trained on 1-prong and 3-prong tau candidates 
-    tdisc_byVLooseIsolationMVA3oldDMwLT  = cms.vstring('tauID("byVLooseIsolationMVA3oldDMwLT")', 'I'),
-    tdisc_byLooseIsolationMVA3oldDMwLT   = cms.vstring('tauID("byLooseIsolationMVA3oldDMwLT")', 'I'),
-    tdisc_byMediumIsolationMVA3oldDMwLT  = cms.vstring('tauID("byMediumIsolationMVA3oldDMwLT")', 'I'),
-    tdisc_byTightIsolationMVA3oldDMwLT   = cms.vstring('tauID("byTightIsolationMVA3oldDMwLT")', 'I'),
-    tdisc_byVTightIsolationMVA3oldDMwLT  = cms.vstring('tauID("byVTightIsolationMVA3oldDMwLT")', 'I'),
-    tdisc_byVVTightIsolationMVA3oldDMwLT = cms.vstring('tauID("byVVTightIsolationMVA3oldDMwLT")','I'),
-    tdisc_byIsolationMVA3oldDMwLTraw     = cms.vstring('tauID("byIsolationMVA3oldDMwLTraw")', 'F'),
+    ## New Tau Isolation Discriminators with cone size DeltaR = 0.3 7_6_x
+    #tdisc_byLooseCombinedIsolationDeltaBetaCorr3HitsdR03  = cms.vstring('tauID("byLooseCombinedIsolationDeltaBetaCorr3HitsdR03")','I'),
+    #tdisc_byMediumCombinedIsolationDeltaBetaCorr3HitsdR03 = cms.vstring('tauID("byMediumCombinedIsolationDeltaBetaCorr3HitsdR03")', 'I'),
+    #tdisc_byTightCombinedIsolationDeltaBetaCorr3HitsdR03  = cms.vstring('tauID("byTightCombinedIsolationDeltaBetaCorr3HitsdR03")','I'),
+    ## BDT based tau ID discriminator based on isolation Pt sums plus tau lifetime information, trained on 1-prong, "2-prong" and 3-prong tau candidates 
+    #tdisc_byVLooseIsolationMVA3newDMwLT  = cms.vstring('tauID("byVLooseIsolationMVA3newDMwLT")','I'),
+    #tdisc_byLooseIsolationMVA3newDMwLT   = cms.vstring('tauID("byLooseIsolationMVA3newDMwLT")','I'),
+    #tdisc_byMediumIsolationMVA3newDMwLT  = cms.vstring('tauID("byMediumIsolationMVA3newDMwLT")', 'I'),
+    #tdisc_byTightIsolationMVA3newDMwLT   = cms.vstring('tauID("byTightIsolationMVA3newDMwLT")','I'),
+    #tdisc_byVTightIsolationMVA3newDMwLT  = cms.vstring('tauID("byVTightIsolationMVA3newDMwLT")', 'I'),
+    #tdisc_byVVTightIsolationMVA3newDMwLT = cms.vstring('tauID("byVVTightIsolationMVA3newDMwLT")', 'I'),
+    #tdisc_byIsolationMVA3newDMwLTraw     = cms.vstring('tauID("byIsolationMVA3newDMwLTRaw")','F'),
+    ## BDT based tau ID discriminator based on isolation Pt sums plus tau lifetime information, trained on 1-prong and 3-prong tau candidates 
+    #tdisc_byVLooseIsolationMVA3oldDMwLT  = cms.vstring('tauID("byVLooseIsolationMVA3oldDMwLT")', 'I'),
+    #tdisc_byLooseIsolationMVA3oldDMwLT   = cms.vstring('tauID("byLooseIsolationMVA3oldDMwLT")', 'I'),
+    #tdisc_byMediumIsolationMVA3oldDMwLT  = cms.vstring('tauID("byMediumIsolationMVA3oldDMwLT")', 'I'),
+    #tdisc_byTightIsolationMVA3oldDMwLT   = cms.vstring('tauID("byTightIsolationMVA3oldDMwLT")', 'I'),
+    #tdisc_byVTightIsolationMVA3oldDMwLT  = cms.vstring('tauID("byVTightIsolationMVA3oldDMwLT")', 'I'),
+    #tdisc_byVVTightIsolationMVA3oldDMwLT = cms.vstring('tauID("byVVTightIsolationMVA3oldDMwLT")','I'),
+    #tdisc_byIsolationMVA3oldDMwLTraw     = cms.vstring('tauID("byIsolationMVA3oldDMwLTRaw")', 'F'),
     # With Old Decay Mode reconstruction:
     tdisc_byLooseIsolationMVArun2v1DBoldDMwLT  = cms.vstring('tauID("byLooseIsolationMVArun2v1DBoldDMwLT")','I'),
     tdisc_byMediumIsolationMVArun2v1DBoldDMwLT = cms.vstring('tauID("byMediumIsolationMVArun2v1DBoldDMwLT")','I'),
