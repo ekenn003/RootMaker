@@ -20,8 +20,8 @@ options.register('runMetFilter', 0)
 #process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
 #process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
 
-#options.isMC = 0 # false
-options.isMC = 1 # true
+options.isMC = 0 # false
+#options.isMC = 1 # true
 
 
 
@@ -31,15 +31,15 @@ options.overrideGT = 1 # true (default is false)
 ##############################
 ### Input files ##############
 ##############################
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
+
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 10000
+options.maxEvents = 1000
 
 #options.skipEvents = 20
 
@@ -95,9 +95,9 @@ process.options = cms.untracked.PSet(
 ### Output file #############
 #############################
 if options.isMC:
-    options.outputFile = 'AC1B_76mc.root'
+    options.outputFile = 'AC1B_80mc.root'
 else:
-    options.outputFile = 'AC1B_76data.root'
+    options.outputFile = 'AC1B_80data.root'
 
 
 ################################
@@ -136,10 +136,10 @@ process.schedule = cms.Schedule()
 #       paths = cms.untracked.vstring('schedule') 
 #)
 #
-#process.SimpleMemoryCheck = cms.Service(
-#    "SimpleMemoryCheck",
-#    ignoreTotal = cms.untracked.int32(1)
-#)
+process.SimpleMemoryCheck = cms.Service(
+    "SimpleMemoryCheck",
+    ignoreTotal = cms.untracked.int32(1)
+)
 
 # To use IgProf's neat memory profiling tools, uncomment the following 
 # lines then run this cfg with igprof like so:
@@ -178,21 +178,21 @@ selections = {
 ################################
 # selection for cleaning (objects should match final selection)
 cleaning = {
-    # clean jets agains electrons, muons, and taus with dR of 0.3
-    'ak4pfchsjets' : {
-        'electrons' : {
-            'cut' : 'pt > 10 && abs(eta) < 2.5',
-            'dr'  : 0.3,
-        },
-        'muons' : {
-            'cut' : 'pt > 10 && abs(eta) < 2.4 && isMediumMuon && trackIso/pt < 0.3 && userFloat("dxy") < 0.02 && userFloat("dz") < 0.14 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt < 0.15',
-            'dr'  : 0.3,
-        },
-        'taus' : {
-            'cut' : 'pt > 20 && abs(eta) < 2.3 && tauID("decayModeFinding")',
-            'dr'  : 0.3,
-        },
-    },
+#    # clean jets agains electrons, muons, and taus with dR of 0.3
+#    'ak4pfchsjets' : {
+#        'electrons' : {
+#            'cut' : 'pt > 10 && abs(eta) < 2.5',
+#            'dr'  : 0.3,
+#        },
+#        'muons' : {
+#            'cut' : 'pt > 10 && abs(eta) < 2.4 && isMediumMuon && trackIso/pt < 0.3 && userFloat("dxy") < 0.02 && userFloat("dz") < 0.14 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt < 0.15',
+#            'dr'  : 0.3,
+#        },
+#        'taus' : {
+#            'cut' : 'pt > 20 && abs(eta) < 2.3 && tauID("decayModeFinding")',
+#            'dr'  : 0.3,
+#        },
+#    },
 }
 
 ################################
