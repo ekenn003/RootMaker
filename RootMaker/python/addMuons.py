@@ -97,8 +97,6 @@ muonBranches = commonObjectBranches.clone(
     rochesterEnergy = cms.vstring('userFloat("rochesterEnergy")','F'),
     rochesterError  = cms.vstring('userFloat("rochesterError")','F'),
 
-    # user data from HLTMatchEmbedder
-    trigger = cms.vstring('userInt("trigger")','I'),
     matches_IsoMu20                           = cms.vstring('userInt("matches_IsoMu20")','I'),
     matches_IsoTkMu20                         = cms.vstring('userInt("matches_IsoTkMu20")','I'),
     matches_IsoMu27                           = cms.vstring('userInt("matches_IsoMu27")','I'),
