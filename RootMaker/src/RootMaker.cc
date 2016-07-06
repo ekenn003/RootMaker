@@ -264,8 +264,8 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     // decide if we store it
     // for example, require at least 1 muon
 
-    //bool keepevent = false;
-    bool keepevent = true;
+    bool keepevent = false;
+    //bool keepevent = true;
     for (auto &coll : objectCollectionBranches) {
         string name = coll->getName();
         UInt_t count = coll->getCount();
