@@ -62,8 +62,8 @@ void TriggerBranches::fill(const edm::Event &iEvent)
     // triggers
     for (auto trigName : myTriggerNames) {
         int trigBit = GetTriggerBit(trigName, names);
-        string passString = "event_hlt_passes_" + trigName;
-        string prescaleString = "prescale_hlt_" + trigName;
+        string passString = "passes_" + trigName;
+        string prescaleString = "prescale_" + trigName;
         if (trigBit == -1) {
             triggerIntMap_[passString] = -1;
             triggerIntMap_[prescaleString] = -1;
