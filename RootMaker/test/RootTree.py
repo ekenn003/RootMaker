@@ -3,37 +3,37 @@ from RootMaker.RootMaker.RootMaker_cfi import *
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 # set defaults:
-options.register('overrideGT', False)
-options.register('skipEvents', 0)
-options.register('isMC', False)
-options.register('recGenParticles', False)
-options.register('recAllGenParticles', False)
-options.register('recGenJets', False)
-#options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
-options.register('runMetFilter', 0)
+options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
+options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
+options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
+options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
+options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
+options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
+options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
+options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
 
+##############################
+### MC / data ################
+##############################
+#options.isMC = False # data
+options.isMC = True # MC
 
 ##############################
 ### Global tag ###############
 ##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
-#process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
-#process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
-
-options.isMC = 0 # false
-#options.isMC = 1 # true
-
-
+#options.globalTag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
+options.globalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
-options.overrideGT = 1 # true (default is false)
+options.overrideGT = False # (default is false)
 
 ##############################
 ### Input files ##############
 ##############################
 
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
 
 #############################
 ## Running options ##########
@@ -43,13 +43,13 @@ options.maxEvents = 1000
 
 #options.skipEvents = 20
 
-options.runMetFilter = 0
+options.runMetFilter = False
 
 # include gen particles? (if !isMC they will be False anyway)
 if options.isMC:
-    options.recGenParticles = 1 # true (default is False)
-    options.recAllGenParticles = 1 # true (default is False)
-    options.recGenJets = 1 # true (default is False)
+    options.recGenParticles = True # (default is False)
+    options.recAllGenParticles = True # (default is False)
+    options.recGenJets = True # (default is False)
 
 
 
@@ -103,10 +103,14 @@ else:
 ################################
 ### Override global tag ########
 ################################
+process.GlobalTag.globaltag = options.globalTag
 if options.overrideGT:
     envvar = 'mcgt' if options.isMC else 'datagt'
     from Configuration.AlCa.GlobalTag import GlobalTag
-    GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+    #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+    # ichep GT (includes JECs)
+    # https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
+    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
     process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 
@@ -136,10 +140,15 @@ process.schedule = cms.Schedule()
 #       paths = cms.untracked.vstring('schedule') 
 #)
 #
-process.SimpleMemoryCheck = cms.Service(
-    "SimpleMemoryCheck",
-    ignoreTotal = cms.untracked.int32(1)
-)
+
+
+
+#process.SimpleMemoryCheck = cms.Service(
+#    "SimpleMemoryCheck",
+#    ignoreTotal = cms.untracked.int32(1)
+#)
+
+
 
 # To use IgProf's neat memory profiling tools, uncomment the following 
 # lines then run this cfg with igprof like so:
