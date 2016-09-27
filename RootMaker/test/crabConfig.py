@@ -24,7 +24,8 @@ config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 1
 
 # storage options
-config.Data.outLFNDirBase = '/store/user/ekennedy/smh2mu/'
-config.Site.storageSite = 'T2_CH_CERN'
+config.Data.outLFNDirBase = '/store/user/ekennedy/smh2mu/76X/'
+#config.Site.storageSite = 'T2_CH_CERN'
+config.Site.storageSite = 'T2_US_UCSD'
 
 config.Data.publication = False

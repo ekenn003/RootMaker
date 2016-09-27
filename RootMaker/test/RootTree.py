@@ -3,53 +3,54 @@ from RootMaker.RootMaker.RootMaker_cfi import *
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 # set defaults:
-options.register('overrideGT', False)
-options.register('skipEvents', 0)
-options.register('isMC', False)
-options.register('recGenParticles', False)
-options.register('recAllGenParticles', False)
-options.register('recGenJets', False)
-#options.register('runMetFilter', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, "Run the recommended MET filters")
-options.register('runMetFilter', 0)
+options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
+options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
+options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
+options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
+options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
+options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
+options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
+options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
 
+
+##############################
+### MC / data ################
+##############################
+#options.isMC = False # data
+options.isMC = True # MC
 
 ##############################
 ### Global tag ###############
 ##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
-#process.GlobalTag.globaltag = cms.string('76X_dataRun2_v15')
-#process.GlobalTag.globaltag = cms.string('76X_mcRun2_asymptotic_v12')
-
-#options.isMC = 0 # data
-options.isMC = 1 # monte carlo
-
-
+#options.globalTag = '76X_dataRun2_16Dec2015_v0'
+options.globalTag = '76X_mcRun2_asymptotic_RunIIFall15DR76_v1'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
-options.overrideGT = 1 # true (default is false)
+#options.overrideGT = True # (default is false)
 
 ##############################
 ### Input files ##############
 ##############################
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
 
 #############################
 ## Running options ##########
 #############################
 
-#options.maxEvents = 10000
+#options.maxEvents = 3000
 
 #options.skipEvents = 20
 
-options.runMetFilter = 0
+#options.runMetFilter = True
 
 # include gen particles? (if !isMC they will be False anyway)
 if options.isMC:
-    options.recGenParticles = 1 # true (default is False)
-    options.recAllGenParticles = 1 # true (default is False)
-    options.recGenJets = 1 # true (default is False)
+    options.recGenParticles = True # (default is False)
+    options.recAllGenParticles = True # (default is False)
+    options.recGenJets = True # (default is False)
 
 
 
@@ -103,6 +104,7 @@ else:
 ################################
 ### Override global tag ########
 ################################
+process.GlobalTag.globaltag = options.globalTag
 if options.overrideGT:
     envvar = 'mcgt' if options.isMC else 'datagt'
     from Configuration.AlCa.GlobalTag import GlobalTag
