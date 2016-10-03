@@ -175,11 +175,11 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>9 && abs(eta)<3.',
-    'muons'        : 'pt>9 && abs(eta)<3.',
-    'taus'         : 'pt>15 && abs(eta)<5.',
-    'photons'      : 'pt>13000 && abs(eta)<3.',
-    'ak4pfchsjets' : 'pt>15 && abs(eta)<5.',
+    'electrons'    : 'pt>7. && abs(eta)<3.',
+    'muons'        : 'pt>6. && abs(eta)<2.5',
+#    'taus'         : 'pt>15. && abs(eta)<2.5',
+#    'photons'      : 'pt>13000 && abs(eta)<3.',
+    'ak4pfchsjets' : 'pt>15. && abs(eta)<4.8',
 }
 
 ################################
@@ -235,16 +235,16 @@ objectCollections = addMuons(
     objectCollections,
     isMC=bool(options.isMC),
 )
-objectCollections = addTaus(
-    process,
-    objectCollections,
-    isMC=bool(options.isMC),
-)
-objectCollections = addPhotons(
-    process,
-    objectCollections,
-    isMC=bool(options.isMC),
-)
+#objectCollections = addTaus(
+#    process,
+#    objectCollections,
+#    isMC=bool(options.isMC),
+#)
+#objectCollections = addPhotons(
+#    process,
+#    objectCollections,
+#    isMC=bool(options.isMC),
+#)
 objectCollections = addJets(
     process,
     objectCollections,
@@ -280,7 +280,7 @@ process.makeroottree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') i
 process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
 process.makeroottree.objectCollections.electrons.collection    = objectCollections['electrons']
 process.makeroottree.objectCollections.muons.collection        = objectCollections['muons']
-process.makeroottree.objectCollections.taus.collection         = objectCollections['taus']
+#process.makeroottree.objectCollections.taus.collection         = objectCollections['taus']
 #process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
 process.makeroottree.objectCollections.ak4pfchsjets.collection = objectCollections['ak4pfchsjets']
 process.makeroottree.objectCollections.pfmettype1.collection   = objectCollections['pfmettype1']

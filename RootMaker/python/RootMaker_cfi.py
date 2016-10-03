@@ -62,10 +62,10 @@ makeroottree = cms.EDAnalyzer("RootMaker",
             collection = cms.InputTag("slimmedMuons"),
             branches = muonBranches,
         ),
-        taus = cms.PSet(
-            collection = cms.InputTag("slimmedTaus"),
-            branches = tauBranches,
-        ),
+#        taus = cms.PSet(
+#            collection = cms.InputTag("slimmedTaus"),
+#            branches = tauBranches,
+#        ),
 #        photons = cms.PSet(
 #            collection = cms.InputTag("slimmedPhotons"),
 #            branches = photonBranches,
