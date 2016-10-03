@@ -15,15 +15,15 @@ options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarPa
 ##############################
 ### MC / data ################
 ##############################
-#options.isMC = False # data
-options.isMC = True # MC
+options.isMC = False # data
+#options.isMC = True # MC
 
 ##############################
 ### Global tag ###############
 ##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
-#options.globalTag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
-options.globalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
+options.globalTag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
+#options.globalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
 options.overrideGT = False # (default is false)
@@ -32,24 +32,24 @@ options.overrideGT = False # (default is false)
 ### Input files ##############
 ##############################
 
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 1000
+options.maxEvents = 10000
 
 #options.skipEvents = 20
 
 options.runMetFilter = False
 
-# include gen particles? (if !isMC they will be False anyway)
-if options.isMC:
-    options.recGenParticles = True # (default is False)
-    options.recAllGenParticles = True # (default is False)
-    options.recGenJets = True # (default is False)
+## include gen particles? (if !isMC they will be False anyway)
+#if options.isMC:
+#    options.recGenParticles = True # (default is False)
+#    options.recAllGenParticles = True # (default is False)
+#    options.recGenJets = True # (default is False)
 
 
 
@@ -175,11 +175,11 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>4 && abs(eta)<5.',
-    'muons'        : 'pt>4 && abs(eta)<5.',
-    'taus'         : 'pt>4 && abs(eta)<5.',
-    'photons'      : 'pt>4 && abs(eta)<5.',
-    'ak4pfchsjets' : 'pt>4 && abs(eta)<5.',
+    'electrons'    : 'pt>9 && abs(eta)<3.',
+    'muons'        : 'pt>9 && abs(eta)<3.',
+    'taus'         : 'pt>15 && abs(eta)<5.',
+    'photons'      : 'pt>13000 && abs(eta)<3.',
+    'ak4pfchsjets' : 'pt>15 && abs(eta)<5.',
 }
 
 ################################
@@ -281,7 +281,7 @@ process.makeroottree.vertexCollections.vertices.collection     = objectCollectio
 process.makeroottree.objectCollections.electrons.collection    = objectCollections['electrons']
 process.makeroottree.objectCollections.muons.collection        = objectCollections['muons']
 process.makeroottree.objectCollections.taus.collection         = objectCollections['taus']
-process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
+#process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
 process.makeroottree.objectCollections.ak4pfchsjets.collection = objectCollections['ak4pfchsjets']
 process.makeroottree.objectCollections.pfmettype1.collection   = objectCollections['pfmettype1']
 

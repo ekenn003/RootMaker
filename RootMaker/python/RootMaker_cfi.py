@@ -66,10 +66,10 @@ makeroottree = cms.EDAnalyzer("RootMaker",
             collection = cms.InputTag("slimmedTaus"),
             branches = tauBranches,
         ),
-        photons = cms.PSet(
-            collection = cms.InputTag("slimmedPhotons"),
-            branches = photonBranches,
-        ),
+#        photons = cms.PSet(
+#            collection = cms.InputTag("slimmedPhotons"),
+#            branches = photonBranches,
+#        ),
         ak4pfchsjets = cms.PSet(
             collection = cms.InputTag("slimmedJets"),
             branches = jetBranches,
