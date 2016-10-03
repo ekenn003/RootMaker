@@ -32,25 +32,25 @@ options.globalTag = '76X_mcRun2_asymptotic_RunIIFall15DR76_v1'
 ##############################
 ### Input files ##############
 ##############################
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
 
 #############################
 ## Running options ##########
 #############################
 
-#options.maxEvents = 3000
+options.maxEvents = 3000
 
 #options.skipEvents = 20
 
 #options.runMetFilter = True
 
-# include gen particles? (if !isMC they will be False anyway)
-if options.isMC:
-    options.recGenParticles = True # (default is False)
-    options.recAllGenParticles = True # (default is False)
-    options.recGenJets = True # (default is False)
+## include gen particles? (if !isMC they will be False anyway)
+#if options.isMC:
+#    options.recGenParticles = True # (default is False)
+#    options.recAllGenParticles = True # (default is False)
+#    options.recGenJets = True # (default is False)
 
 
 
@@ -168,11 +168,11 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>7 && abs(eta)<5.',
-    'muons'        : 'pt>7 && abs(eta)<5.',
-    'taus'         : 'pt>12 && abs(eta)<5.',
-    'photons'      : 'pt>7 && abs(eta)<5.',
-    'ak4pfchsjets' : 'pt>7 && abs(eta)<5.',
+    'electrons'    : 'pt>7. && abs(eta)<3.',
+    'muons'        : 'pt>7. && abs(eta)<2.5',
+#    'taus'         : 'pt>17. && abs(eta)<5.',
+#    'photons'      : 'pt>13000. && abs(eta)<5.',
+    'ak4pfchsjets' : 'pt>15. && abs(eta)<4.8',
 }
 
 ################################
@@ -213,16 +213,16 @@ objectCollections = addMuons(
     objectCollections,
     isMC=bool(options.isMC),
 )
-objectCollections = addTaus(
-    process,
-    objectCollections,
-    isMC=bool(options.isMC),
-)
-objectCollections = addPhotons(
-    process,
-    objectCollections,
-    isMC=bool(options.isMC),
-)
+#objectCollections = addTaus(
+#    process,
+#    objectCollections,
+#    isMC=bool(options.isMC),
+#)
+#objectCollections = addPhotons(
+#    process,
+#    objectCollections,
+#    isMC=bool(options.isMC),
+#)
 objectCollections = addJets(
     process,
     objectCollections,
@@ -258,8 +258,8 @@ process.makeroottree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') i
 process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
 process.makeroottree.objectCollections.electrons.collection    = objectCollections['electrons']
 process.makeroottree.objectCollections.muons.collection        = objectCollections['muons']
-process.makeroottree.objectCollections.taus.collection         = objectCollections['taus']
-process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
+#process.makeroottree.objectCollections.taus.collection         = objectCollections['taus']
+#process.makeroottree.objectCollections.photons.collection      = objectCollections['photons']
 process.makeroottree.objectCollections.ak4pfchsjets.collection = objectCollections['ak4pfchsjets']
 process.makeroottree.objectCollections.pfmettype1.collection   = objectCollections['pfmettype1']
 
