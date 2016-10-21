@@ -1,17 +1,20 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
-from FWCore.ParameterSet.VarParsing import VarParsing
-options = VarParsing('analysis')
-# set defaults:
-options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
-options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
-options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
-options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
-options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
-options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
-options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
-options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
-
+#from FWCore.ParameterSet.VarParsing import VarParsing
+#options = VarParsing('analysis')
+## set defaults:
+#options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
+#options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
+#options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
+#options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
+#options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
+#options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
+#options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
+#options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
+#
+#options.register('mystring', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, '')
+#
+options.parseArguments()
 
 ##############################
 ### MC / data ################
@@ -19,12 +22,17 @@ options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarPa
 #options.isMC = False # data
 options.isMC = True # MC
 
+print 'sourceDS = ' + options.sourceDS
+
 ##############################
 ### Global tag ###############
 ##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
-#options.globalTag = '76X_dataRun2_16Dec2015_v0'
-options.globalTag = '76X_mcRun2_asymptotic_RunIIFall15DR76_v1'
+if options.isMC:
+    options.globalTag = '76X_mcRun2_asymptotic_RunIIFall15DR76_v1'
+else:
+    options.globalTag = '76X_dataRun2_16Dec2015_v0'
+
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
 #options.overrideGT = True # (default is false)
@@ -32,15 +40,15 @@ options.globalTag = '76X_mcRun2_asymptotic_RunIIFall15DR76_v1'
 ##############################
 ### Input files ##############
 ##############################
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/SingleRunD_16dec_76.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4L_powheg_76.root'
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/DYJets2L_amcatnlo_76.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 3000
+options.maxEvents = 1000
 
 #options.skipEvents = 20
 
@@ -249,6 +257,7 @@ for coll in cleaning:
 process.load("RootMaker.RootMaker.RootMaker_cfi")
 
 process.makeroottree.isData = not options.isMC
+process.makeroottree.sourceDataset = options.sourceDS
 process.makeroottree.addGenParticles    = bool(options.recGenParticles)
 process.makeroottree.addAllGenParticles = bool(options.recAllGenParticles)
 process.makeroottree.addGenJets         = bool(options.recGenJets)

@@ -3,6 +3,20 @@
 # This is all default stuff - you shouldn't have to change anything in this file. 
 import FWCore.ParameterSet.Config as cms
 
+from FWCore.ParameterSet.VarParsing import VarParsing
+options = VarParsing('analysis')
+# set defaults:
+options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
+options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
+options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
+options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
+options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
+options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
+options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
+options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
+
+options.register('sourceDS', 'None', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Source dataset')
+
 # load branches
 from RootMaker.RootMaker.addTriggers     import * # triggerBranches, filterBranches
 from RootMaker.RootMaker.addVertices     import * # vertexBranches
@@ -13,9 +27,11 @@ from RootMaker.RootMaker.addMET          import * # metBranches
 from RootMaker.RootMaker.addTaus         import * # tauBranches, TauDiscriminators
 from RootMaker.RootMaker.addPhotons      import * # photonBranches
 
+# set overridable defaults
 makeroottree = cms.EDAnalyzer("RootMaker",
     # configuration
     isData            = cms.bool(True),
+    sourceDataset     = cms.string('None'),
 
     addGenParticles    = cms.bool(False),
     addAllGenParticles = cms.bool(False),

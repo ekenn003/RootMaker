@@ -93,6 +93,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
 
     // configuration
     bool isData_;
+    string sourceDS_;
 
     // trees
     TTree *infotree;
@@ -111,6 +112,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t  nevents_filled;
     Float_t sumweights;
     TString CMSSW_version;
+    TString source_dataset;
 
     // lumitree branches
     UInt_t  lumi_run;
