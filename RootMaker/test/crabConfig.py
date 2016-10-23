@@ -17,12 +17,13 @@ json          = ''
 version = '76X'
 era     = 'oct16'
 
+# name out output directory in /store/user/ekennedy/...
+output  = ''
+
 #if it is mc or data
 #real    = 'data'
 #real    = 'mc'
 
-# name out output directory in /store/user/ekennedy/...
-output  = ''
 
 # which T2 to store it at
 #config.Site.storageSite = 'T2_CH_CERN'
