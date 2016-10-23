@@ -1,19 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
-#from FWCore.ParameterSet.VarParsing import VarParsing
-#options = VarParsing('analysis')
-## set defaults:
-#options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
-#options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
-#options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
-#options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
-#options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
-#options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
-#options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
-#options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
-#
-#options.register('mystring', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, '')
-#
+
 options.parseArguments()
 
 ##############################
@@ -22,7 +9,6 @@ options.parseArguments()
 #options.isMC = False # data
 options.isMC = True # MC
 
-print 'sourceDS = ' + options.sourceDS
 
 ##############################
 ### Global tag ###############
@@ -48,7 +34,7 @@ options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup76/ZZT4
 ## Running options ##########
 #############################
 
-options.maxEvents = 1000
+#options.maxEvents = 1000
 
 #options.skipEvents = 20
 
