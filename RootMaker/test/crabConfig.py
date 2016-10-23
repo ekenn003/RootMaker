@@ -1,28 +1,57 @@
 from CRABClient.UserUtilities import config
 config = config()
 
-# taskname
-config.General.requestName = '_try1'
+###############################################
+# configuration ###############################
+###############################################
 
-config.JobType.pluginName = 'Analysis'
+# task
+taskname = '_try1'
+filesperjob = 3
 
-config.JobType.psetName = 'RootTree.py'
+# input
+input_dataset = ''
+json          = ''
 
-# input and JSON
-config.Data.inputDataset = ''
-config.JobType.pyCfgParams = ['sourceDS=" "']
+# output folder options
+version = '76X'
+era     = 'oct16'
 
-config.Data.lumiMask = ''
+#if it is mc or data
+#real    = 'data'
+real    = 'mc'
 
-# job splitting options
-config.Data.inputDBS = 'global'
+# name out output directory in /store/user/ekennedy/...
+output  = ''
 
-config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 1
-
-# storage options
+# which T2 to store it at
 #config.Site.storageSite = 'T2_CH_CERN'
 config.Site.storageSite = 'T2_US_UCSD'
-config.Data.outLFNDirBase = '/store/user/ekennedy/{0}/smh2mu/76X/<era>/<mc-data>/<dset>'.format(config.Site.storageSite)
 
+
+
+
+
+###############################################
+# /end configuration ##########################
+###############################################
+
+config.General.requestName = taskname
+config.JobType.pluginName = 'Analysis'
+config.JobType.psetName = 'RootTree.py'
+
+config.Data.inputDataset = input_dataset
+config.JobType.pyCfgParams = ['sourceDS="{0}"'.format((config.Data.inputDataset).split('/')[1])]
+
+# this needs to be changed for 2015 vs 2016 collisions
+config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/{0}'.format(json)
+
+config.Data.inputDBS = 'global'
+config.Data.splitting = 'FileBased'
+config.Data.unitsPerJob = filesperjob
+
+config.Data.outLFNDirBase = '/store/user/ekennedy/{0}/smh2mu/{1}/{2}/{3}/{4}'.format(config.Site.storageSite, version, era, real, output)
 config.Data.publication = False
+
+print '\nSource dataset identified as {0}'.format((config.Data.inputDataset).split('/')[1])
+print 'Output will be stored in {0}'.format(config.Data.outLFNDirBase)
