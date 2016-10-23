@@ -44,7 +44,7 @@ config.Data.inputDataset = input_dataset
 config.JobType.pyCfgParams = ['sourceDS="{0}"'.format((config.Data.inputDataset).split('/')[1])]
 
 # this needs to be changed for 2015 vs 2016 collisions
-if real=='data'
+if real=='data':
     config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/{0}'.format(json)
 
 config.Data.inputDBS = 'global'
@@ -55,4 +55,4 @@ config.Data.outLFNDirBase = '/store/user/ekennedy/{0}/smh2mu/{1}/{2}/{3}/{4}'.fo
 config.Data.publication = False
 
 print '\nSource dataset identified as {0}'.format((config.Data.inputDataset).split('/')[1])
-print 'Output will be stored in {0}'.format(config.Data.outLFNDirBase)
+print 'Output will be stored in {0}\n'.format(config.Data.outLFNDirBase)
