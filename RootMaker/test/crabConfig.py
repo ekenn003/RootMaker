@@ -19,7 +19,7 @@ era     = 'oct16'
 
 #if it is mc or data
 #real    = 'data'
-real    = 'mc'
+#real    = 'mc'
 
 # name out output directory in /store/user/ekennedy/...
 output  = ''
@@ -44,7 +44,8 @@ config.Data.inputDataset = input_dataset
 config.JobType.pyCfgParams = ['sourceDS="{0}"'.format((config.Data.inputDataset).split('/')[1])]
 
 # this needs to be changed for 2015 vs 2016 collisions
-config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/{0}'.format(json)
+if real=='data'
+    config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/{0}'.format(json)
 
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
