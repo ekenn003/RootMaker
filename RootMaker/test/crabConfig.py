@@ -1,31 +1,60 @@
 from CRABClient.UserUtilities import config
 config = config()
 
-# taskname
-config.General.requestName = '_try1'
+###############################################
+# configuration ###############################
+###############################################
 
+# task
+taskname = '_try1'
+filesperjob = 3
+
+# input
+input_dataset = ''
+json          = ''
+
+# output folder options
+version = '80X'
+era     = 'oct16'
+
+# name out output directory in /store/user/ekennedy/...
+output  = ''
+
+#if it is mc or data
+#real    = 'data'
+#real    = 'mc'
+
+
+# which T2 to store it at
+#config.Site.storageSite = 'T2_CH_CERN'
+config.Site.storageSite = 'T2_US_UCSD'
+
+
+
+
+
+###############################################
+# /end configuration ##########################
+###############################################
+
+config.General.requestName = taskname
 config.JobType.pluginName = 'Analysis'
-
 config.JobType.psetName = 'RootTree.py'
 
-# input and JSON
-config.Data.inputDataset = ''
-config.Data.lumiMask = ''
+config.Data.inputDataset = input_dataset
+config.JobType.pyCfgParams = ['sourceDS="{0}"'.format((config.Data.inputDataset).split('/')[1])]
 
-# job splitting options
+# this needs to be changed for 2015 vs 2016 collisions
+if real=='data':
+    config.Data.lumiMask = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/{0}'.format(json)
+
 config.Data.inputDBS = 'global'
-
-# for data:
-#config.Data.splitting = 'LumiBased'
-#config.Data.unitsPerJob = 3
-
-# for MC:
 config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 1
+config.Data.unitsPerJob = filesperjob
 
-# storage options
-config.Data.outLFNDirBase = '/store/user/ekennedy/smh2mu/80X/<era>/<mc-data>/<dset>'
-config.Site.storageSite = 'T2_CH_CERN'
-#config.Site.storageSite = 'T2_US_UCSD'
-
+config.Data.outLFNDirBase = '/store/user/ekennedy/{0}/smh2mu/{1}/{2}/{3}/{4}'.format(config.Site.storageSite, version, era, real, output)
 config.Data.publication = False
+
+print '\nSource dataset identified as {0}'.format((config.Data.inputDataset).split('/')[1])
+print 'Output will be stored in {0}\n'.format(config.Data.outLFNDirBase)
+

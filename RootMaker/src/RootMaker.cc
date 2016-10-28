@@ -9,7 +9,8 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
 
     vertexCollections(iConfig.getParameter<edm::ParameterSet>("vertexCollections")),
     objectCollections(iConfig.getParameter<edm::ParameterSet>("objectCollections")),
-    isData_(iConfig.getParameter<bool>("isData"))
+    isData_(iConfig.getParameter<bool>("isData")),
+    sourceDS_(iConfig.getParameter<string>("sourceDataset"))
 {
     usesResource("TFileService");
 
@@ -24,6 +25,8 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     infotree->Branch("nevents_filled",  &nevents_filled,  "nevents_filled/i");
     infotree->Branch("sumweights",      &sumweights,      "sumweights/F");
     infotree->Branch("CMSSW_version",   &CMSSW_version);
+    infotree->Branch("source_dataset",  &source_dataset);
+
 
     // create lumitree
     lumitree = FS->make<TTree> ("AC1Blumi", "AC1Blumi", 1);
@@ -147,12 +150,15 @@ void RootMaker::endJob()
     cerr<<"nevents_filled  = "<<nevents_filled<<endl;
     cerr<<"nevents total   = "<<nevents<<endl;
     cerr<<"isData = "<<isdata<<endl;
+    cerr<<"source_dataset = "<<source_dataset<<endl;
 }
 
 
 // _________________________________________________________________________________
 void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
 {
+    // Record what dataset we run on
+    source_dataset = sourceDS_;
     // get CMSSW version used to produce the first event in the job
     // (should be the same in every event, so overwrite it every time)
     if (nevents == 0) {
