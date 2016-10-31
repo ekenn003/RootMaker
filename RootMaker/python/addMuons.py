@@ -112,6 +112,7 @@ muonBranches = commonObjectBranches.clone(
 ################################################
 def addMuons(process, coll, **kwargs):
     isMC = kwargs.pop('isMC', False)
+    isReHLT = kwargs.pop('isReHLT', False)
     mSrc = coll['muons']
     pvSrc = coll['vertices']
     # customization path
@@ -121,7 +122,7 @@ def addMuons(process, coll, **kwargs):
     ### embed rochester corrections ###
     ###################################
     process.mRoch = cms.EDProducer(
-        "RochCorEmbedder",
+        'RochCorEmbedder',
         src = cms.InputTag(mSrc),
         isData = cms.bool(not isMC),
     )
@@ -133,7 +134,7 @@ def addMuons(process, coll, **kwargs):
     ### embed pv ###
     ################
     process.mPV = cms.EDProducer(
-        "MuonPVEmbedder",
+        'MuonPVEmbedder',
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
     )
@@ -144,7 +145,7 @@ def addMuons(process, coll, **kwargs):
     ### embed muon id ###
     #####################
     process.mID = cms.EDProducer(
-        "MuonInfoEmbedder",
+        'MuonInfoEmbedder',
         src = cms.InputTag(mSrc),
         vertexSrc = cms.InputTag(pvSrc),
     )
@@ -155,10 +156,10 @@ def addMuons(process, coll, **kwargs):
     ### embed trigger matching ###
     ##############################
     process.mTrig = cms.EDProducer(
-        "MuonHLTMatchEmbedder",
+        'MuonHLTMatchEmbedder',
         src = cms.InputTag(mSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
-        triggerObjects = cms.InputTag("selectedPatTrigger"),
+        triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if isReHLT else cms.InputTag('TriggerResults', '', 'HLT'),
+        triggerObjects = cms.InputTag('selectedPatTrigger'),
         deltaR = cms.double(0.5),
         labels = cms.vstring( # needs to match paths
             # single muon
