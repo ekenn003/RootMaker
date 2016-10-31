@@ -4,8 +4,9 @@ from RootMaker.RootMaker.RootMaker_cfi import *
 ##############################
 ### MC / data ################
 ##############################
-options.isMC = False # data
-#options.isMC = True # MC
+#options.isMC = False # data
+options.isMC = True # MC
+
 options.isReHLT = True 
 
 ##############################
@@ -24,7 +25,8 @@ options.overrideGT = False # (default is false)
 ### Input files ##############
 ##############################
 
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/test/miniaod_GGF_reHLT.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
 
 #############################
@@ -226,6 +228,7 @@ objectCollections = addMuons(
     process,
     objectCollections,
     isMC=bool(options.isMC),
+    isReHLT=bool(options.isReHLT),
 )
 #objectCollections = addTaus(
 #    process,

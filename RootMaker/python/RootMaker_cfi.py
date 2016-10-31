@@ -27,7 +27,7 @@ from RootMaker.RootMaker.addMET          import * # metBranches
 from RootMaker.RootMaker.addTaus         import * # tauBranches, TauDiscriminators
 from RootMaker.RootMaker.addPhotons      import * # photonBranches
 
-makeroottree = cms.EDAnalyzer("RootMaker",
+makeroottree = cms.EDAnalyzer('RootMaker',
     # configuration
     isData            = cms.bool(True),
     sourceDataset     = cms.string('None'),
@@ -37,60 +37,60 @@ makeroottree = cms.EDAnalyzer("RootMaker",
     addGenJets         = cms.bool(False),
 
     # generator info
-    genEventInfo       = cms.InputTag("generator"),
-    lheEventProduct    = cms.InputTag("externalLHEProducer"),
-    prunedGenParticles = cms.InputTag("prunedGenParticles"),
-    packedGenParticles = cms.InputTag("packedGenParticles"),
-    genJets            = cms.InputTag("slimmedGenJets"),
-    slimGenMET         = cms.InputTag("slimmedMETs"),
+    genEventInfo       = cms.InputTag('generator'),
+    lheEventProduct    = cms.InputTag('externalLHEProducer'),
+    prunedGenParticles = cms.InputTag('prunedGenParticles'),
+    packedGenParticles = cms.InputTag('packedGenParticles'),
+    genJets            = cms.InputTag('slimmedGenJets'),
+    slimGenMET         = cms.InputTag('slimmedMETs'),
 
     # event info
-    pileupSummaryInfo = cms.InputTag("slimmedAddPileupInfo"),
-    rho               = cms.InputTag("fixedGridRhoFastjetAll"),
-    vertices          = cms.InputTag("offlineSlimmedPrimaryVertices"),
-    lumiProducer      = cms.InputTag("lumiProducer"),
-    beamSpot          = cms.InputTag("offlineBeamSpot", "", "RECO"),
+    pileupSummaryInfo = cms.InputTag('slimmedAddPileupInfo'),
+    rho               = cms.InputTag('fixedGridRhoFastjetAll'),
+    vertices          = cms.InputTag('offlineSlimmedPrimaryVertices'),
+    lumiProducer      = cms.InputTag('lumiProducer'),
+    beamSpot          = cms.InputTag('offlineBeamSpot', '', 'RECO'),
 
     # trigger
-    triggerResults    = cms.InputTag("TriggerResults",  "", "HLT"),
-    filterResults     = cms.InputTag("TriggerResults",  "", "PAT"),
-    triggerObjects    = cms.InputTag("selectedPatTrigger"),
-    triggerPrescales  = cms.InputTag("patTrigger"),
-    l1trigger         = cms.InputTag("gtDigis"),
+    triggerResults    = cms.InputTag('TriggerResults',  '', 'HLT'),
+    filterResults     = cms.InputTag('TriggerResults',  '', 'PAT'),
+    triggerObjects    = cms.InputTag('selectedPatTrigger'),
+    triggerPrescales  = cms.InputTag('patTrigger'),
+    l1trigger         = cms.InputTag('gtDigis'),
     # trigger branches
     triggerBranches   = triggerBranches,
     filterBranches    = filterBranches,
 
-    # set default object collections (overridden by "objectCollections" in RootTree.py)
+    # set default object collections (overridden by 'objectCollections' in RootTree.py)
     vertexCollections = cms.PSet(
         vertices = cms.PSet(
-            collection = cms.InputTag("offlineSlimmedPrimaryVertices"),
+            collection = cms.InputTag('offlineSlimmedPrimaryVertices'),
             branches = vertexBranches,
         ),
     ),
     objectCollections = cms.PSet(
         electrons = cms.PSet(
-            collection = cms.InputTag("slimmedElectrons"),
+            collection = cms.InputTag('slimmedElectrons'),
             branches = electronBranches,
         ),
         muons = cms.PSet(
-            collection = cms.InputTag("slimmedMuons"),
+            collection = cms.InputTag('slimmedMuons'),
             branches = muonBranches,
         ),
 #        taus = cms.PSet(
-#            collection = cms.InputTag("slimmedTaus"),
+#            collection = cms.InputTag('slimmedTaus'),
 #            branches = tauBranches,
 #        ),
 #        photons = cms.PSet(
-#            collection = cms.InputTag("slimmedPhotons"),
+#            collection = cms.InputTag('slimmedPhotons'),
 #            branches = photonBranches,
 #        ),
         ak4pfchsjets = cms.PSet(
-            collection = cms.InputTag("slimmedJets"),
+            collection = cms.InputTag('slimmedJets'),
             branches = jetBranches,
         ),
         pfmettype1 = cms.PSet(
-            collection = cms.InputTag("slimmedMETs"),
+            collection = cms.InputTag('slimmedMETs'),
             branches = metBranches,
         ),
     ),
