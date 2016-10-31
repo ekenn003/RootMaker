@@ -31,28 +31,28 @@ jetBranches = commonJetTauBranches.clone(
     btag_passCMVAv2M = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.185 ? 1 : 0','I'),
     btag_passCMVAv2T = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.875 ? 1 : 0','I'),
 
-    # energies
-    hadronicenergy        = cms.vstring('chargedHadronEnergy + neutralHadronEnergy','F'),
-    chargedhadronicenergy = cms.vstring('chargedHadronEnergy','F'),
-    emenergy              = cms.vstring('chargedEmEnergy + neutralEmEnergy','F'),
-    chargedemenergy       = cms.vstring('chargedEmEnergy','F'),
-    hfhadronicenergy      = cms.vstring('HFHadronEnergy','F'),
-    hfemenergy            = cms.vstring('HFEMEnergy','F'),
-    electronenergy        = cms.vstring('electronEnergy','F'),
-    muonenergy            = cms.vstring('muonEnergy','F'),
-    # multiplicities
-    chargedmulti    = cms.vstring('chargedMultiplicity','I'),
-    neutralmulti    = cms.vstring('neutralMultiplicity','I'),
-    hfhadronicmulti = cms.vstring('HFHadronMultiplicity','I'),
-    hfemmulti       = cms.vstring('HFEMMultiplicity','I'),
-    electronmulti   = cms.vstring('electronMultiplicity','I'),
-    muonmulti       = cms.vstring('muonMultiplicity','I'),
-    # energy fractions
-    neutralhadronenergyfraction = cms.vstring('neutralHadronEnergyFraction','F'),
-    neutralemenergyfraction     = cms.vstring('neutralEmEnergyFraction','F'),
-    chargedhadronenergyfraction = cms.vstring('chargedHadronEnergyFraction','F'),
-    muonenergyfraction          = cms.vstring('muonEnergyFraction','F'),
-    chargedemenergyfraction     = cms.vstring('chargedEmEnergyFraction','F'),
+#    # energies
+#    hadronicenergy        = cms.vstring('chargedHadronEnergy + neutralHadronEnergy','F'),
+#    chargedhadronicenergy = cms.vstring('chargedHadronEnergy','F'),
+#    emenergy              = cms.vstring('chargedEmEnergy + neutralEmEnergy','F'),
+#    chargedemenergy       = cms.vstring('chargedEmEnergy','F'),
+#    hfhadronicenergy      = cms.vstring('HFHadronEnergy','F'),
+#    hfemenergy            = cms.vstring('HFEMEnergy','F'),
+#    electronenergy        = cms.vstring('electronEnergy','F'),
+#    muonenergy            = cms.vstring('muonEnergy','F'),
+#    # multiplicities
+#    chargedmulti    = cms.vstring('chargedMultiplicity','I'),
+#    neutralmulti    = cms.vstring('neutralMultiplicity','I'),
+#    hfhadronicmulti = cms.vstring('HFHadronMultiplicity','I'),
+#    hfemmulti       = cms.vstring('HFEMMultiplicity','I'),
+#    electronmulti   = cms.vstring('electronMultiplicity','I'),
+#    muonmulti       = cms.vstring('muonMultiplicity','I'),
+#    # energy fractions
+#    neutralhadronenergyfraction = cms.vstring('neutralHadronEnergyFraction','F'),
+#    neutralemenergyfraction     = cms.vstring('neutralEmEnergyFraction','F'),
+#    chargedhadronenergyfraction = cms.vstring('chargedHadronEnergyFraction','F'),
+#    muonenergyfraction          = cms.vstring('muonEnergyFraction','F'),
+#    chargedemenergyfraction     = cms.vstring('chargedEmEnergyFraction','F'),
 
     # user data embedded from JetIDEmbedder
     is_loose        = cms.vstring('userInt("idLoose")','I'),
@@ -64,14 +64,14 @@ jetBranches = commonJetTauBranches.clone(
     #puid_medium     = cms.vstring('userInt("puid_medium")','I'),
     #puid_tight      = cms.vstring('userInt("puid_tight")','I'),
 
-    # user data embedded from JetShapeEmbedder
-    chargeda          = cms.vstring('userFloat("chargeda")','F'),
-    chargedb          = cms.vstring('userFloat("chargedb")','F'),
-    neutrala          = cms.vstring('userFloat("neutrala")','F'),
-    neutralb          = cms.vstring('userFloat("neutralb")','F'),
-    alla              = cms.vstring('userFloat("alla")','F'),
-    allb              = cms.vstring('userFloat("allb")', 'F'),
-    chargedfractionmv = cms.vstring('userFloat("chargedfractionmv")','F'),
+#    # user data embedded from JetShapeEmbedder
+#    chargeda          = cms.vstring('userFloat("chargeda")','F'),
+#    chargedb          = cms.vstring('userFloat("chargedb")','F'),
+#    neutrala          = cms.vstring('userFloat("neutrala")','F'),
+#    neutralb          = cms.vstring('userFloat("neutralb")','F'),
+#    alla              = cms.vstring('userFloat("alla")','F'),
+#    allb              = cms.vstring('userFloat("allb")', 'F'),
+#    chargedfractionmv = cms.vstring('userFloat("chargedfractionmv")','F'),
 )
 
 

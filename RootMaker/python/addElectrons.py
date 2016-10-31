@@ -42,14 +42,14 @@ electronBranches = commonEgammaBranches.clone(
     fbrems   = cms.vstring('fbrem','F'),
     numbrems = cms.vstring('numberOfBrems','F'),
 
-    # supercluster
-    scE1x5             = cms.vstring('scE1x5','F'),
-    scE2x5Max          = cms.vstring('scE2x5Max','F'),
-    scE5x5             = cms.vstring('scE5x5','F'),
-    esuperclusterovertrack    = cms.vstring('eSuperClusterOverP','F'),
-    eseedclusterovertrack     = cms.vstring('eSeedClusterOverP','F'),
-    deltaetasuperclustertrack = cms.vstring('deltaEtaSuperClusterTrackAtVtx','F'),
-    deltaphisuperclustertrack = cms.vstring('deltaPhiSuperClusterTrackAtVtx','F'),
+#    # supercluster
+#    scE1x5             = cms.vstring('scE1x5','F'),
+#    scE2x5Max          = cms.vstring('scE2x5Max','F'),
+#    scE5x5             = cms.vstring('scE5x5','F'),
+#    esuperclusterovertrack    = cms.vstring('eSuperClusterOverP','F'),
+#    eseedclusterovertrack     = cms.vstring('eSeedClusterOverP','F'),
+#    deltaetasuperclustertrack = cms.vstring('deltaEtaSuperClusterTrackAtVtx','F'),
+#    deltaphisuperclustertrack = cms.vstring('deltaPhiSuperClusterTrackAtVtx','F'),
 
     # user data from VIDEmbedder
     cutBasedVeto         = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-veto")','I'),
@@ -206,22 +206,22 @@ def addElectrons(process, coll, **kwargs):
     eSrc = 'ePV'
     process.electronCustomization *= process.ePV
 
-    ##############################
-    ### embed trigger matching ###
-    ##############################
-    process.eTrig = cms.EDProducer(
-        "ElectronHLTMatchEmbedder",
-        src = cms.InputTag(eSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
-        triggerObjects = cms.InputTag("selectedPatTrigger"),
-        deltaR = cms.double(0.5),
-        labels = cms.vstring(
-        ),
-        paths = cms.vstring(
-        ),
-    )
-    eSrc = 'eTrig'
-    process.electronCustomization *= process.eTrig
+    ###############################
+    #### embed trigger matching ###
+    ###############################
+    #process.eTrig = cms.EDProducer(
+    #    "ElectronHLTMatchEmbedder",
+    #    src = cms.InputTag(eSrc),
+    #    triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
+    #    triggerObjects = cms.InputTag("selectedPatTrigger"),
+    #    deltaR = cms.double(0.5),
+    #    labels = cms.vstring(
+    #    ),
+    #    paths = cms.vstring(
+    #    ),
+    #)
+    #eSrc = 'eTrig'
+    #process.electronCustomization *= process.eTrig
 
     # add to schedule
     process.schedule.append(process.electronCustomization)
