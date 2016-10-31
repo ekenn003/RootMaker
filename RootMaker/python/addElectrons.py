@@ -14,7 +14,7 @@ electronBranches = commonEgammaBranches.clone(
     correctedecalenergy              = cms.vstring('ecalEnergy','F'),
 
     # user data from HLTMatchEmbedder
-    trigger = cms.vstring('userInt("trigger")','I'), # testing
+    #trigger = cms.vstring('userInt("trigger")','I'), # testing
 
     # electron_info:
     passconversionveto = cms.vstring('passConversionVeto','I'),

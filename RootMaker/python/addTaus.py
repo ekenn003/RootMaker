@@ -11,7 +11,7 @@ tauBranches = commonJetTauBranches.clone(
     dxy    = cms.vstring('userFloat("dxy")','F'),
     dxyerr = cms.vstring('dxyError','F'),
     # user data from HLTMatchEmbedder
-    trigger = cms.vstring('userInt("trigger")','I'), 
+    #trigger = cms.vstring('userInt("trigger")','I'), 
 
 
     #jet_refisnonnull = cms.vstring('jetRef().isNonnull','I'),
