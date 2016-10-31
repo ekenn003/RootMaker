@@ -22,7 +22,7 @@ output  = ''
 
 #if it is mc or data
 #real    = 'data'
-#real    = 'mc'
+real    = 'mc'
 
 
 # which T2 to store it at
@@ -42,7 +42,9 @@ config.JobType.pluginName = 'Analysis'
 config.JobType.psetName = 'RootTree.py'
 
 config.Data.inputDataset = input_dataset
-config.JobType.pyCfgParams = ['sourceDS="{0}"'.format((config.Data.inputDataset).split('/')[1])]
+isReHLT = ('reHLT' in input_dataset)
+config.JobType.pyCfgParams = ['sourceDS={0}, isReHLT={1}'.format((config.Data.inputDataset).split('/')[1], isReHLT)]
+print config.JobType.pyCfgParams
 
 # this needs to be changed for 2015 vs 2016 collisions
 if real=='data':

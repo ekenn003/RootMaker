@@ -6,6 +6,7 @@ from RootMaker.RootMaker.RootMaker_cfi import *
 ##############################
 options.isMC = False # data
 #options.isMC = True # MC
+options.isReHLT = True 
 
 ##############################
 ### Global tag ###############
@@ -30,7 +31,7 @@ options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSS
 ## Running options ##########
 #############################
 
-#options.maxEvents = 10000
+options.maxEvents = 10000
 
 #options.skipEvents = 20
 
@@ -71,7 +72,7 @@ objectCollections = {
 #############################
 ### PROCESS #################
 #############################
-process = cms.Process("ROOTMAKER")
+process = cms.Process('ROOTMAKER')
 
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
@@ -109,14 +110,14 @@ if options.overrideGT:
 ################################
 ### Run options ################
 ################################
-process.load("FWCore.MessageService.MessageLogger_cfi")
+process.load('FWCore.MessageService.MessageLogger_cfi')
 process.MessageLogger.cerr.FwkReport.reportEvery = 100
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
-process.source = cms.Source("PoolSource",
+process.source = cms.Source('PoolSource',
     fileNames = cms.untracked.vstring(options.inputFiles),
     skipEvents = cms.untracked.uint32(options.skipEvents)
 )
-process.TFileService = cms.Service("TFileService", 
+process.TFileService = cms.Service('TFileService', 
     fileName = cms.string(options.outputFile),
 )
 process.schedule = cms.Schedule()
@@ -125,7 +126,7 @@ process.schedule = cms.Schedule()
 ### Profiling utilities ###
 ###########################
 #process.ProfilerService = cms.Service (
-#      "ProfilerService",
+#      'ProfilerService',
 #       firstEvent = cms.untracked.int32(2),
 #       lastEvent = cms.untracked.int32(500),
 #       paths = cms.untracked.vstring('schedule') 
@@ -135,7 +136,7 @@ process.schedule = cms.Schedule()
 
 
 #process.SimpleMemoryCheck = cms.Service(
-#    "SimpleMemoryCheck",
+#    'SimpleMemoryCheck',
 #    ignoreTotal = cms.untracked.int32(1)
 #)
 
@@ -152,11 +153,11 @@ process.schedule = cms.Schedule()
 # For interpretation of the output, see http://igprof.org/text-output-format.html
 
 #from IgTools.IgProf.IgProfTrigger import igprof
-#process.load("IgTools.IgProf.IgProfTrigger")
+#process.load('IgTools.IgProf.IgProfTrigger')
 #process.igprofPath = cms.Path(process.igprof)
 #process.igprof.reportEventInterval     = cms.untracked.int32(250)
-#process.igprof.reportToFileAtBeginJob  = cms.untracked.string("|gzip -c>igprof.begin-job.gz")
-#process.igprof.reportToFileAtEvent = cms.untracked.string("|gzip -c>igprof.%I.%E.%L.%R.event.gz")
+#process.igprof.reportToFileAtBeginJob  = cms.untracked.string('|gzip -c>igprof.begin-job.gz')
+#process.igprof.reportToFileAtEvent = cms.untracked.string('|gzip -c>igprof.%I.%E.%L.%R.event.gz')
 #process.schedule.append(process.igprofPath)
 
 
@@ -185,11 +186,11 @@ cleaning = {
 #            'dr'  : 0.3,
 #        },
 #        'muons' : {
-#            'cut' : 'pt > 10 && abs(eta) < 2.4 && isMediumMuon && trackIso/pt < 0.3 && userFloat("dxy") < 0.02 && userFloat("dz") < 0.14 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt < 0.15',
+#            'cut' : 'pt > 10 && abs(eta) < 2.4 && isMediumMuon && trackIso/pt < 0.3 && userFloat('dxy') < 0.02 && userFloat('dz') < 0.14 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt < 0.15',
 #            'dr'  : 0.3,
 #        },
 #        'taus' : {
-#            'cut' : 'pt > 20 && abs(eta) < 2.3 && tauID("decayModeFinding")',
+#            'cut' : 'pt > 20 && abs(eta) < 2.3 && tauID('decayModeFinding')',
 #            'dr'  : 0.3,
 #        },
 #    },
@@ -207,7 +208,7 @@ if options.runMetFilter:
     # PAT for MC and RECO for data
     hltFilter.TriggerResultsTag = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
     hltFilter.throw = cms.bool(True)
-    for flag in ["HBHENoiseFilter", "HBHENoiseIsoFilter", "CSCTightHalo2015Filter", "EcalDeadCellTriggerPrimitiveFilter", "goodVertices", "eeBadScFilter"]:
+    for flag in ['HBHENoiseFilter', 'HBHENoiseIsoFilter', 'CSCTightHalo2015Filter', 'EcalDeadCellTriggerPrimitiveFilter', 'goodVertices', 'eeBadScFilter']:
         mod = hltFilter.clone(HLTPaths=cms.vstring('Flag_{0}'.format(flag)))
         modName = 'filter{0}'.format(flag)
         setattr(process,modName,mod)
@@ -259,7 +260,7 @@ for coll in cleaning:
 ################################
 ### Load the analyzer ##########
 ################################
-process.load("RootMaker.RootMaker.RootMaker_cfi")
+process.load('RootMaker.RootMaker.RootMaker_cfi')
 
 process.makeroottree.isData = not options.isMC
 process.makeroottree.sourceDataset = options.sourceDS
@@ -267,7 +268,9 @@ process.makeroottree.addGenParticles    = bool(options.recGenParticles)
 process.makeroottree.addAllGenParticles = bool(options.recAllGenParticles)
 process.makeroottree.addGenJets         = bool(options.recGenJets)
 
-process.makeroottree.filterResults = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
+# fix for 80X reHLT
+process.makeroottree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if (options.isMC and options.isReHLT) else cms.InputTag('TriggerResults', '', 'HLT')
+process.makeroottree.filterResults  = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
 # send collections again in case they've been modified:
 process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
 process.makeroottree.objectCollections.electrons.collection    = objectCollections['electrons']
