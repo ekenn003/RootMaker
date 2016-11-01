@@ -11,7 +11,7 @@ filesperjob = 3
 
 # input
 input_dataset = ''
-json          = ''
+json          = 'Cert_271036-283685_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt'
 
 # output folder options
 version = '80X'
@@ -43,7 +43,7 @@ config.JobType.psetName = 'RootTree.py'
 
 config.Data.inputDataset = input_dataset
 isReHLT = ('reHLT' in input_dataset)
-config.JobType.pyCfgParams = ['sourceDS={0}, isReHLT={1}'.format((config.Data.inputDataset).split('/')[1], isReHLT)]
+config.JobType.pyCfgParams = ['sourceDS="{0}", isReHLT="{1}"'.format((config.Data.inputDataset).split('/')[1], isReHLT)]
 print config.JobType.pyCfgParams
 
 # this needs to be changed for 2015 vs 2016 collisions
