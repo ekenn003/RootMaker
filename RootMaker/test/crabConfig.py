@@ -43,7 +43,7 @@ config.JobType.psetName = 'RootTree.py'
 
 config.Data.inputDataset = input_dataset
 isReHLT = ('reHLT' in input_dataset)
-config.JobType.pyCfgParams = ['sourceDS="{0}", isReHLT="{1}"'.format((config.Data.inputDataset).split('/')[1], isReHLT)]
+config.JobType.pyCfgParams = ['sourceDS="{0}", isReHLT={1}'.format((config.Data.inputDataset).split('/')[1], isReHLT)]
 print config.JobType.pyCfgParams
 
 # this needs to be changed for 2015 vs 2016 collisions
