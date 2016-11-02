@@ -272,13 +272,25 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
 
     bool keepevent = false;
     //bool keepevent = true;
+    int nMuonCands = 0;
+    int nElectronCands = 0;
     for (auto &coll : objectCollectionBranches) {
         string name = coll->getName();
         UInt_t count = coll->getCount();
-        if( (name == "muons" && count > 1) ) {
-            keepevent = true;
+
+        if (name == "muons") {
+            nMuonCands = count;
+        }
+        else if (name == "electrons") {
+            nElectronCands = count;
         }
     }
+    int nLeptons = nMuonCands + nElectronCands;
+
+    if (nMuonCands>1 && nLeptons>2) {
+        keepevent = true;
+    }
+
     if (keepevent) {
         nevents_filled++;
         tree->Fill();
