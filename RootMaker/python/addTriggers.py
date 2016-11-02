@@ -13,6 +13,18 @@ triggerBranches = cms.PSet(
     IsoTkMu20 = cms.PSet(
         path = cms.string('HLT_IsoTkMu20_v\\[0-9]+'),
     ),
+    IsoMu22 = cms.PSet(
+        path = cms.string('HLT_IsoMu22_v\\[0-9]+'),
+    ),
+    IsoTkMu22 = cms.PSet(
+        path = cms.string('HLT_IsoTkMu22_v\\[0-9]+'),
+    ),
+    IsoMu24 = cms.PSet(
+        path = cms.string('HLT_IsoMu24_v\\[0-9]+'),
+    ),
+    IsoTkMu24 = cms.PSet(
+        path = cms.string('HLT_IsoTkMu24_v\\[0-9]+'),
+    ),
     IsoMu27 = cms.PSet(
         path = cms.string('HLT_IsoMu27_v\\[0-9]+'),
     ),

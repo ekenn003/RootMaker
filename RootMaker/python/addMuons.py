@@ -101,6 +101,10 @@ muonBranches = commonObjectBranches.clone(
     trigger = cms.vstring('userInt("trigger")','I'),
     matches_IsoMu20                           = cms.vstring('userInt("matches_IsoMu20")','I'),
     matches_IsoTkMu20                         = cms.vstring('userInt("matches_IsoTkMu20")','I'),
+    matches_IsoMu22                           = cms.vstring('userInt("matches_IsoMu22")','I'),
+    matches_IsoTkMu22                         = cms.vstring('userInt("matches_IsoTkMu22")','I'),
+    matches_IsoMu24                           = cms.vstring('userInt("matches_IsoMu24")','I'),
+    matches_IsoTkMu24                         = cms.vstring('userInt("matches_IsoTkMu24")','I'),
     matches_IsoMu27                           = cms.vstring('userInt("matches_IsoMu27")','I'),
     matches_IsoTkMu27                         = cms.vstring('userInt("matches_IsoTkMu27")','I'),
     matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ   = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ")','I'),
@@ -165,6 +169,10 @@ def addMuons(process, coll, **kwargs):
             # single muon
             'matches_IsoMu20',
             'matches_IsoTkMu20',
+            'matches_IsoMu22',
+            'matches_IsoTkMu22',
+            'matches_IsoMu24',
+            'matches_IsoTkMu24',
             'matches_IsoMu27',
             'matches_IsoTkMu27',
             # double muon
@@ -175,6 +183,10 @@ def addMuons(process, coll, **kwargs):
             # single muon
             'HLT_IsoMu20_v\\[0-9]+',
             'HLT_IsoTkMu20_v\\[0-9]+',
+            'HLT_IsoMu22_v\\[0-9]+',
+            'HLT_IsoTkMu22_v\\[0-9]+',
+            'HLT_IsoMu24_v\\[0-9]+',
+            'HLT_IsoTkMu24_v\\[0-9]+',
             'HLT_IsoMu27_v\\[0-9]+',
             'HLT_IsoTkMu27_v\\[0-9]+',
             # double muon
