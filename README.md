@@ -1,8 +1,5 @@
 # RootMaker
 
-# Danger! 
-only keeps events with 3 or 4 leptons
-
 Still missing: 
   - number of charged tracks in taus
   - puppi met / jets
@@ -19,3 +16,6 @@ Recipe:
     # checkout and build
     git clone -b 80X https://github.com/ekenn003/RootMaker.git
     scramv1 b -j 20
+
+# Danger! 
+only keeps events with 3 or 4 leptons
