@@ -1,5 +1,8 @@
 # RootMaker
 
+# Danger! 
+only keeps events with 3 or 4 leptons
+
 Still missing: 
   - number of charged tracks in taus
   - puppi met / jets
