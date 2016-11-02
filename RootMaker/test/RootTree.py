@@ -1,13 +1,16 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
 
+options.parseArguments()
+
 ##############################
 ### MC / data ################
 ##############################
-#options.isMC = False # data
-options.isMC = True # MC
+options.isMC = False # data
+#options.isMC = True # MC
 
-options.isReHLT = True 
+#options.isReHLT = True 
+
 
 ##############################
 ### Global tag ###############
@@ -25,15 +28,15 @@ options.overrideGT = False # (default is false)
 ### Input files ##############
 ##############################
 
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/test/miniaod_GGF_reHLT.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/miniaod_GGF_reHLT.root'
+options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 10000
+options.maxEvents = 1000
 
 #options.skipEvents = 20
 
@@ -169,11 +172,11 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>7. && abs(eta)<3.',
-    'muons'        : 'pt>6. && abs(eta)<2.5',
+    'electrons'    : 'pt>7. && abs(eta)<3. && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")',
+    'muons'        : 'pt>8. && abs(eta)<2.5 && isGlobalMuon',
 #    'taus'         : 'pt>15. && abs(eta)<2.5',
 #    'photons'      : 'pt>13000 && abs(eta)<3.',
-    'ak4pfchsjets' : 'pt>15. && abs(eta)<4.8',
+    'ak4pfchsjets' : 'pt>25. && abs(eta)<4.8 && userInt("idLoose")',
 }
 
 ################################
@@ -181,21 +184,6 @@ selections = {
 ################################
 # selection for cleaning (objects should match final selection)
 cleaning = {
-#    # clean jets agains electrons, muons, and taus with dR of 0.3
-#    'ak4pfchsjets' : {
-#        'electrons' : {
-#            'cut' : 'pt > 10 && abs(eta) < 2.5',
-#            'dr'  : 0.3,
-#        },
-#        'muons' : {
-#            'cut' : 'pt > 10 && abs(eta) < 2.4 && isMediumMuon && trackIso/pt < 0.3 && userFloat('dxy') < 0.02 && userFloat('dz') < 0.14 && (pfIsolationR04().sumChargedHadronPt+max(0.,pfIsolationR04().sumNeutralHadronEt+pfIsolationR04().sumPhotonEt-0.5*pfIsolationR04().sumPUPt))/pt < 0.15',
-#            'dr'  : 0.3,
-#        },
-#        'taus' : {
-#            'cut' : 'pt > 20 && abs(eta) < 2.3 && tauID('decayModeFinding')',
-#            'dr'  : 0.3,
-#        },
-#    },
 }
 
 ################################
