@@ -6,11 +6,14 @@ options.parseArguments()
 ##############################
 ### MC / data ################
 ##############################
-options.isMC = False # data
+#options.isMC = False # data
 #options.isMC = True # MC
 
 #options.isReHLT = True 
 
+print 'isrehlt = ' + str(options.isReHLT)
+print 'ismc = ' + str(options.isMC)
+print 'source ds = ' + str(options.sourceDS)
 
 ##############################
 ### Global tag ###############
@@ -29,14 +32,14 @@ options.overrideGT = False # (default is false)
 ##############################
 
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/miniaod_GGF_reHLT.root'
-options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
 #options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
 
 #############################
 ## Running options ##########
 #############################
 
-options.maxEvents = 1000
+#options.maxEvents = 1000
 
 #options.skipEvents = 20
 
@@ -260,7 +263,7 @@ process.makeroottree.addAllGenParticles = bool(options.recAllGenParticles)
 process.makeroottree.addGenJets         = bool(options.recGenJets)
 
 # fix for 80X reHLT
-process.makeroottree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if (options.isMC and options.isReHLT) else cms.InputTag('TriggerResults', '', 'HLT')
+process.makeroottree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT{0}'.format('2' if options.isReHLT else ''))
 process.makeroottree.filterResults  = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
 # send collections again in case they've been modified:
 process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
