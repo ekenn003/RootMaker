@@ -1,13 +1,7 @@
 #!/usr/bin/env python
 import argparse
-#import logging
 import os
-#import math
 import sys
-#import glob
-#import subprocess
-#import fnmatch
-#import json
 
 
 # This is because when you make an assignment to a variable in a scope,
@@ -49,8 +43,8 @@ def get_sample_lists(args):
     global jobnamelist
     # get samples from samplelist
     if os.path.isfile(args.samplelist):
-        with open(args.samplelist,'r') as f:
-            for line in f.readlines():
+        with open(args.samplelist, 'r') as fin:
+            for line in fin.readlines():
                 l = ''.join( c for c in line if c not in ' \t\r\n')
                 if not l: continue
                 if l.startswith('#'): continue
