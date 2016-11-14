@@ -12,7 +12,19 @@ samplelist = []
 sourceDSlist = []
 jobnamelist = []
 
+pyname = 'crabconfig.py'
 
+
+## ___________________________________________________________
+def submit_jobs(args):
+    # go to working area
+    os.chdir('{0}/src/RootMaker/RootMaker/test/{1}'.format(os.environ['CMSSW_BASE'], args.era))
+    for i, sample in enumerate(samplelist):
+        os.chdir(jobnamelist[i])
+        #os.system('crab submit -c {0}'.format(pyname))
+        print 'crab submit -c {1}/{0}'.format(pyname, os.getcwd())
+        os.chdir('../')
+    os.chdir('../')
 
 ## ___________________________________________________________
 def write_crab_configs(args):
@@ -33,7 +45,7 @@ def write_crab_configs(args):
 
     print 'Created the following files:'
     for i, sample in enumerate(samplelist):
-        print '    {0}/src/RootMaker/RootMaker/test/{1}/{2}/crabconfig.py'.format(os.environ['CMSSW_BASE'], args.era, jobnamelist[i])
+        print '    {0}/src/RootMaker/RootMaker/test/{1}/{2}/{3}'.format(os.environ['CMSSW_BASE'], args.era, jobnamelist[i], pyname)
 
 
 ## ___________________________________________________________
@@ -76,7 +88,7 @@ def get_json(runperiod):
 
 ## ___________________________________________________________
 def write_crab_config(args, n):
-    with open('crabconfig.py', 'w') as fout:
+    with open(pyname, 'w') as fout:
         fout.write('from CRABClient.UserUtilities import config')
         fout.write('\nconfig = config()')
         fout.write('\nconfig.Site.storageSite = \'T2_CH_CERN\'')
@@ -127,6 +139,7 @@ def main(argv=None):
 
     get_sample_lists(args)
     write_crab_configs(args)
+    submit_jobs(args)
 
 
 
