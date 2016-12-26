@@ -1,19 +1,13 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
+import sys
 
+print sys.argv
 options.parseArguments()
+#print options
 
-##############################
-### MC / data ################
-##############################
-#options.isMC = False # data
-#options.isMC = True # MC
-
-#options.isReHLT = True 
-
-print 'isrehlt = ' + str(options.isReHLT)
-print 'ismc = ' + str(options.isMC)
-print 'source ds = ' + str(options.sourceDS)
+print '\nSource dataset identified as {0}'.format(options.sourceDS)
+print 'Sample will be processed as {0}'.format('MC' if options.isMC else 'DATA')
 
 ##############################
 ### Global tag ###############
@@ -25,25 +19,22 @@ else:
     options.globalTag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
-options.overrideGT = False # (default is false)
+#options.overrideGT = False # (default is false)
 
 ##############################
 ### Input files ##############
 ##############################
 
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/miniaod_GGF_reHLT.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
-#options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
+if options.isMC:
+    options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
+else:
+    options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
 
 #############################
 ## Running options ##########
 #############################
 
-#options.maxEvents = 1000
-
-#options.skipEvents = 20
-
-options.runMetFilter = False
+#options.runMetFilter = False
 
 ## include gen particles? (if !isMC they will be False anyway)
 #if options.isMC:
@@ -175,7 +166,7 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>7. && abs(eta)<3. && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")',
+    'electrons'    : 'pt>8. && abs(eta)<3. && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")',
     'muons'        : 'pt>8. && abs(eta)<2.5 && isGlobalMuon',
 #    'taus'         : 'pt>15. && abs(eta)<2.5',
 #    'photons'      : 'pt>13000 && abs(eta)<3.',
@@ -206,6 +197,32 @@ if options.runMetFilter:
         modName = 'filter{0}'.format(flag)
         setattr(process,modName,mod)
         filters += [getattr(process,modName)]
+
+if options.sourceDS=='DoubleMuon':
+    print '\nwhat up double muon\n'
+    singleTriggerSelection = cms.EDFilter(
+        'TriggerResultsFilter',
+        triggerConditions = cms.vstring(
+            'HLT_IsoMu24_v*',
+            'HLT_IsoTkMu24_v*',
+        ),
+        hltResults = cms.InputTag('TriggerResults', '', 'HLT{0}'.format('2' if options.isReHLT else '')),
+        l1tResults = cms.InputTag('gtDigis'),
+#        l1tIgnoreMask = cms.bool(False),
+#        l1techIgnorePrescales = cms.bool(False),
+#        daqPartitions = cms.uint32(1),
+#        throw = cms.bool(True)
+    )
+    doubleTriggerSelection = singleTriggerSelection.clone(
+        triggerConditions = cms.vstring(
+            'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*',
+            'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*',
+        ),
+    )
+
+    setattr(process, 'singleTriggerSelection', singleTriggerSelection)
+    setattr(process, 'doubleTriggerSelection', doubleTriggerSelection)
+
 
 ################################
 ### Add object collections #####
@@ -278,9 +295,16 @@ process.makeroottree.objectCollections.pfmettype1.collection   = objectCollectio
 ### Path #######################
 ################################
 process.makeroottreePath = cms.Path()
+
+if options.sourceDS=='DoubleMuon':
+    process.makeroottreePath += ~getattr(process, 'singleTriggerSelection')
+    process.makeroottreePath += getattr(process, 'doubleTriggerSelection')
+
+
 for f in filters:
     process.makeroottreePath += f
 process.makeroottreePath += process.makeroottree
+
 process.schedule.append(process.makeroottreePath)
 
 
