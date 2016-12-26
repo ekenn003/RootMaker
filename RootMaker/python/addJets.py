@@ -8,11 +8,11 @@ jetBranches = commonJetTauBranches.clone(
     area = cms.vstring('jetArea','F'),
 
     # user data embedded with ??? these are all like -1 right now
-    energycorr      = cms.vstring('userFloat("energycorr")','F'),
+    #energycorr      = cms.vstring('userFloat("energycorr")','F'),
     #energycorrl7uds = cms.vstring('userFloat("energycorrl7uds")','F'),
     #energycorrl7bottom = cms.vstring('userFloat("energycorrl7bottom")','F'),
-    energycorrunc   = cms.vstring('userFloat("energycorrunc")','F'),
-    mcflavour       = cms.vstring('userFloat("mcflavour")','F'),
+    #energycorrunc   = cms.vstring('userFloat("energycorrunc")','F'),
+    #mcflavour       = cms.vstring('userFloat("mcflavour")','F'),
 
     # user data embedded with BtagEmbedder
 
@@ -21,15 +21,18 @@ jetBranches = commonJetTauBranches.clone(
     btag_pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
     btag_pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
     btag_pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
+
     btag_passJPL     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.245 ? 1 : 0','I'),
     btag_passJPM     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.515 ? 1 : 0','I'),
     btag_passJPT     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.760 ? 1 : 0','I'),
-    btag_passCSVv2L  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.460 ? 1 : 0','I'),
-    btag_passCSVv2M  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.800 ? 1 : 0','I'),
-    btag_passCSVv2T  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.935 ? 1 : 0','I'),
-    btag_passCMVAv2L = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > -0.715 ? 1 : 0','I'),
-    btag_passCMVAv2M = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.185 ? 1 : 0','I'),
-    btag_passCMVAv2T = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.875 ? 1 : 0','I'),
+    # pfCombinedInclusiveSecondaryVertexV2BJetTags
+    btag_passCSVv2L  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.5426 ? 1 : 0','I'),
+    btag_passCSVv2M  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.8484 ? 1 : 0','I'),
+    btag_passCSVv2T  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.9535 ? 1 : 0','I'),
+    # pfCombinedMVAV2BJetTags
+    btag_passCMVAv2L = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > -0.5884 ? 1 : 0','I'),
+    btag_passCMVAv2M = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.4432 ? 1 : 0','I'),
+    btag_passCMVAv2T = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.9432 ? 1 : 0','I'),
 
 #    # energies
 #    hadronicenergy        = cms.vstring('chargedHadronEnergy + neutralHadronEnergy','F'),
@@ -58,7 +61,7 @@ jetBranches = commonJetTauBranches.clone(
     is_loose        = cms.vstring('userInt("idLoose")','I'),
     is_tight        = cms.vstring('userInt("idTight")','I'),
     is_tightLepVeto = cms.vstring('userInt("idTightLepVeto")','I'),
-    jpumva          = cms.vstring('userFloat("jpumva")','F'),
+    #jpumva          = cms.vstring('userFloat("jpumva")','F'),
     #mva             = cms.vstring('userFloat("mva")','F'),
     #puid_loose      = cms.vstring('userInt("puid_loose")','I'),
     #puid_medium     = cms.vstring('userInt("puid_medium")','I'),
@@ -134,17 +137,17 @@ def addJets(process, coll, **kwargs):
     process.jetCustomization *= process.jShape
     jSrc = "jShape"
 
-    # embed gen jets
-    if isMC:
-        process.jGenJet = cms.EDProducer(
-            "JetMatchedGenJetEmbedder",
-            src = cms.InputTag(jSrc),
-            genJets = cms.InputTag("slimmedGenJets"),
-            srcIsTaus = cms.bool(False),
-            deltaR = cms.double(0.5),
-        )
-        jSrc = "jGenJet"
-        process.jetCustomization *= process.jGenJet
+    ## embed gen jets
+    #if isMC:
+    #    process.jGenJet = cms.EDProducer(
+    #        "JetMatchedGenJetEmbedder",
+    #        src = cms.InputTag(jSrc),
+    #        genJets = cms.InputTag("slimmedGenJets"),
+    #        srcIsTaus = cms.bool(False),
+    #        deltaR = cms.double(0.5),
+    #    )
+    #    jSrc = "jGenJet"
+    #    process.jetCustomization *= process.jGenJet
 
 
     # add to schedule
