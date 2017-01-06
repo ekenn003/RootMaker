@@ -14,21 +14,23 @@ print 'Sample will be processed as {0}'.format('MC' if options.isMC else 'DATA')
 ##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
 if options.isMC:
+    # temporary until moriond17 tag is released
     options.globalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
 else:
+    # temporary until moriond17 tag is released
     options.globalTag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
-#options.overrideGT = False # (default is false)
+#options.overrideGT = True # (default is false)
 
 ##############################
 ### Input files ##############
 ##############################
 
 if options.isMC:
-    options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/mc_DYJets_80x.root'
+    options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/120000/0EA60289-18C4-E611-8A8F-008CFA110AB4.root'
 else:
-    options.inputFiles = 'file:/afs/cern.ch/work/e/ekennedy/work/tuplizer/tup80/CMSSW_8_0_12/src/RootMaker/RootMaker/da_SMu16B_80x.root'
+    options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
 
 #############################
 ## Running options ##########
