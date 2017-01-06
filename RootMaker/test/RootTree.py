@@ -30,7 +30,10 @@ else:
 if options.isMC:
     options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/120000/0EA60289-18C4-E611-8A8F-008CFA110AB4.root'
 else:
-    options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
+    if options.isReReco:
+        options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
+    else:
+        options.inputFiles = '/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/129CD4B5-5D9F-E611-A9AB-02163E014220.root'
 
 #############################
 ## Running options ##########
@@ -106,6 +109,40 @@ if options.overrideGT:
     GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
     process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
+##################
+### JEC source ###
+##################
+# this is if we need to override the jec in global tag
+
+if options.isMC:
+    # Moriond MC
+    sqfile = 'RootMaker/RootMaker/data/Spring16_23Sep2016V2_MC.db'
+elif options.isReReco:
+    # ReReco
+    sqfile = 'RootMaker/RootMaker/data/Spring16_23Sep2016AllV2_DATA.db'
+else:
+    # PromptReco
+    sqfile = 'RootMaker/RootMaker/data/Spring16_25nsV10All_DATA.db'
+
+tag = 'JetCorrectorParametersCollection_{0}_AK4PFchs'.format(sqfile.split('/')[-1][:-3])
+
+process.load('CondCore.DBCommon.CondDBCommon_cfi')
+from CondCore.DBCommon.CondDBSetup_cfi import *
+process.jec = cms.ESSource('PoolDBESSource',
+    DBParameters = cms.PSet(
+        messageLevel = cms.untracked.int32(0)
+    ),
+    timetype = cms.string('runnumber'),
+    toGet = cms.VPSet(
+        cms.PSet(
+            record = cms.string('JetCorrectionsRecord'),
+            tag    = cms.string(tag),
+            label  = cms.untracked.string('AK4PFchs')
+        ),
+    ), 
+    connect = cms.string('sqlite:{0}'.format(sqfile)),
+)
+process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 
 ################################
