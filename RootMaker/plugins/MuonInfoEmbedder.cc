@@ -3,6 +3,7 @@
 // Embeds muon_innertrack_dz
 // Embeds muon_innertrack_dxy
 // Embeds muon_isTightMuon
+// Embeds muon_isMedium2016Muon
 // Embeds muon_numberOfMatches
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -23,6 +24,7 @@ class MuonInfoEmbedder : public edm::stream::EDProducer<>
   public:
     explicit MuonInfoEmbedder(const edm::ParameterSet&);
     ~MuonInfoEmbedder() {}
+    bool isMedium2016Muon(const reco::Muon &recoMu);
     static void fillDescriptions(edm::ConfigurationDescriptions &descriptions);
 
   private:
@@ -57,6 +59,7 @@ void MuonInfoEmbedder::produce(edm::Event& iEvent, const edm::EventSetup &iSetup
 
         // add tight muon id
         newMuon.addUserInt("isTightMuon", muon.isTightMuon(pv));
+        newMuon.addUserInt("isMedium2016Muon", isMedium2016Muon(muon));
 
         // add numberOfMatches
         Int_t nmatches = muon.numberOfMatches(reco::Muon::SegmentAndTrackArbitration);
@@ -110,6 +113,19 @@ void MuonInfoEmbedder::produce(edm::Event& iEvent, const edm::EventSetup &iSetup
     }
     // put it in our new muons
     iEvent.put(output);
+}
+
+// https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2#Short_Term_Instructions_for_Mori
+bool MuonInfoEmbedder::isMedium2016Muon(const reco::Muon &recoMu)
+{
+    bool goodGlob = recoMu.isGlobalMuon() &&
+                    recoMu.globalTrack()->normalizedChi2() < 3 &&
+                    recoMu.combinedQuality().chi2LocalPosition < 12 &&
+                    recoMu.combinedQuality().trkKink < 20;
+    bool isMedium = muon::isLooseMuon(recoMu) &&
+                    recoMu.innerTrack()->validFraction() > 0.49 &&
+                    muon::segmentCompatibility(recoMu) > (goodGlob ? 0.303 : 0.451);
+    return isMedium;
 }
 
 void MuonInfoEmbedder::fillDescriptions(edm::ConfigurationDescriptions &descriptions)

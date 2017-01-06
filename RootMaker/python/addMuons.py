@@ -11,12 +11,12 @@ muonBranches = commonObjectBranches.clone(
     dxy    = cms.vstring('userFloat("dxy")','F'),
     dxyerr = cms.vstring('dxyError','F'),
 
-    # user data from MuonInfoEmbedder
-    trackermuonquality      = cms.vstring('userInt("trackermuonquality")','I'),
-    numchamberswithsegments = cms.vstring('userInt("numberOfMatches")','I'),
-    numchambers             = cms.vstring('numberOfChambers','I'),
-    nummatchedstations      = cms.vstring('numberOfMatchedStations','I'),
-    numvalidmuonhits = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().hitPattern().numberOfValidMuonHits() : -1', 'I'),
+    ## user data from MuonInfoEmbedder
+    #trackermuonquality      = cms.vstring('userInt("trackermuonquality")','I'),
+    #numchamberswithsegments = cms.vstring('userInt("numberOfMatches")','I'),
+    #numchambers             = cms.vstring('numberOfChambers','I'),
+    #nummatchedstations      = cms.vstring('numberOfMatchedStations','I'),
+    #numvalidmuonhits = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().hitPattern().numberOfValidMuonHits() : -1', 'I'),
 
     ecalenergy = cms.vstring('calEnergy().em','F'),
     hcalenergy = cms.vstring('calEnergy().had','F'),
@@ -77,14 +77,17 @@ muonBranches = commonObjectBranches.clone(
     pfisolationr4_sumneutralhadronethighthreshold = cms.vstring('pfIsolationR04().sumNeutralHadronEtHighThreshold','F'),
     pfisolationr4_sumphotonethighthreshold        = cms.vstring('pfIsolationR04().sumPhotonEtHighThreshold','F'),
 
-    isolationr3track    = cms.vstring('trackIso()','F'),
-    isolationr3ntrack   = cms.vstring('isolationR03().nTracks','I'),
-    isolationr3ecal     = cms.vstring('isolationR03().emEt','F'), # same as ecalIso()
-    isolationr3hcal     = cms.vstring('isolationR03().hadEt','F'), # same as hcalIso()
+    #isolationr3track    = cms.vstring('trackIso()','F'),
+    #isolationr3ntrack   = cms.vstring('isolationR03().nTracks','I'),
+    #isolationr3ecal     = cms.vstring('isolationR03().emEt','F'), # same as ecalIso()
+    #isolationr3hcal     = cms.vstring('isolationR03().hadEt','F'), # same as hcalIso()
 
     # muon ID (tight ID embedded from MuonInfoEmbedder)
     is_tight_muon  = cms.vstring('userInt("isTightMuon")','I'),
     is_medium_muon = cms.vstring('isMediumMuon','I'),
+    # medium2016 for moriond17
+    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2#Short_Term_Instructions_for_Mori
+    is_medium2016_muon = cms.vstring('userInt("isMedium2016Muon")','I'),
     is_loose_muon  = cms.vstring('isLooseMuon','I'),
 
     # user data from RochCorEmbedder
@@ -99,10 +102,6 @@ muonBranches = commonObjectBranches.clone(
 
     # user data from HLTMatchEmbedder
     trigger = cms.vstring('userInt("trigger")','I'),
-    matches_IsoMu20                           = cms.vstring('userInt("matches_IsoMu20")','I'),
-    matches_IsoTkMu20                         = cms.vstring('userInt("matches_IsoTkMu20")','I'),
-    matches_IsoMu22                           = cms.vstring('userInt("matches_IsoMu22")','I'),
-    matches_IsoTkMu22                         = cms.vstring('userInt("matches_IsoTkMu22")','I'),
     matches_IsoMu24                           = cms.vstring('userInt("matches_IsoMu24")','I'),
     matches_IsoTkMu24                         = cms.vstring('userInt("matches_IsoTkMu24")','I'),
     matches_IsoMu27                           = cms.vstring('userInt("matches_IsoMu27")','I'),
@@ -167,10 +166,6 @@ def addMuons(process, coll, **kwargs):
         deltaR = cms.double(0.5),
         labels = cms.vstring( # needs to match paths
             # single muon
-            'matches_IsoMu20',
-            'matches_IsoTkMu20',
-            'matches_IsoMu22',
-            'matches_IsoTkMu22',
             'matches_IsoMu24',
             'matches_IsoTkMu24',
             'matches_IsoMu27',
@@ -181,10 +176,6 @@ def addMuons(process, coll, **kwargs):
         ),
         paths = cms.vstring( # needs to match labels
             # single muon
-            'HLT_IsoMu20_v\\[0-9]+',
-            'HLT_IsoTkMu20_v\\[0-9]+',
-            'HLT_IsoMu22_v\\[0-9]+',
-            'HLT_IsoTkMu22_v\\[0-9]+',
             'HLT_IsoMu24_v\\[0-9]+',
             'HLT_IsoTkMu24_v\\[0-9]+',
             'HLT_IsoMu27_v\\[0-9]+',
