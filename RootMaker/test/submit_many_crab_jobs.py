@@ -36,7 +36,7 @@ def submit_jobs(args):
     os.chdir('{0}/src/RootMaker/RootMaker/test/{1}'.format(os.environ['CMSSW_BASE'], args.era))
     for i, sample in enumerate(samplelist):
         os.chdir(jobnamelist[i])
-#        os.system('crab submit -c {0}'.format(pyname))
+        os.system('crab submit -c {0}'.format(pyname))
         print 'crab submit -c {1}/{0}'.format(pyname, os.getcwd())
         os.chdir('../')
         print
@@ -98,8 +98,8 @@ def write_crab_config(args, n):
         fout.write('\nconfig.Data.splitting = \'FileBased\'')
         fout.write('\nconfig.Data.unitsPerJob = {0}'.format(args.filesperjob))
         fout.write('\nconfig.Data.inputDataset = \'{0}\''.format(samplelist[n]))
-        fout.write('\nconfig.JobType.pyCfgParams = [\'sqlhead="src/RootMaker/RootMaker/"\']'
-        fout.write('\nconfig.JobType.pyCfgParams = [\'sourceDS="{0}"\']'.format(sourceDSlist[n]))
+        fout.write('\nconfig.JobType.pyCfgParams = [\'sqlhead="src/RootMaker/RootMaker/"\']')
+        fout.write('\nconfig.JobType.pyCfgParams += [\'sourceDS="{0}"\']'.format(sourceDSlist[n]))
         # add rehlt option
         if args.isReHLT:
             fout.write('\nconfig.JobType.pyCfgParams += [\'isReHLT=1\']')
