@@ -6,16 +6,18 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('analysis')
 # set defaults:
-options.register('globalTag', '', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
-options.register('overrideGT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Override the global tag with default')
-options.register('skipEvents', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
-options.register('isMC', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Is MC')
-options.register('recGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenParticles')
-options.register('recAllGenParticles', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include AllGenParticles')
-options.register('recGenJets', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Include GenJets')
-options.register('runMetFilter', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'Run the recommended MET filters')
-options.register('sourceDS', 'None', VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Source dataset')
-options.register('isReHLT', False, VarParsing.multiplicity.singleton, VarParsing.varType.bool, 'MC dataset was reHLT\'d')
+options.register('globalTag', '',         VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Global Tag')
+options.register('overrideGT', 0,         VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Override the global tag with default')
+options.register('sqlhead', '',           VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Data directory from src if running with CRAB')
+options.register('skipEvents', 0,         VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Number of events to skip (from beginning)')
+options.register('isMC', 0,               VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Is MC')
+options.register('recGenParticles', 0,    VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Include GenParticles')
+options.register('recAllGenParticles', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Include AllGenParticles')
+options.register('recGenJets', 0,         VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Include GenJets')
+options.register('runMetFilter', 0,       VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Run the recommended MET filters')
+options.register('sourceDS', 'None',      VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Source dataset')
+options.register('isReHLT', 0,            VarParsing.multiplicity.singleton, VarParsing.varType.int, 'MC dataset was reHLT\'d')
+options.register('isReReco', 0,           VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Data dataset was reReco\'d')
 
 # load branches
 from RootMaker.RootMaker.addTriggers     import * # triggerBranches, filterBranches

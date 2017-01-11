@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 from RootMaker.RootMaker.RootMaker_cfi import *
-import sys
+import sys, os
 
 print sys.argv
 options.parseArguments()
@@ -8,6 +8,7 @@ options.parseArguments()
 
 print '\nSource dataset identified as {0}'.format(options.sourceDS)
 print 'Sample will be processed as {0}'.format('MC' if options.isMC else 'DATA')
+
 
 ##############################
 ### Global tag ###############
@@ -32,7 +33,7 @@ if options.isMC:
 else:
     if options.isReReco:
         options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
-    else:
+    else: # PromptReco
         options.inputFiles = '/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/129CD4B5-5D9F-E611-A9AB-02163E014220.root'
 
 #############################
@@ -114,15 +115,19 @@ if options.overrideGT:
 ##################
 # this is if we need to override the jec in global tag
 
+# this needs to be changed based on whether we run with crab or locally
+#sqlhead = 'src/RootMaker/RootMaker/'
+#sqlhead = ''
+
 if options.isMC:
     # Moriond MC
-    sqfile = 'RootMaker/RootMaker/data/Spring16_23Sep2016V2_MC.db'
+    sqfile = '{0}data/Spring16_23Sep2016V2_MC.db'.format(options.sqlhead)
 elif options.isReReco:
     # ReReco
-    sqfile = 'RootMaker/RootMaker/data/Spring16_23Sep2016AllV2_DATA.db'
+    sqfile = '{0}data/Spring16_23Sep2016AllV2_DATA.db'.format(options.sqlhead)
 else:
     # PromptReco
-    sqfile = 'RootMaker/RootMaker/data/Spring16_25nsV10All_DATA.db'
+    sqfile = '{0}data/Spring16_25nsV10All_DATA.db'.format(options.sqlhead)
 
 tag = 'JetCorrectorParametersCollection_{0}_AK4PFchs'.format(sqfile.split('/')[-1][:-3])
 

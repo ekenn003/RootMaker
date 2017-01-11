@@ -16,14 +16,30 @@ pyname = 'crabconfig.py'
 
 
 ## ___________________________________________________________
+def get_json(runperiod):
+    json15dir = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/'
+    json16dir = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/'
+
+    jsons = {
+        'Collisions15': json15dir + 'Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt',
+
+        'ReReco16':     json16dir + 'ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt',
+
+        'PromptReco16': json16dir + 'Final/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt',
+    }
+    if runperiod in jsons: return jsons[runperiod]
+
+
+## ___________________________________________________________
 def submit_jobs(args):
     # go to working area
     os.chdir('{0}/src/RootMaker/RootMaker/test/{1}'.format(os.environ['CMSSW_BASE'], args.era))
     for i, sample in enumerate(samplelist):
         os.chdir(jobnamelist[i])
-        #os.system('crab submit -c {0}'.format(pyname))
+#        os.system('crab submit -c {0}'.format(pyname))
         print 'crab submit -c {1}/{0}'.format(pyname, os.getcwd())
         os.chdir('../')
+        print
     os.chdir('../')
 
 ## ___________________________________________________________
@@ -70,23 +86,6 @@ def get_sample_lists(args):
 
 
 ## ___________________________________________________________
-def get_json(runperiod):
-    jsons = {
-        'Collisions15': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
-                        'Collisions15/13TeV/'\
-                        'Reprocessing/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt',
-        'ICHEP2016':    '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
-                        'Collisions16/13TeV/'\
-                        'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt',
-        'Collisions16': '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/'\
-                        'Collisions16/13TeV/'\
-                        'Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt',
-    }
-    if runperiod in jsons: return jsons[runperiod]
-
-
-
-## ___________________________________________________________
 def write_crab_config(args, n):
     with open(pyname, 'w') as fout:
         fout.write('from CRABClient.UserUtilities import config')
@@ -99,11 +98,23 @@ def write_crab_config(args, n):
         fout.write('\nconfig.Data.splitting = \'FileBased\'')
         fout.write('\nconfig.Data.unitsPerJob = {0}'.format(args.filesperjob))
         fout.write('\nconfig.Data.inputDataset = \'{0}\''.format(samplelist[n]))
+        fout.write('\nconfig.JobType.pyCfgParams = [\'sqlhead="src/RootMaker/RootMaker/"\']'
         fout.write('\nconfig.JobType.pyCfgParams = [\'sourceDS="{0}"\']'.format(sourceDSlist[n]))
+        # add rehlt option
         if args.isReHLT:
             fout.write('\nconfig.JobType.pyCfgParams += [\'isReHLT=1\']')
+        else:
+            fout.write('\nconfig.JobType.pyCfgParams += [\'isReHLT=0\']')
+        # add mc option
         if args.isMC:
             fout.write('\nconfig.JobType.pyCfgParams += [\'isMC=1\']')
+        else:
+            fout.write('\nconfig.JobType.pyCfgParams += [\'isMC=0\']')
+        # add rereco option
+        if args.isReReco:
+            fout.write('\nconfig.JobType.pyCfgParams += [\'isReReco=1\']')
+        else:
+            fout.write('\nconfig.JobType.pyCfgParams += [\'isReReco=0\']')
         if args.applylumimask is not None:
             fout.write('\nconfig.Data.lumiMask = \'{0}\''.format(get_json(args.applylumimask)))
         fout.write('\nconfig.Data.outLFNDirBase = \'/store/user/ekennedy/T2_CH_CERN/smh2mu/80X/{0}/{1}/{2}\''.format(args.era, 'mc' if args.isMC else 'data', jobnamelist[n]))
@@ -117,12 +128,13 @@ def parse_command_line(argv):
 
     parser.add_argument('--era',       type=str, help='Era (nov16, etc)')
     parser.add_argument('--trystring', type=str, help='CRAB taskname suffix')
-    parser.add_argument('--isMC',    action='store_true', help='Is Monte Carlo')
-    parser.add_argument('--isReHLT', action='store_true', help='Is reHLT Monte Carlo')
+    parser.add_argument('--isMC',     action='store_true', help='Is Monte Carlo')
+    parser.add_argument('--isReHLT',  action='store_true', help='Is reHLT Monte Carlo')
+    parser.add_argument('--isReReco', action='store_true', help='Is reReco data')
     # input list files
     parser.add_argument('--samplelist', type=str, help='Text file list of DAS samples to submit, one per line')
     # more optional args
-    parser.add_argument('--applylumimask', type=str, default=None, choices=['Collisions15','ICHEP2016','Collisions16'])
+    parser.add_argument('--applylumimask', type=str, default=None, choices=['Collisions15','ReReco16','PromptReco16'])
     parser.add_argument('--filesperjob',   type=int, default=1)
 
     return parser.parse_args(argv)
