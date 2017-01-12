@@ -92,6 +92,20 @@ def addJets(process, coll, **kwargs):
     process.jetCustomization = cms.Path()
 
     # recorrect jets
+    ######################
+    #####from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+
+    #####jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
+    #####if isMC:
+    #####    jetCorr = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')
+    #####updateJetCollection(
+    #####    process,
+    #####    jetSource = cms.InputTag(jSrc),
+    #####    jetCorrections = jetCorr,
+    #####)
+    #####process.updatedPatJets.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
+    #####jSrc = 'updatedPatJets'
+
     from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
     process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
         src = cms.InputTag(jSrc),
@@ -103,21 +117,21 @@ def addJets(process, coll, **kwargs):
     from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
     process.patJetsReapplyJEC = updatedPatJets.clone(
         jetSource = cms.InputTag(jSrc),
-        jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
+        jetCorrFactorsSource = cms.VInputTag(cms.InputTag('patJetCorrFactorsReapplyJEC'))
     )
     process.jetCustomization *= process.patJetCorrFactorsReapplyJEC
     process.jetCustomization *= process.patJetsReapplyJEC
-    jSrc = "patJetsReapplyJEC"
+    jSrc = 'patJetsReapplyJEC'
 
     # embed ids
     process.jID = cms.EDProducer(
-        "JetIDEmbedder",
+        'JetIDEmbedder',
         src = cms.InputTag(jSrc),
     )
     process.jetCustomization *= process.jID
-    jSrc = "jID"
+    jSrc = 'jID'
 
-    #process.load("RecoJets.JetProducers.PileupJetID_cfi")
+    #process.load('RecoJets.JetProducers.PileupJetID_cfi')
     #process.jpuID = process.pileupJetId.clone(
     #    jets=cms.InputTag(jSrc),
     #    inputIsCorrected=True,
@@ -126,27 +140,27 @@ def addJets(process, coll, **kwargs):
     #)
 
     #process.jetCustomization *= process.jpuID
-    #jSrc = "jpuID"
+    #jSrc = 'jpuID'
 
     # embed shapes
     process.jShape = cms.EDProducer(
-        "JetShapeEmbedder",
+        'JetShapeEmbedder',
         src = cms.InputTag(jSrc),
         packedSrc = cms.InputTag(packedSrc),
     )
     process.jetCustomization *= process.jShape
-    jSrc = "jShape"
+    jSrc = 'jShape'
 
     ## embed gen jets
     #if isMC:
     #    process.jGenJet = cms.EDProducer(
-    #        "JetMatchedGenJetEmbedder",
+    #        'JetMatchedGenJetEmbedder',
     #        src = cms.InputTag(jSrc),
-    #        genJets = cms.InputTag("slimmedGenJets"),
+    #        genJets = cms.InputTag('slimmedGenJets'),
     #        srcIsTaus = cms.bool(False),
     #        deltaR = cms.double(0.5),
     #    )
-    #    jSrc = "jGenJet"
+    #    jSrc = 'jGenJet'
     #    process.jetCustomization *= process.jGenJet
 
 

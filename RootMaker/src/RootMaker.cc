@@ -271,25 +271,13 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     // for example, require at least 1 muon
 
     bool keepevent = false;
-    //bool keepevent = true;
-    int nMuonCands = 0;
-    //int nElectronCands = 0;
     for (auto &coll : objectCollectionBranches) {
         string name = coll->getName();
         UInt_t count = coll->getCount();
         // count leptons
-        if (name == "muons") {
-            nMuonCands = count;
+        if (name == "muons" && count > 1) {
+            keepevent = true;
         }
-        //else if (name == "electrons") {
-        //    nElectronCands = count;
-        //}
-    }
-    //int nLeptons = nMuonCands + nElectronCands;
-
-    //if (nMuonCands>1 && nLeptons>2) {
-    if (nMuonCands>1) {
-        keepevent = true;
     }
 
     if (keepevent) {
@@ -298,5 +286,7 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     } else {
         nevents_skipped++;
     }
+
+
 }
 

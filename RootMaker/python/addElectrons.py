@@ -21,26 +21,26 @@ electronBranches = commonEgammaBranches.clone(
     ecaldrivenseed     = cms.vstring('ecalDrivenSeed','I'),
     trackerdrivenseed  = cms.vstring('trackerDrivenSeed','I'),
 
-    # track information
-    trackchi2   = cms.vstring('gsfTrack().chi2()','F'),
-    trackndof   = cms.vstring('gsfTrack().ndof()','F'),
-    nhits       = cms.vstring('gsfTrack().numberOfValidHits()','I'),
-    npixelhits    = cms.vstring('gsfTrack().hitPattern().numberOfValidPixelHits()','I'),
-    npixellayers  = cms.vstring('gsfTrack().hitPattern().pixelLayersWithMeasurement()','I'),
-    nstriplayers  = cms.vstring('gsfTrack().hitPattern().stripLayersWithMeasurement()','I'),
+    ## track information
+    #trackchi2   = cms.vstring('gsfTrack().chi2()','F'),
+    #trackndof   = cms.vstring('gsfTrack().ndof()','F'),
+    #nhits       = cms.vstring('gsfTrack().numberOfValidHits()','I'),
+    #npixelhits    = cms.vstring('gsfTrack().hitPattern().numberOfValidPixelHits()','I'),
+    #npixellayers  = cms.vstring('gsfTrack().hitPattern().pixelLayersWithMeasurement()','I'),
+    #nstriplayers  = cms.vstring('gsfTrack().hitPattern().stripLayersWithMeasurement()','I'),
     # these two things are the same in MC? 
     # user data embedded from ElectronMissingHitsEmbedder
     nmissinghits  = cms.vstring('userInt("missingHits")','I'),
     nhitsexpected = cms.vstring('gsfTrack().numberOfLostHits()','I'),
 
     # shower information
-    r9   = cms.vstring('r9','F'),
-    e1x5 = cms.vstring('e1x5','F'),
-    e2x5 = cms.vstring('e2x5Max','F'),
-    e5x5 = cms.vstring('e5x5','F'),
+    #r9   = cms.vstring('r9','F'),
+    #e1x5 = cms.vstring('e1x5','F'),
+    #e2x5 = cms.vstring('e2x5Max','F'),
+    #e5x5 = cms.vstring('e5x5','F'),
 
-    fbrems   = cms.vstring('fbrem','F'),
-    numbrems = cms.vstring('numberOfBrems','F'),
+    #fbrems   = cms.vstring('fbrem','F'),
+    #numbrems = cms.vstring('numberOfBrems','F'),
 
 #    # supercluster
 #    scE1x5             = cms.vstring('scE1x5','F'),

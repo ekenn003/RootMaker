@@ -9,7 +9,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
-#include "RootMaker/RootMaker/plugins/rochcor2015.h"
+#include "RootMaker/RootMaker/plugins/rochcor2016.h"
 
 using namespace std;
 
@@ -29,7 +29,7 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     bool isData_;
     auto_ptr<vector<pat::Muon> > output;
-    auto_ptr<rochcor2015> rmcor;
+    auto_ptr<rochcor2016> rmcor;
 };
 
 // constructor
@@ -37,7 +37,7 @@ RochCorEmbedder::RochCorEmbedder(const edm::ParameterSet& iConfig):
     muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
     isData_(iConfig.getParameter<bool>("isData"))
 {
-    rmcor = auto_ptr<rochcor2015>(new rochcor2015());
+    rmcor = auto_ptr<rochcor2016>(new rochcor2016());
     produces<vector<pat::Muon> >();
 }
 

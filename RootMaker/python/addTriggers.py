@@ -7,18 +7,18 @@ import FWCore.ParameterSet.Config as cms
 # trigger
 triggerBranches = cms.PSet(
     # single muon
-    IsoMu20 = cms.PSet(
-        path = cms.string('HLT_IsoMu20_v\\[0-9]+'),
-    ),
-    IsoTkMu20 = cms.PSet(
-        path = cms.string('HLT_IsoTkMu20_v\\[0-9]+'),
-    ),
-    IsoMu22 = cms.PSet(
-        path = cms.string('HLT_IsoMu22_v\\[0-9]+'),
-    ),
-    IsoTkMu22 = cms.PSet(
-        path = cms.string('HLT_IsoTkMu22_v\\[0-9]+'),
-    ),
+    #IsoMu20 = cms.PSet(
+    #    path = cms.string('HLT_IsoMu20_v\\[0-9]+'),
+    #),
+    #IsoTkMu20 = cms.PSet(
+    #    path = cms.string('HLT_IsoTkMu20_v\\[0-9]+'),
+    #),
+    #IsoMu22 = cms.PSet(
+    #    path = cms.string('HLT_IsoMu22_v\\[0-9]+'),
+    #),
+    #IsoTkMu22 = cms.PSet(
+    #    path = cms.string('HLT_IsoTkMu22_v\\[0-9]+'),
+    #),
     IsoMu24 = cms.PSet(
         path = cms.string('HLT_IsoMu24_v\\[0-9]+'),
     ),
