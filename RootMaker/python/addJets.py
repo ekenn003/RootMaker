@@ -134,15 +134,6 @@ def addJets(process, coll, **kwargs):
     #process.jetCustomization *= process.jpuID
     #jSrc = 'jpuID'
 
-    # embed shapes
-    process.jShape = cms.EDProducer(
-        'JetShapeEmbedder',
-        src = cms.InputTag(jSrc),
-        packedSrc = cms.InputTag(packedSrc),
-    )
-    process.jetCustomization *= process.jShape
-    jSrc = 'jShape'
-
     ## embed gen jets
     #if isMC:
     #    process.jGenJet = cms.EDProducer(
