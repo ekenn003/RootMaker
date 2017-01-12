@@ -117,17 +117,17 @@ if options.overrideGT:
 
 # this needs to be changed based on whether we run with crab or locally
 #sqlhead = 'src/RootMaker/RootMaker/'
-#sqlhead = ''
+sqlhead = ''.join( c for c in str(options.sqlhead) if c not in '"')
 
 if options.isMC:
     # Moriond MC
-    sqfile = '{0}data/Spring16_23Sep2016V2_MC.db'.format(options.sqlhead)
+    sqfile = '{0}data/Spring16_23Sep2016V2_MC.db'.format(sqlhead)
 elif options.isReReco:
     # ReReco
-    sqfile = '{0}data/Spring16_23Sep2016AllV2_DATA.db'.format(options.sqlhead)
+    sqfile = '{0}data/Spring16_23Sep2016AllV2_DATA.db'.format(sqlhead)
 else:
     # PromptReco
-    sqfile = '{0}data/Spring16_25nsV10All_DATA.db'.format(options.sqlhead)
+    sqfile = '{0}data/Spring16_25nsV10All_DATA.db'.format(sqlhead)
 
 tag = 'JetCorrectorParametersCollection_{0}_AK4PFchs'.format(sqfile.split('/')[-1][:-3])
 
