@@ -1,21 +1,16 @@
 # RootMaker
 
-Still missing: 
-  - number of charged tracks in taus
-  - puppi met / jets
-  - unmatched gen particles
-
 Recipe:
 
     # setup environment
-    cmsrel CMSSW_8_0_12
-    cd CMSSW_8_0_12/src
+    cmsrel CMSSW_8_0_25
+    cd CMSSW_8_0_25/src
     cmsenv
     git cms-init
     
+    git cms-merge-topic cms-met:METRecipe_8020
+    
     # checkout and build
-    git clone -b 80X https://github.com/ekenn003/RootMaker.git
+    git clone -b 80X git@github.com:ekenn003/RootMaker.git
     scramv1 b -j 20
 
-# Danger! 
-only keeps events with 3 or 4 leptons
