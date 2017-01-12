@@ -67,14 +67,6 @@ jetBranches = commonJetTauBranches.clone(
     #puid_medium     = cms.vstring('userInt("puid_medium")','I'),
     #puid_tight      = cms.vstring('userInt("puid_tight")','I'),
 
-#    # user data embedded from JetShapeEmbedder
-#    chargeda          = cms.vstring('userFloat("chargeda")','F'),
-#    chargedb          = cms.vstring('userFloat("chargedb")','F'),
-#    neutrala          = cms.vstring('userFloat("neutrala")','F'),
-#    neutralb          = cms.vstring('userFloat("neutralb")','F'),
-#    alla              = cms.vstring('userFloat("alla")','F'),
-#    allb              = cms.vstring('userFloat("allb")', 'F'),
-#    chargedfractionmv = cms.vstring('userFloat("chargedfractionmv")','F'),
 )
 
 
