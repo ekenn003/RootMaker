@@ -15,8 +15,8 @@ options.register('recGenParticles', 0,    VarParsing.multiplicity.singleton, Var
 options.register('recAllGenParticles', 0, VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Include AllGenParticles')
 options.register('recGenJets', 0,         VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Include GenJets')
 options.register('runMetFilter', 0,       VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Run the recommended MET filters')
+options.register('runMuonFilter', 0,      VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Run the bad/duplicate muon filters')
 options.register('sourceDS', 'None',      VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Source dataset')
-options.register('isReHLT', 0,            VarParsing.multiplicity.singleton, VarParsing.varType.int, 'MC dataset was reHLT\'d')
 options.register('isReReco', 0,           VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Data dataset was reReco\'d')
 
 # load branches

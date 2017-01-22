@@ -34,32 +34,6 @@ muonBranches = commonObjectBranches.clone(
     chi2             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().chi2() : -1', 'F'),
     ndof             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ndof() : -1', 'F'),
 
-#    hasinnertrack           = cms.vstring('innerTrack().isNonnull()','I'),
-#    innertrack_px           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().px() : 0', 'F'),
-#    innertrack_py           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().py() : 0', 'F'),
-#    innertrack_pz           = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().pz() : 0', 'F'),
-#    innertrack_dxy          = cms.vstring('userFloat("innertrack_dxy")','F'),
-#    innertrack_dxyerr       = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().dxyError() : 0', 'F'),
-#    innertrack_dz           = cms.vstring('userFloat("innertrack_dz")','F'),
-#    innertrack_dzerr        = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().dzError() : 0', 'F'),
-#    innertrack_chi2         = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().chi2() : -1', 'F'),
-#    innertrack_ndof         = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().ndof() : -1', 'F'),
-#    innertrack_charge       = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().charge() : 0', 'I'),
-#    innertrack_nhits        = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().numberOfValidHits() : -1', 'I'),
-#    innertrack_nmissinghits = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().numberOfLostHits() : -1', 'I'),
-#    innertrack_npixelhits   = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().numberOfValidPixelHits() : -1', 'I'),
-#    innertrack_npixellayers = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().pixelLayersWithMeasurement() : -1', 'I'),
-#    innertrack_nstriplayers = cms.vstring('? (innerTrack().isNonnull() ) ? innerTrack().hitPattern().stripLayersWithMeasurement() : -1', 'I'),
-#
-#    hasoutertrack          = cms.vstring('outerTrack().isNonnull()','I'),
-#    outertrack_px          = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().px() : 0', 'F'),
-#    outertrack_py          = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().py() : 0', 'F'),
-#    outertrack_pz          = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().pz() : 0', 'F'),
-#    outertrack_hits        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().numberOfValidHits() : -1', 'I'),
-#    outertrack_missinghits = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().numberOfLostHits() : -1', 'I'),
-#    outertrack_chi2        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().chi2() : -1', 'F'),
-#    outertrack_ndof        = cms.vstring('? (outerTrack().isNonnull() ) ? outerTrack().ndof() : -1', 'F'),
-
     # isolation
     pfisolationr3_sumchargedhadronpt   = cms.vstring('pfIsolationR03().sumChargedHadronPt','F'),
     pfisolationr3_sumchargedparticlept = cms.vstring('pfIsolationR03().sumChargedParticlePt','F'),
@@ -115,7 +89,6 @@ muonBranches = commonObjectBranches.clone(
 ################################################
 def addMuons(process, coll, **kwargs):
     isMC = kwargs.pop('isMC', False)
-    isReHLT = kwargs.pop('isReHLT', False)
     mSrc = coll['muons']
     pvSrc = coll['vertices']
     # customization path
@@ -161,7 +134,7 @@ def addMuons(process, coll, **kwargs):
     process.mTrig = cms.EDProducer(
         'MuonHLTMatchEmbedder',
         src = cms.InputTag(mSrc),
-        triggerResults = cms.InputTag('TriggerResults', '', 'HLT2') if isReHLT else cms.InputTag('TriggerResults', '', 'HLT'),
+        triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
         triggerObjects = cms.InputTag('selectedPatTrigger'),
         deltaR = cms.double(0.5),
         labels = cms.vstring( # needs to match paths

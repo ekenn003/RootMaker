@@ -229,6 +229,12 @@ cleaning = {
 ################################
 # filters
 filters = []
+
+# bad/duplicate muon filter
+if options.runMuonFilter:
+    from RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff import noBadGlobalMuons
+    filters += [noBadGlobalMuons]
+
 # met filters
 if options.runMetFilter:
     from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
@@ -243,14 +249,13 @@ if options.runMetFilter:
         filters += [getattr(process,modName)]
 
 if options.sourceDS=='DoubleMuon':
-    print '\nwhat up double muon\n'
     singleTriggerSelection = cms.EDFilter(
         'TriggerResultsFilter',
         triggerConditions = cms.vstring(
             'HLT_IsoMu24_v*',
             'HLT_IsoTkMu24_v*',
         ),
-        hltResults = cms.InputTag('TriggerResults', '', 'HLT{0}'.format('2' if options.isReHLT else '')),
+        hltResults = cms.InputTag('TriggerResults', '', 'HLT'),
         l1tResults = cms.InputTag('gtDigis'),
 #        l1tIgnoreMask = cms.bool(False),
 #        l1techIgnorePrescales = cms.bool(False),
@@ -280,7 +285,6 @@ objectCollections = addMuons(
     process,
     objectCollections,
     isMC=bool(options.isMC),
-    isReHLT=bool(options.isReHLT),
 )
 #objectCollections = addTaus(
 #    process,
@@ -324,7 +328,7 @@ process.makeroottree.addAllGenParticles = bool(options.recAllGenParticles)
 process.makeroottree.addGenJets         = bool(options.recGenJets)
 
 # fix for 80X reHLT
-process.makeroottree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT{0}'.format('2' if options.isReHLT else ''))
+process.makeroottree.triggerResults = cms.InputTag('TriggerResults', '', 'HLT')
 process.makeroottree.filterResults  = cms.InputTag('TriggerResults', '', 'PAT') if options.isMC else cms.InputTag('TriggerResults', '', 'RECO')
 # send collections again in case they've been modified:
 process.makeroottree.vertexCollections.vertices.collection     = objectCollections['vertices']
@@ -340,15 +344,15 @@ process.makeroottree.objectCollections.pfmettype1.collection   = objectCollectio
 ################################
 process.makeroottreePath = cms.Path()
 
+# if this is the DoubleMuon dataset, remove events that pass the singlemuon trigger
 if options.sourceDS=='DoubleMuon':
     process.makeroottreePath += ~getattr(process, 'singleTriggerSelection')
     process.makeroottreePath += getattr(process, 'doubleTriggerSelection')
 
-
 for f in filters:
     process.makeroottreePath += f
-process.makeroottreePath += process.makeroottree
 
+process.makeroottreePath += process.makeroottree
 process.schedule.append(process.makeroottreePath)
 
 
