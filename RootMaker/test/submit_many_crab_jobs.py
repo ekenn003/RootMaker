@@ -100,11 +100,6 @@ def write_crab_config(args, n):
         fout.write('\nconfig.Data.inputDataset = \'{0}\''.format(samplelist[n]))
         fout.write('\nconfig.JobType.pyCfgParams = [\'sqlhead="src/RootMaker/RootMaker/"\']')
         fout.write('\nconfig.JobType.pyCfgParams += [\'sourceDS="{0}"\']'.format(sourceDSlist[n]))
-        # add rehlt option
-        if args.isReHLT:
-            fout.write('\nconfig.JobType.pyCfgParams += [\'isReHLT=1\']')
-        else:
-            fout.write('\nconfig.JobType.pyCfgParams += [\'isReHLT=0\']')
         # add mc option
         if args.isMC:
             fout.write('\nconfig.JobType.pyCfgParams += [\'isMC=1\']')
@@ -129,7 +124,6 @@ def parse_command_line(argv):
     parser.add_argument('--era',       type=str, help='Era (nov16, etc)')
     parser.add_argument('--trystring', type=str, help='CRAB taskname suffix')
     parser.add_argument('--isMC',     action='store_true', help='Is Monte Carlo')
-    parser.add_argument('--isReHLT',  action='store_true', help='Is reHLT Monte Carlo')
     parser.add_argument('--isReReco', action='store_true', help='Is reReco data')
     # input list files
     parser.add_argument('--samplelist', type=str, help='Text file list of DAS samples to submit, one per line')
