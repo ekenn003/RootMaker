@@ -9,7 +9,7 @@ Recipe:
     git cms-init
     
     git cms-merge-topic cms-met:METRecipe_8020
-    git cms-merge-topic gpetruc:badMuonFilters_80X
+    git cms-merge-topic gpetruc:badMuonFilters_80X_v2
     
     # checkout and build
     git clone -b 80X git@github.com:ekenn003/RootMaker.git
