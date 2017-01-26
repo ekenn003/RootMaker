@@ -14,12 +14,13 @@ print 'Sample will be processed as {0}'.format('MC' if options.isMC else 'DATA')
 ### Global tag ###############
 ##############################
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
+# temporary until moriond17 tag is released
 if options.isMC:
-    # temporary until moriond17 tag is released
-    options.globalTag = '80X_mcRun2_asymptotic_2016_miniAODv2_v1'
-else:
-    # temporary until moriond17 tag is released
-    options.globalTag = '80X_dataRun2_Prompt_ICHEP16JEC_v0'
+    options.globalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
+elif options.isReReco:
+    options.globalTag = '80X_dataRun2_2016SeptRepro_v5'
+else: # PromptReco
+    options.globalTag = '80X_dataRun2_Prompt_v15'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
 #options.overrideGT = True # (default is false)
@@ -30,11 +31,10 @@ else:
 
 if options.isMC:
     options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/120000/0EA60289-18C4-E611-8A8F-008CFA110AB4.root'
-else:
-    if options.isReReco:
-        options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
-    else: # PromptReco
-        options.inputFiles = '/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/129CD4B5-5D9F-E611-A9AB-02163E014220.root'
+elif options.isReReco:
+    options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
+else: # PromptReco
+    options.inputFiles = '/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/129CD4B5-5D9F-E611-A9AB-02163E014220.root'
 
 #############################
 ## Running options ##########
@@ -232,8 +232,10 @@ filters = []
 
 # bad/duplicate muon filter
 if options.runMuonFilter:
+    process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
     from RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff import noBadGlobalMuons
-    filters += [noBadGlobalMuons]
+    setattr(process, 'noBadGlobalMuons', noBadGlobalMuons)
+    filters += [getattr(process, 'noBadGlobalMuons')]
 
 # met filters
 if options.runMetFilter:
