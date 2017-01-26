@@ -7,14 +7,14 @@ submit_data_rereco=false
 submit_data_prompt=false
 
 
-era="jan17"
-try="try1_$n"
+era="jan17prompt"
+try="tryp_$n"
 
 
-submit_sig=true
+#submit_sig=true
 #submit_bkg=true
 #submit_data_rereco=true
-#submit_data_prompt=true
+submit_data_prompt=true
 
 sig_list="inputlist_jan17_sig.txt"
 bkg_list="inputlist_jan17_bkg.txt"
