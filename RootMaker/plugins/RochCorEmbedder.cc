@@ -11,6 +11,7 @@
 #include "TLorentzVector.h"
 
 #include "RootMaker/RootMaker/plugins/RoccoR.h"
+#include "RootMaker/RootMaker/plugins/RoccoR.cc"
 
 using namespace std;
 
@@ -30,8 +31,7 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     bool isData_;
     auto_ptr<vector<pat::Muon> > output;
-   // RoccoR rc("rcdata.2016.v3");
-    //auto_ptr<rochcor2016> rmcor;
+    RoccoR rc("rcdata.2016.v3");
 };
 
 // constructor
@@ -39,10 +39,7 @@ RochCorEmbedder::RochCorEmbedder(const edm::ParameterSet& iConfig):
     muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
     isData_(iConfig.getParameter<bool>("isData"))
 {
-    //rmcor = auto_ptr<rochcor2016>(new rochcor2016());
     produces<vector<pat::Muon> >();
-    //rc("rcdata.2016.v3");
-    
 }
 
 void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -50,8 +47,6 @@ void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
     output = auto_ptr<vector<pat::Muon> >(new vector<pat::Muon>);
     edm::Handle<edm::View<pat::Muon> > muons;
     iEvent.getByToken(muonToken_, muons);
-
-    RoccoR rc("rcdata.2016.v3");
 
     for (size_t c = 0; c < muons->size(); ++c) {
         const auto obj = muons->at(c);
