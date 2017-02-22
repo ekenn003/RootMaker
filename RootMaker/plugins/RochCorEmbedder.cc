@@ -11,7 +11,6 @@
 #include "TLorentzVector.h"
 
 #include "RootMaker/RootMaker/plugins/RoccoR.h"
-#include "RootMaker/RootMaker/plugins/RoccoR.cc"
 
 using namespace std;
 
@@ -31,7 +30,7 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     bool isData_;
     auto_ptr<vector<pat::Muon> > output;
-    RoccoR rc("rcdata.2016.v3");
+    RoccoR* rc;
 };
 
 // constructor
@@ -40,6 +39,7 @@ RochCorEmbedder::RochCorEmbedder(const edm::ParameterSet& iConfig):
     isData_(iConfig.getParameter<bool>("isData"))
 {
     produces<vector<pat::Muon> >();
+    rc = new RoccoR("rcdata.2016.v3");
 }
 
 void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -66,19 +66,12 @@ void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
         float fRand_1 = (iRand_1 % 1000) * 0.001;
         float fRand_2 = (iRand_2 % 1000) * 0.001;
 
-        if(isData_) q_term = rc.kScaleDT(obj.charge(), obj.pt(), obj.eta(), obj.phi(), 0, 0 );
-        else q_term = rc.kScaleAndSmearMC(obj.charge(), obj.pt(), obj.eta(), obj.phi(), ntrk, fRand_1, fRand_2, 0, 0);
+        if(isData_) q_term = rc->kScaleDT(obj.charge(), obj.pt(), obj.eta(), obj.phi(), 0, 0 );
+        else q_term = rc->kScaleAndSmearMC(obj.charge(), obj.pt(), obj.eta(), obj.phi(), ntrk, fRand_1, fRand_2, 0, 0);
 
         newObj.addUserFloat("rochesterPt", q_term*obj.pt());
         //newObj.addUserFloat("rochesterPt_up", q_term*obj.Pt());
         //newObj.addUserFloat("rochesterPt_down", p4.Pt());
-//        newObj.addUserFloat("rochesterPx", p4.Px());
-//        newObj.addUserFloat("rochesterPy", p4.Py());
-//        newObj.addUserFloat("rochesterPz", p4.Pz());
-//        newObj.addUserFloat("rochesterEta", p4.Eta());
-//        newObj.addUserFloat("rochesterPhi", p4.Phi());
-//        newObj.addUserFloat("rochesterEnergy", p4.Energy());
-//        newObj.addUserFloat("rochesterError", qter);
         output->push_back(newObj);
     }
 
