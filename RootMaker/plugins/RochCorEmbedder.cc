@@ -8,8 +8,9 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
+#include "TLorentzVector.h"
 
-#include "RootMaker/RootMaker/plugins/rochcor2016.h"
+#include "RootMaker/RootMaker/plugins/RoccoR.h"
 
 using namespace std;
 
@@ -29,7 +30,8 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     bool isData_;
     auto_ptr<vector<pat::Muon> > output;
-    auto_ptr<rochcor2016> rmcor;
+   // RoccoR rc("rcdata.2016.v3");
+    //auto_ptr<rochcor2016> rmcor;
 };
 
 // constructor
@@ -37,8 +39,10 @@ RochCorEmbedder::RochCorEmbedder(const edm::ParameterSet& iConfig):
     muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
     isData_(iConfig.getParameter<bool>("isData"))
 {
-    rmcor = auto_ptr<rochcor2016>(new rochcor2016());
+    //rmcor = auto_ptr<rochcor2016>(new rochcor2016());
     produces<vector<pat::Muon> >();
+    //rc("rcdata.2016.v3");
+    
 }
 
 void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -47,28 +51,39 @@ void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
     edm::Handle<edm::View<pat::Muon> > muons;
     iEvent.getByToken(muonToken_, muons);
 
+    RoccoR rc("rcdata.2016.v3");
+
     for (size_t c = 0; c < muons->size(); ++c) {
         const auto obj = muons->at(c);
         pat::Muon newObj = obj;
-        TLorentzVector p4;
+        //TLorentzVector p4;
 
-        p4.SetPtEtaPhiM(obj.pt(),obj.eta(),obj.phi(),obj.mass());
-        int   charge = obj.charge();
-        float qter = 1.0; 
-        int   runopt = 0;
-        int   ntrk = 0;
+        //p4.SetPtEtaPhiM(obj.pt(),obj.eta(),obj.phi(),obj.mass());
+        //int   charge = obj.charge();
+        //float qter = 1.0; 
+        //int   runopt = 0;
+        int   ntrk = obj.innerTrack()->hitPattern().trackerLayersWithMeasurement();
+        float q_term = 1.;
 
-        if(isData_) rmcor->momcor_data(p4, charge, runopt, qter);
-        else rmcor->momcor_mc(p4, charge, ntrk, qter);
+        srand( time(NULL) );
+        int iRand_1 = rand();
+        int iRand_2 = (iRand_1 % 1000)*(iRand_1 % 1000);
+        float fRand_1 = (iRand_1 % 1000) * 0.001;
+        float fRand_2 = (iRand_2 % 1000) * 0.001;
 
-        newObj.addUserFloat("rochesterPt", p4.Pt());
-        newObj.addUserFloat("rochesterPx", p4.Px());
-        newObj.addUserFloat("rochesterPy", p4.Py());
-        newObj.addUserFloat("rochesterPz", p4.Pz());
-        newObj.addUserFloat("rochesterEta", p4.Eta());
-        newObj.addUserFloat("rochesterPhi", p4.Phi());
-        newObj.addUserFloat("rochesterEnergy", p4.Energy());
-        newObj.addUserFloat("rochesterError", qter);
+        if(isData_) q_term = rc.kScaleDT(obj.charge(), obj.pt(), obj.eta(), obj.phi(), 0, 0 );
+        else q_term = rc.kScaleAndSmearMC(obj.charge(), obj.pt(), obj.eta(), obj.phi(), ntrk, fRand_1, fRand_2, 0, 0);
+
+        newObj.addUserFloat("rochesterPt", q_term*obj.pt());
+        //newObj.addUserFloat("rochesterPt_up", q_term*obj.Pt());
+        //newObj.addUserFloat("rochesterPt_down", p4.Pt());
+//        newObj.addUserFloat("rochesterPx", p4.Px());
+//        newObj.addUserFloat("rochesterPy", p4.Py());
+//        newObj.addUserFloat("rochesterPz", p4.Pz());
+//        newObj.addUserFloat("rochesterEta", p4.Eta());
+//        newObj.addUserFloat("rochesterPhi", p4.Phi());
+//        newObj.addUserFloat("rochesterEnergy", p4.Energy());
+//        newObj.addUserFloat("rochesterError", qter);
         output->push_back(newObj);
     }
 
