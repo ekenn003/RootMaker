@@ -29,6 +29,7 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
     // data
     edm::EDGetTokenT<edm::View<pat::Muon> > muonToken_;
     bool isData_;
+    edm::FileInPath rochCorrDataDir_;
     auto_ptr<vector<pat::Muon> > output;
     RoccoR* rc;
 };
@@ -36,10 +37,14 @@ class RochCorEmbedder : public edm::stream::EDProducer<> {
 // constructor
 RochCorEmbedder::RochCorEmbedder(const edm::ParameterSet& iConfig):
     muonToken_(consumes<edm::View<pat::Muon> >(iConfig.getParameter<edm::InputTag>("src"))),
-    isData_(iConfig.getParameter<bool>("isData"))
+    isData_(iConfig.getParameter<bool>("isData")),
+    rochCorrDataDir_(iConfig.getParameter<edm::FileInPath>("rochCorrDataDir"))
 {
     produces<vector<pat::Muon> >();
-    rc = new RoccoR("rcdata.2016.v3");
+    string rochCorrDataDirPath = rochCorrDataDir_.fullPath();
+    rochCorrDataDirPath.erase(rochCorrDataDirPath.length()-10);
+    std::cerr<<"location = "<<rochCorrDataDirPath<<std::endl;
+    rc = new RoccoR(rochCorrDataDirPath);
 }
 
 void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
@@ -57,7 +62,7 @@ void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
         //int   charge = obj.charge();
         //float qter = 1.0; 
         //int   runopt = 0;
-        int   ntrk = obj.innerTrack()->hitPattern().trackerLayersWithMeasurement();
+        int   ntrk = ( obj.innerTrack().isNonnull() ? obj.innerTrack()->hitPattern().trackerLayersWithMeasurement() : -1 );
         float q_term = 1.;
 
         srand( time(NULL) );
@@ -66,8 +71,12 @@ void RochCorEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
         float fRand_1 = (iRand_1 % 1000) * 0.001;
         float fRand_2 = (iRand_2 % 1000) * 0.001;
 
-        if(isData_) q_term = rc->kScaleDT(obj.charge(), obj.pt(), obj.eta(), obj.phi(), 0, 0 );
-        else q_term = rc->kScaleAndSmearMC(obj.charge(), obj.pt(), obj.eta(), obj.phi(), ntrk, fRand_1, fRand_2, 0, 0);
+        int charge = int(obj.charge());
+        double thisPt = obj.pt();
+        double thisEta = obj.eta();
+        double thisPhi = obj.phi();
+        if(isData_) q_term = rc->kScaleDT(charge, thisPt, thisEta, thisPhi, 0, 0 );
+        else q_term = rc->kScaleAndSmearMC(charge, thisPt, thisEta, thisPhi, ntrk, fRand_1, fRand_2, 0, 0);
 
         newObj.addUserFloat("rochesterPt", q_term*obj.pt());
         //newObj.addUserFloat("rochesterPt_up", q_term*obj.Pt());

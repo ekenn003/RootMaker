@@ -1,6 +1,6 @@
 //#ifndef ElectroWeakAnalysis_RoccoR
 //#define ElectroWeakAnalysis_RoccoR
-//
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -289,19 +289,11 @@ void RocOne::init(std::string filename, int iTYPE, int iSYS, int iMEM){
 }
 
 double RocOne::kScaleDT(int Q, double pt, double eta, double phi) const{
-    std::cerr<<"pretty freaky"<<std::endl;
     int H=getBin(eta, NETA, BETA);
     int F=getBin(phi, NPHI, MPHI, DPHI);
     double m=M[DT][H][F];
     double a=A[DT][H][F];
     double d=D[DT][H];
-
-    std::cerr<<"pt = "<<pt<<std::endl;
-    std::cerr<<"F = "<<F<<", H = "<<H<<std::endl;
-    std::cerr<<"Q = "<<Q<<std::endl;
-    std::cerr<<"m = "<<m<<std::endl;
-    std::cerr<<"d = "<<d<<std::endl;
-    std::cerr<<"a = "<<a<<std::endl;
 
     double k=d/(m+Q*a*pt);
     return k;
@@ -384,16 +376,7 @@ double RoccoR::kGenSmear(double pt, double eta, double v, double u, RocRes::TYPE
 }
 
 double RoccoR::kScaleDT(int Q, double pt, double eta, double phi, int s, int m) const{
-    std::cerr<<"s = "<<s<<std::endl;
-    std::cerr<<"m = "<<m<<std::endl;
-    std::cerr<<"Q = "<<Q<<std::endl;
-    std::cerr<<"eta = "<<eta<<std::endl;
-    std::cerr<<"phi = "<<phi<<std::endl;
-    std::cerr<<"pt = "<<pt<<std::endl;
-
-    std::cerr<<"scary stuff huh"<<std::endl;
     return RC[s][m].kScaleDT(Q, pt, eta, phi);
-    std::cerr<<"hi i'm morty's math teacher"<<std::endl;
 }
 
 double RoccoR::kScaleAndSmearMC(int Q, double pt, double eta, double phi, int n, double u, double w, int s, int m) const{

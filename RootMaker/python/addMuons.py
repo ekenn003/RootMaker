@@ -94,7 +94,7 @@ def addMuons(process, coll, **kwargs):
         'RochCorEmbedder',
         src = cms.InputTag(mSrc),
         isData = cms.bool(not isMC),
-        dataDir = cms.FileInPath("RootMaker/RootMaker/data/rcdata.2016.v3"),
+        rochCorrDataDir = cms.FileInPath("RootMaker/RootMaker/data/rcdata.2016.v3/config.txt"),
     )
     mSrc = 'mRoch'
     process.muonCustomization *= process.mRoch
