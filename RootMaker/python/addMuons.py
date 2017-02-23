@@ -66,13 +66,6 @@ muonBranches = commonObjectBranches.clone(
 
     # user data from RochCorEmbedder
     rochesterPt     = cms.vstring('userFloat("rochesterPt")','F'),
-    rochesterPx     = cms.vstring('userFloat("rochesterPx")','F'),
-    rochesterPy     = cms.vstring('userFloat("rochesterPy")','F'),
-    rochesterPz     = cms.vstring('userFloat("rochesterPz")','F'),
-    rochesterEta    = cms.vstring('userFloat("rochesterEta")','F'),
-    rochesterPhi    = cms.vstring('userFloat("rochesterPhi")','F'),
-    rochesterEnergy = cms.vstring('userFloat("rochesterEnergy")','F'),
-    rochesterError  = cms.vstring('userFloat("rochesterError")','F'),
 
     # user data from HLTMatchEmbedder
     trigger = cms.vstring('userInt("trigger")','I'),
@@ -101,6 +94,7 @@ def addMuons(process, coll, **kwargs):
         'RochCorEmbedder',
         src = cms.InputTag(mSrc),
         isData = cms.bool(not isMC),
+        dataDir = cms.FileInPath("RootMaker/RootMaker/data/rcdata.2016.v3"),
     )
     mSrc = 'mRoch'
     process.muonCustomization *= process.mRoch
