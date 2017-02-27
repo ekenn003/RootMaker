@@ -84,7 +84,7 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     edm::EDGetTokenT<vector<PileupSummaryInfo> > PUInfoToken_;
     edm::EDGetTokenT<LumiSummary> lumiInfoToken_;
     edm::EDGetTokenT<L1GlobalTriggerReadoutRecord> l1TriggerToken_;
-    edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
+//    edm::EDGetTokenT<reco::BeamSpot> beamSpotToken_;
     edm::EDGetTokenT<reco::VertexCollection> verticesToken_;
 
     // branches
@@ -136,14 +136,14 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     UInt_t   event_luminosityblock;
     Float_t  event_rho;
 
-    Float_t beamspot_x;
-    Float_t beamspot_y;
-    Float_t beamspot_z;
-    Float_t beamspot_xwidth;
-    Float_t beamspot_ywidth;
-    Float_t beamspot_zsigma;
-    Float_t beamspot_cov[6];
-
+//    Float_t beamspot_x;
+//    Float_t beamspot_y;
+//    Float_t beamspot_z;
+//    Float_t beamspot_xwidth;
+//    Float_t beamspot_ywidth;
+//    Float_t beamspot_zsigma;
+//    Float_t beamspot_cov[6];
+//
     Int_t   numpileupinteractionsminus;
     Int_t   numpileupinteractions;
     Int_t   numpileupinteractionsplus;
@@ -154,6 +154,9 @@ class RootMaker : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one
     vector<unique_ptr<ObjectCollectionBranches> > objectCollectionBranches;
     unique_ptr<TriggerBranches>    triggerBranches;
     unique_ptr<MonteCarloBranches> monteCarloBranches;
+
+    // Rochester corrections
+    //RoccoR rc("rcdata.2016.v3");
 
 };
 
