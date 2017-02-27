@@ -20,7 +20,7 @@ def collectionFilter(process,obj,objSrc,selection):
     )
     modName = '{0}Selection'.format(obj)
     setattr(process,modName,module)
-    pathName = '{0}SlectionPath'.format(obj)
+    pathName = '{0}SelectionPath'.format(obj)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
