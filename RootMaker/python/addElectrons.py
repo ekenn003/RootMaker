@@ -52,18 +52,10 @@ electronBranches = commonEgammaBranches.clone(
 #    deltaphisuperclustertrack = cms.vstring('deltaPhiSuperClusterTrackAtVtx','F'),
 
     # user data from VIDEmbedder
-    cutBasedVeto         = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-veto")','I'),
-    cutBasedLoose        = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")','I'),
-    cutBasedMedium       = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-medium")','I'),
-    cutBasedTight        = cms.vstring('userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-tight")','I'),
-    mvaNonTrigWP90       = cms.vstring('userInt("mvaEleID-Spring15-25ns-nonTrig-V1-wp90")','I'),
-    mvaNonTrigWP80       = cms.vstring('userInt("mvaEleID-Spring15-25ns-nonTrig-V1-wp80")','I'),
-    mvaTrigWP90          = cms.vstring('userInt("mvaEleID-Spring15-25ns-Trig-V1-wp90")','I'),
-    mvaTrigWP80          = cms.vstring('userInt("mvaEleID-Spring15-25ns-Trig-V1-wp80")','I'),
-    mvaNonTrigValues     = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values")','F'),
-    mvaTrigValues        = cms.vstring('userFloat("ElectronMVAEstimatorRun2Spring15Trig25nsV1Values")','F'),
-    mvaNonTrigCategories = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories")','I'),
-    mvaTrigCategories    = cms.vstring('userInt("ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories")','I'),
+    cutBasedVeto         = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-veto")','I'),
+    cutBasedLoose        = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-loose")','I'),
+    cutBasedMedium       = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-medium")','I'),
+    cutBasedTight        = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-tight")','I'),
 )
 
 
@@ -90,7 +82,7 @@ def addElectrons(process, coll, **kwargs):
     ### embed gap info ###
     ######################
     process.eGI = cms.EDProducer(
-        "ElectronGapInfoEmbedder",
+        'ElectronGapInfoEmbedder',
         src = cms.InputTag(eSrc),
     )
     eSrc = 'eGI'
@@ -104,12 +96,8 @@ def addElectrons(process, coll, **kwargs):
     
     # define which IDs we want to produce
     my_id_modules = [
-        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',
+        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
     ]
-    
     # add them to the VID producer
     for idmod in my_id_modules:
         setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
@@ -120,46 +108,37 @@ def addElectrons(process, coll, **kwargs):
     process.electronRegressionValueMapProducer.srcMiniAOD = cms.InputTag(eSrc)
 
     idDecisionLabels = [
-        'cutBasedElectronID-Spring15-25ns-V1-standalone-veto',
-        'cutBasedElectronID-Spring15-25ns-V1-standalone-loose',
-        'cutBasedElectronID-Spring15-25ns-V1-standalone-medium',
-        'cutBasedElectronID-Spring15-25ns-V1-standalone-tight',
-        'heepElectronID-HEEPV60',
-        'mvaEleID-Spring15-25ns-nonTrig-V1-wp80',
-        'mvaEleID-Spring15-25ns-nonTrig-V1-wp90',
-        'mvaEleID-Spring15-25ns-Trig-V1-wp90',
-        'mvaEleID-Spring15-25ns-Trig-V1-wp80',
+       'cutBasedElectronID-Summer16-80X-V1-veto',
+       'cutBasedElectronID-Summer16-80X-V1-loose',
+       'cutBasedElectronID-Summer16-80X-V1-medium',
+       'cutBasedElectronID-Summer16-80X-V1-tight',
+
     ]
     idDecisionTags = [
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-veto'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-loose'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-medium'),
-        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-tight'),
-        cms.InputTag('egmGsfElectronIDs:heepElectronID-HEEPV60'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-nonTrig-V1-wp80'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-nonTrig-V1-wp90'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-Trig-V1-wp90'),
-        cms.InputTag('egmGsfElectronIDs:mvaEleID-Spring15-25ns-Trig-V1-wp80'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-loose'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight'),
     ]
     mvaValueLabels = [
-        #"ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values",
-        #"ElectronMVAEstimatorRun2Spring15Trig25nsV1Values",
+        #'ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values',
+        #'ElectronMVAEstimatorRun2Spring15Trig25nsV1Values',
     ]
     mvaValueTags = [
-        #cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values"),
-        #cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values"),
+        #cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values'),
+        #cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values'),
     ]
     mvaCategoryLabels = [
-        #"ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories",
-        #"ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories",
+        #'ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories',
+        #'ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories',
     ]
     mvaCategoryTags = [
-        #cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories"),
-        #cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories"),
+        #cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories'),
+        #cms.InputTag('electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories'),
     ]
 
     process.eidEmbedder = cms.EDProducer(
-        "ElectronVIDEmbedder",
+        'ElectronVIDEmbedder',
         src=cms.InputTag(eSrc),
         idLabels = cms.vstring(*idDecisionLabels),        # labels for bool maps
         ids = cms.VInputTag(*idDecisionTags),             # bool maps
@@ -176,7 +155,7 @@ def addElectrons(process, coll, **kwargs):
     ### embed missing hits ###
     ##########################
     process.eMH = cms.EDProducer(
-        "ElectronMissingHitsEmbedder",
+        'ElectronMissingHitsEmbedder',
         src = cms.InputTag(eSrc),
     )
     eSrc = 'eMH'
@@ -185,11 +164,12 @@ def addElectrons(process, coll, **kwargs):
     #############################
     ### embed effective areas ###
     #############################
-    eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt'
+    eaFile = 'RecoEgamma/ElectronIdentification/data/Summer16/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt'
+    #eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt'
     process.eEffArea = cms.EDProducer(
-        "ElectronEffectiveAreaEmbedder",
+        'ElectronEffectiveAreaEmbedder',
         src = cms.InputTag(eSrc),
-        label = cms.string("EffectiveArea"), # embeds a user float with this name
+        label = cms.string('EffectiveArea'), # embeds a user float with this name
         configFile = cms.FileInPath(eaFile), # the effective areas file
     )
     eSrc = 'eEffArea'
@@ -199,29 +179,12 @@ def addElectrons(process, coll, **kwargs):
     ### embed pv ###
     ################
     process.ePV = cms.EDProducer(
-        "ElectronPVEmbedder",
+        'ElectronPVEmbedder',
         src = cms.InputTag(eSrc),
         vertexSrc = cms.InputTag(pvSrc),
     )
     eSrc = 'ePV'
     process.electronCustomization *= process.ePV
-
-    ###############################
-    #### embed trigger matching ###
-    ###############################
-    #process.eTrig = cms.EDProducer(
-    #    "ElectronHLTMatchEmbedder",
-    #    src = cms.InputTag(eSrc),
-    #    triggerResults = cms.InputTag('TriggerResults', '', 'HLT'),
-    #    triggerObjects = cms.InputTag("selectedPatTrigger"),
-    #    deltaR = cms.double(0.5),
-    #    labels = cms.vstring(
-    #    ),
-    #    paths = cms.vstring(
-    #    ),
-    #)
-    #eSrc = 'eTrig'
-    #process.electronCustomization *= process.eTrig
 
     # add to schedule
     process.schedule.append(process.electronCustomization)

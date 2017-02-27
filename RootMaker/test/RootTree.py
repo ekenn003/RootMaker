@@ -16,9 +16,9 @@ print 'Sample will be processed as {0}'.format('MC' if options.isMC else 'DATA')
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions
 # temporary until moriond17 tag is released
 if options.isMC:
-    options.globalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v6'
+    options.globalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
 elif options.isReReco:
-    options.globalTag = '80X_dataRun2_2016SeptRepro_v5'
+    options.globalTag = '80X_dataRun2_2016SeptRepro_v7'
 else: # PromptReco
     options.globalTag = '80X_dataRun2_Prompt_v15'
 
@@ -32,9 +32,9 @@ else: # PromptReco
 if options.isMC:
     options.inputFiles = '/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/120000/0EA60289-18C4-E611-8A8F-008CFA110AB4.root'
 elif options.isReReco:
-    options.inputFiles = '/store/data/Run2016E/SingleMuon/MINIAOD/23Sep2016-v1/50000/0230DB91-868D-E611-A532-0025904A96BC.root'
+    options.inputFiles = '/store/data/Run2016D/SingleMuon/MINIAOD/03Feb2017-v1/100000/08F20BC7-0EEB-E611-A76A-3417EBE47EBC.root'
 else: # PromptReco
-    options.inputFiles = '/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v3/000/284/036/00000/129CD4B5-5D9F-E611-A9AB-02163E014220.root'
+    options.inputFiles = '/store/data/Run2016H/SingleMuon/MINIAOD/03Feb2017_ver3-v1/80000/36F116DC-8AEA-E611-84D5-24BE05C62711.root'
 
 #############################
 ## Running options ##########
@@ -116,15 +116,13 @@ if options.overrideGT:
 # this is if we need to override the jec in global tag
 
 # this needs to be changed based on whether we run with crab or locally
-#sqlhead = 'src/RootMaker/RootMaker/'
-sqlhead = ''.join( c for c in str(options.sqlhead) if c not in '"')
+sqlhead = ''.join( c for c in str(options.sqlhead) if c not in '"' )
 
 if options.isMC:
-    # Moriond MC
-    sqfile = '{0}data/Spring16_23Sep2016V2_MC.db'.format(sqlhead)
+    sqfile = '{0}data/Summer16_23Sep2016V4_MC.db'.format(sqlhead)
 elif options.isReReco:
     # ReReco
-    sqfile = '{0}data/Spring16_23Sep2016AllV2_DATA.db'.format(sqlhead)
+    sqfile = '{0}data/Summer16_23Sep2016AllV4_DATA.db'.format(sqlhead)
 else:
     # PromptReco
     sqfile = '{0}data/Spring16_25nsV10All_DATA.db'.format(sqlhead)
@@ -210,7 +208,7 @@ process.schedule = cms.Schedule()
 # the selections for each object (to be included in ntuple)
 # will always be the last thing done to the collection, so can use embedded things from previous steps
 selections = {
-    'electrons'    : 'pt>8. && abs(eta)<3. && userInt("cutBasedElectronID-Spring15-25ns-V1-standalone-loose")',
+    'electrons'    : 'pt>8. && abs(eta)<3. && userInt("cutBasedElectronID-Summer16-80X-V1-loose")',
     'muons'        : 'pt>8. && abs(eta)<2.5 && isGlobalMuon',
 #    'taus'         : 'pt>15. && abs(eta)<2.5',
 #    'photons'      : 'pt>13000 && abs(eta)<3.',
@@ -232,10 +230,11 @@ filters = []
 
 # bad/duplicate muon filter
 if options.runMuonFilter:
-    process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
-    from RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff import noBadGlobalMuons
-    setattr(process, 'noBadGlobalMuons', noBadGlobalMuons)
-    filters += [getattr(process, 'noBadGlobalMuons')]
+    pass
+#    process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
+#    from RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff import noBadGlobalMuons
+#    setattr(process, 'noBadGlobalMuons', noBadGlobalMuons)
+#    filters += [getattr(process, 'noBadGlobalMuons')]
 
 # met filters
 if options.runMetFilter:
