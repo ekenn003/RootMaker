@@ -17,7 +17,7 @@ options.register('recGenJets', 0,         VarParsing.multiplicity.singleton, Var
 options.register('runMetFilter', 0,       VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Run the recommended MET filters')
 options.register('runMuonFilter', 0,      VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Run the bad/duplicate muon filters')
 options.register('sourceDS', 'None',      VarParsing.multiplicity.singleton, VarParsing.varType.string, 'Source dataset')
-options.register('isReReco', 0,           VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Data dataset was reReco\'d')
+options.register('isReReco', 1,           VarParsing.multiplicity.singleton, VarParsing.varType.int, 'Data dataset was reReco\'d')
 
 # load branches
 from RootMaker.RootMaker.addTriggers     import * # triggerBranches, filterBranches

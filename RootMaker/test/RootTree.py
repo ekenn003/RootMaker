@@ -17,10 +17,8 @@ print 'Sample will be processed as {0}'.format('MC' if options.isMC else 'DATA')
 # temporary until moriond17 tag is released
 if options.isMC:
     options.globalTag = '80X_mcRun2_asymptotic_2016_TrancheIV_v8'
-elif options.isReReco:
+else: # ReReco and PromptReco
     options.globalTag = '80X_dataRun2_2016SeptRepro_v7'
-else: # PromptReco
-    options.globalTag = '80X_dataRun2_Prompt_v15'
 
 # uncomment this line to override the given global tag with the latest one (not recommended)
 #options.overrideGT = True # (default is false)
@@ -107,7 +105,7 @@ if options.overrideGT:
     #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
     # ichep GT (includes JECs)
     # https://twiki.cern.ch/twiki/bin/view/CMS/JECDataMC
-    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
+    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
     process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 ##################
@@ -120,12 +118,9 @@ sqlhead = ''.join( c for c in str(options.sqlhead) if c not in '"' )
 
 if options.isMC:
     sqfile = '{0}data/Summer16_23Sep2016V4_MC.db'.format(sqlhead)
-elif options.isReReco:
-    # ReReco
-    sqfile = '{0}data/Summer16_23Sep2016AllV4_DATA.db'.format(sqlhead)
 else:
-    # PromptReco
-    sqfile = '{0}data/Spring16_25nsV10All_DATA.db'.format(sqlhead)
+    # ReReco and PromptReco
+    sqfile = '{0}data/Summer16_23Sep2016AllV4_DATA.db'.format(sqlhead)
 
 tag = 'JetCorrectorParametersCollection_{0}_AK4PFchs'.format(sqfile.split('/')[-1][:-3])
 
