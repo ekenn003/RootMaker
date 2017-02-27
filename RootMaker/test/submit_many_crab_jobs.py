@@ -110,11 +110,6 @@ def write_crab_config(args, n):
             fout.write('\nconfig.JobType.pyCfgParams += [\'isReReco=1\']')
         else:
             fout.write('\nconfig.JobType.pyCfgParams += [\'isReReco=0\']')
-        # use bad/fake muon filter
-        if args.useMuonFilter:
-            fout.write('\nconfig.JobType.pyCfgParams += [\'runMuonFilter=1\']')
-        else:
-            fout.write('\nconfig.JobType.pyCfgParams += [\'runMuonFilter=0\']')
         if args.applylumimask is not None:
             fout.write('\nconfig.Data.lumiMask = \'{0}\''.format(get_json(args.applylumimask)))
         fout.write('\nconfig.Data.outLFNDirBase = \'/store/user/ekennedy/T2_CH_CERN/smh2mu/80X/{0}/{1}/{2}\''.format(args.era, 'mc' if args.isMC else 'data', jobnamelist[n]))
@@ -130,7 +125,6 @@ def parse_command_line(argv):
     parser.add_argument('--trystring', type=str, help='CRAB taskname suffix')
     parser.add_argument('--isMC',     action='store_true', help='Is Monte Carlo')
     parser.add_argument('--isReReco', action='store_true', help='Is reReco data')
-    parser.add_argument('--useMuonFilter', action='store_true', help='Use bad/fake muon filter')
     # input list files
     parser.add_argument('--samplelist', type=str, help='Text file list of DAS samples to submit, one per line')
     # more optional args
