@@ -87,6 +87,28 @@ def addMuons(process, coll, **kwargs):
     # customization path
     process.muonCustomization = cms.Path()
 
+
+
+    ###################################
+    ### require at least one high pt mu 
+    ###################################
+
+    process.highPtMuons = cms.EDFilter('PATMuonSelector',
+        src = cms.InputTag(mSrc),
+        cut = cms.string('pt > 20.')
+    )
+
+    #hmSrc = 'highPtMuons'
+    process.muonCustomization *= process.highPtMuons
+
+    process.countHighPtMuons = cms.EDFilter('PATCandViewCountFilter',
+        minNumber = cms.uint32(1),
+        maxNumber = cms.uint32(999999),
+        src = cms.InputTag(mSrc)
+    )
+
+    process.muonCustomization *= process.countHighPtMuons
+
     ###################################
     ### embed rochester corrections ###
     ###################################
@@ -94,7 +116,7 @@ def addMuons(process, coll, **kwargs):
         'RochCorEmbedder',
         src = cms.InputTag(mSrc),
         isData = cms.bool(not isMC),
-        rochCorrDataDir = cms.FileInPath("RootMaker/RootMaker/data/rcdata.2016.v3/config.txt"),
+        rochCorrDataDir = cms.FileInPath('RootMaker/RootMaker/data/rcdata.2016.v3/config.txt'),
     )
     mSrc = 'mRoch'
     process.muonCustomization *= process.mRoch
