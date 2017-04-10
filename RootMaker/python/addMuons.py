@@ -98,13 +98,13 @@ def addMuons(process, coll, **kwargs):
         cut = cms.string('pt > 20.')
     )
 
-    #hmSrc = 'highPtMuons'
+    hmSrc = 'highPtMuons'
     process.muonCustomization *= process.highPtMuons
 
     process.countHighPtMuons = cms.EDFilter('PATCandViewCountFilter',
         minNumber = cms.uint32(1),
         maxNumber = cms.uint32(999999),
-        src = cms.InputTag(mSrc)
+        src = cms.InputTag(hmSrc)
     )
 
     process.muonCustomization *= process.countHighPtMuons
