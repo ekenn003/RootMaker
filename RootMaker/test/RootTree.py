@@ -79,7 +79,9 @@ process = cms.Process('ROOTMAKER')
 
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+process.load('CondCore.CondDB.CondDB_cfi')
 process.load('Configuration.StandardSequences.Services_cff')
 
 process.options = cms.untracked.PSet(
@@ -124,8 +126,10 @@ else:
 
 tag = 'JetCorrectorParametersCollection_{0}_AK4PFchs'.format(sqfile.split('/')[-1][:-3])
 
-process.load('CondCore.DBCommon.CondDBCommon_cfi')
-from CondCore.DBCommon.CondDBSetup_cfi import *
+#process.load('CondCore.DBCommon.CondDBCommon_cfi')
+process.load('CondCore.CondDB.CondDB_cfi')
+#from CondCore.DBCommon.CondDBSetup_cfi import *
+from CondCore.CondDB.CondDB_cfi import *
 process.jec = cms.ESSource('PoolDBESSource',
     DBParameters = cms.PSet(
         messageLevel = cms.untracked.int32(0)
@@ -231,6 +235,8 @@ if options.runMuonFilter:
 #    setattr(process, 'noBadGlobalMuons', noBadGlobalMuons)
 #    filters += [getattr(process, 'noBadGlobalMuons')]
 
+
+
 # met filters
 if options.runMetFilter:
     from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
@@ -244,29 +250,22 @@ if options.runMetFilter:
         setattr(process,modName,mod)
         filters += [getattr(process,modName)]
 
-if options.sourceDS=='DoubleMuon':
-    singleTriggerSelection = cms.EDFilter(
-        'TriggerResultsFilter',
-        triggerConditions = cms.vstring(
-            'HLT_IsoMu24_v*',
-            'HLT_IsoTkMu24_v*',
-        ),
-        hltResults = cms.InputTag('TriggerResults', '', 'HLT'),
-        l1tResults = cms.InputTag('gtDigis'),
-#        l1tIgnoreMask = cms.bool(False),
-#        l1techIgnorePrescales = cms.bool(False),
-#        daqPartitions = cms.uint32(1),
-#        throw = cms.bool(True)
-    )
-    doubleTriggerSelection = singleTriggerSelection.clone(
-        triggerConditions = cms.vstring(
-            'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v*',
-            'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v*',
-        ),
-    )
-
-    setattr(process, 'singleTriggerSelection', singleTriggerSelection)
-    setattr(process, 'doubleTriggerSelection', doubleTriggerSelection)
+#####if options.sourceDS=='DoubleMuon':
+####singleTriggerSelection = cms.EDFilter(
+####    'TriggerResultsFilter',
+####    triggerConditions = cms.vstring(
+####        'HLT_IsoMu24_v*',
+####        'HLT_IsoTkMu24_v*',
+####    ),
+####    hltResults = cms.InputTag('TriggerResults', '', 'HLT'),
+####    l1tResults = cms.InputTag('gtDigis'),
+####     l1tIgnoreMask = cms.bool(False),
+####     l1techIgnorePrescales = cms.bool(False),
+####     daqPartitions = cms.uint32(1),
+####     throw = cms.bool(True)
+####)
+####
+####setattr(process, 'singleTriggerSelection', singleTriggerSelection)
 
 
 ################################
@@ -340,10 +339,12 @@ process.makeroottree.objectCollections.pfmettype1.collection   = objectCollectio
 ################################
 process.makeroottreePath = cms.Path()
 
-# if this is the DoubleMuon dataset, remove events that pass the singlemuon trigger
-if options.sourceDS=='DoubleMuon':
-    process.makeroottreePath += ~getattr(process, 'singleTriggerSelection')
-    process.makeroottreePath += getattr(process, 'doubleTriggerSelection')
+####process.makeroottreePath += getattr(process, 'singleTriggerSelection')
+
+## if this is the DoubleMuon dataset, remove events that pass the singlemuon trigger
+#if options.sourceDS=='DoubleMuon':
+#    process.makeroottreePath += ~getattr(process, 'singleTriggerSelection')
+#    process.makeroottreePath += getattr(process, 'doubleTriggerSelection')
 
 for f in filters:
     process.makeroottreePath += f
@@ -355,4 +356,4 @@ process.schedule.append(process.makeroottreePath)
 ################################
 ### debugging ##################
 ################################
-print process.GlobalTag.globaltag
+#print process.GlobalTag.globaltag

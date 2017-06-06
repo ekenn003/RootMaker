@@ -7,11 +7,11 @@ submit_data_rereco=false
 submit_data_prompt=false
 
 
-era="feb17"
+era="apr17"
 try="try1_$n"
 
 
-submit_sig=true
+#submit_sig=true
 submit_bkg=true
 #submit_data_rereco=true
 #submit_data_prompt=true
@@ -35,6 +35,6 @@ if [ "$submit_data_rereco" = "true" ]; then
 fi
 
 if [ "$submit_data_prompt" = "true" ]; then
-    ./submit_many_crab_jobs.py --samplelist $data_list_prompt --era $era --trystring $try --filesperjob=6 --applylumimask="PromptReco16"
+    ./submit_many_crab_jobs.py --samplelist $data_list_prompt --era $era --trystring $try --filesperjob=6 --applylumimask="ReReco16"
 fi
 

@@ -5,7 +5,6 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     rhoToken_          (consumes<double>(iConfig.getParameter<edm::InputTag>("rho"))),
     PUInfoToken_       (consumes<vector<PileupSummaryInfo> >(iConfig.getParameter<edm::InputTag>("pileupSummaryInfo"))),
     l1TriggerToken_    (consumes<L1GlobalTriggerReadoutRecord>(iConfig.getParameter<edm::InputTag>("l1trigger"))),
-    //beamSpotToken_     (consumes<reco::BeamSpot>(iConfig.getParameter<edm::InputTag>("beamSpot"))),
 
     vertexCollections(iConfig.getParameter<edm::ParameterSet>("vertexCollections")),
     objectCollections(iConfig.getParameter<edm::ParameterSet>("objectCollections")),
@@ -52,14 +51,6 @@ RootMaker::RootMaker(const edm::ParameterSet &iConfig) :
     tree->Branch("event_timemicrosec",    &event_timemicrosec,    "event_timemicrosec/i");
     tree->Branch("event_luminosityblock", &event_luminosityblock, "event_luminosityblock/i");
     tree->Branch("event_rho",             &event_rho,             "event_rho/F");
-
-    //tree->Branch("beamspot_x",      &beamspot_x,      "beamspot_x/F");
-    //tree->Branch("beamspot_y",      &beamspot_y,      "beamspot_y/F");
-    //tree->Branch("beamspot_z",      &beamspot_z,      "beamspot_z/F");
-    //tree->Branch("beamspot_xwidth", &beamspot_xwidth, "beamspot_xwidth/F");
-    //tree->Branch("beamspot_ywidth", &beamspot_ywidth, "beamspot_ywidth/F");
-    //tree->Branch("beamspot_zsigma", &beamspot_zsigma, "beamspot_zsigma/F");
-    //tree->Branch("beamspot_cov",    &beamspot_cov,    "beamspot_cov[6]/F");
 
     tree->Branch("numpileupinteractionsminus", &numpileupinteractionsminus, "numpileupinteractionsminus/I");
     tree->Branch("numpileupinteractions",      &numpileupinteractions,      "numpileupinteractions/I");
@@ -195,38 +186,11 @@ void RootMaker::analyze(const edm::Event &iEvent, const edm::EventSetup &iSetup)
     iEvent.getByToken(rhoToken_, rho);
     event_rho = *rho;
 
+
     /////////////////////////////////////////
     // Trigger branches /////////////////////
     /////////////////////////////////////////
     triggerBranches->fill(iEvent);
-
-//    /////////////////////////////////////////
-//    // Beamspot /////////////////////////////
-//    /////////////////////////////////////////
-//    edm::Handle<BeamSpot> TheBeamSpot;
-//    iEvent.getByToken(beamSpotToken_, TheBeamSpot);
-//
-//    beamspot_x = 0.;      beamspot_y = 0.;      beamspot_z = 0.;
-//    beamspot_xwidth = 0.; beamspot_ywidth = 0.; beamspot_zsigma = 0.;
-//    // reset covariance matrix
-//    fill_n(beamspot_cov, 6, 0);
-//    // fill
-//    if(TheBeamSpot.isValid()) {
-//        beamspot_x = TheBeamSpot->x0();
-//        beamspot_y = TheBeamSpot->y0();
-//        beamspot_z = TheBeamSpot->z0();
-//        beamspot_xwidth = TheBeamSpot->BeamWidthX();
-//        beamspot_ywidth = TheBeamSpot->BeamWidthY();
-//        beamspot_zsigma = TheBeamSpot->sigmaZ();
-//        beamspot_cov[0] = TheBeamSpot->covariance(0,0);
-//        beamspot_cov[1] = TheBeamSpot->covariance(0,1);
-//        beamspot_cov[2] = TheBeamSpot->covariance(0,2);
-//        beamspot_cov[3] = TheBeamSpot->covariance(1,1);
-//        beamspot_cov[4] = TheBeamSpot->covariance(1,2);
-//        beamspot_cov[5] = TheBeamSpot->covariance(2,2);
-//        bs_position = TheBeamSpot->position();
-//    }
-
 
     /////////////////////////////////////////
     // Pileup information ///////////////////
