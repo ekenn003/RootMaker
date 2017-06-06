@@ -18,13 +18,13 @@ jetBranches = commonJetTauBranches.clone(
 
 
     # btagging
-    btag_pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
-    btag_pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
-    btag_pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
+#    btag_pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
+#    btag_pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
+#    btag_pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
 
-    btag_passJPL     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.245 ? 1 : 0','I'),
-    btag_passJPM     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.515 ? 1 : 0','I'),
-    btag_passJPT     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.760 ? 1 : 0','I'),
+#    btag_passJPL     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.245 ? 1 : 0','I'),
+#    btag_passJPM     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.515 ? 1 : 0','I'),
+#    btag_passJPT     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.760 ? 1 : 0','I'),
     # pfCombinedInclusiveSecondaryVertexV2BJetTags
     btag_passCSVv2L  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.5426 ? 1 : 0','I'),
     btag_passCSVv2M  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.8484 ? 1 : 0','I'),

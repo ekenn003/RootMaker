@@ -8,8 +8,8 @@ metBranches = cms.PSet(
     ey     = cms.vstring('py()','F'),
     et     = cms.vstring('pt()','F'),
     phi    = cms.vstring('phi()','F'),
-    rawet  = cms.vstring('uncorPt','F'),
-    rawphi = cms.vstring('uncorPhi','F'),
+#    rawet  = cms.vstring('uncorPt','F'),
+#    rawphi = cms.vstring('uncorPhi','F'),
 )
 
 ################################################

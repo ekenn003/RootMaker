@@ -26,22 +26,22 @@ muonBranches = commonObjectBranches.clone(
     is_global         = cms.vstring('isGlobalMuon','I'),
     is_tracker        = cms.vstring('isTrackerMuon','I'),
     is_standalone     = cms.vstring('isStandAloneMuon','I'),
-    is_calo           = cms.vstring('isCaloMuon','I'),
+#    is_calo           = cms.vstring('isCaloMuon','I'),
 
     # tracks
-    hasglobaltrack   = cms.vstring('globalTrack().isNonnull()','I'),
-    pterror          = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ptError() : 0', 'F'),
+#    hasglobaltrack   = cms.vstring('globalTrack().isNonnull()','I'),
+#    pterror          = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ptError() : 0', 'F'),
     chi2             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().chi2() : -1', 'F'),
     ndof             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ndof() : -1', 'F'),
 
     # isolation
-    pfisolationr3_sumchargedhadronpt   = cms.vstring('pfIsolationR03().sumChargedHadronPt','F'),
-    pfisolationr3_sumchargedparticlept = cms.vstring('pfIsolationR03().sumChargedParticlePt','F'),
-    pfisolationr3_sumneutralhadronet   = cms.vstring('pfIsolationR03().sumNeutralHadronEt','F'),
-    pfisolationr3_sumphotonet          = cms.vstring('pfIsolationR03().sumPhotonEt','F'),
-    pfisolationr3_sumpupt              = cms.vstring('pfIsolationR03().sumPUPt','F'),
-    pfisolationr3_sumneutralhadronethighthreshold = cms.vstring('pfIsolationR03().sumNeutralHadronEtHighThreshold','F'),
-    pfisolationr3_sumphotonethighthreshold        = cms.vstring('pfIsolationR03().sumPhotonEtHighThreshold','F'),
+#    pfisolationr3_sumchargedhadronpt   = cms.vstring('pfIsolationR03().sumChargedHadronPt','F'),
+#    pfisolationr3_sumchargedparticlept = cms.vstring('pfIsolationR03().sumChargedParticlePt','F'),
+#    pfisolationr3_sumneutralhadronet   = cms.vstring('pfIsolationR03().sumNeutralHadronEt','F'),
+#    pfisolationr3_sumphotonet          = cms.vstring('pfIsolationR03().sumPhotonEt','F'),
+#    pfisolationr3_sumpupt              = cms.vstring('pfIsolationR03().sumPUPt','F'),
+#    pfisolationr3_sumneutralhadronethighthreshold = cms.vstring('pfIsolationR03().sumNeutralHadronEtHighThreshold','F'),
+#    pfisolationr3_sumphotonethighthreshold        = cms.vstring('pfIsolationR03().sumPhotonEtHighThreshold','F'),
 
     pfisolationr4_sumchargedhadronpt   = cms.vstring('pfIsolationR04().sumChargedHadronPt','F'),
     pfisolationr4_sumchargedparticlept = cms.vstring('pfIsolationR04().sumChargedParticlePt','F'),
@@ -68,13 +68,13 @@ muonBranches = commonObjectBranches.clone(
     rochesterPt     = cms.vstring('userFloat("rochesterPt")','F'),
 
     # user data from HLTMatchEmbedder
-    trigger = cms.vstring('userInt("trigger")','I'),
+#    trigger = cms.vstring('userInt("trigger")','I'),
     matches_IsoMu24                           = cms.vstring('userInt("matches_IsoMu24")','I'),
     matches_IsoTkMu24                         = cms.vstring('userInt("matches_IsoTkMu24")','I'),
-    matches_IsoMu27                           = cms.vstring('userInt("matches_IsoMu27")','I'),
-    matches_IsoTkMu27                         = cms.vstring('userInt("matches_IsoTkMu27")','I'),
-    matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ   = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ")','I'),
-    matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ")','I'),
+#    matches_IsoMu27                           = cms.vstring('userInt("matches_IsoMu27")','I'),
+#    matches_IsoTkMu27                         = cms.vstring('userInt("matches_IsoTkMu27")','I'),
+#    matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ   = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ")','I'),
+#    matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ")','I'),
 )
 
 ################################################
@@ -87,27 +87,6 @@ def addMuons(process, coll, **kwargs):
     # customization path
     process.muonCustomization = cms.Path()
 
-
-
-    ###################################
-    ### require at least one high pt mu 
-    ###################################
-
-    process.highPtMuons = cms.EDFilter('PATMuonSelector',
-        src = cms.InputTag(mSrc),
-        cut = cms.string('pt > 20.')
-    )
-
-    hmSrc = 'highPtMuons'
-    process.muonCustomization *= process.highPtMuons
-
-    process.countHighPtMuons = cms.EDFilter('PATCandViewCountFilter',
-        minNumber = cms.uint32(1),
-        maxNumber = cms.uint32(999999),
-        src = cms.InputTag(hmSrc)
-    )
-
-    process.muonCustomization *= process.countHighPtMuons
 
     ###################################
     ### embed rochester corrections ###

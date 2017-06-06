@@ -17,9 +17,9 @@ electronBranches = commonEgammaBranches.clone(
     #trigger = cms.vstring('userInt("trigger")','I'), # testing
 
     # electron_info:
-    passconversionveto = cms.vstring('passConversionVeto','I'),
-    ecaldrivenseed     = cms.vstring('ecalDrivenSeed','I'),
-    trackerdrivenseed  = cms.vstring('trackerDrivenSeed','I'),
+#    passconversionveto = cms.vstring('passConversionVeto','I'),
+#    ecaldrivenseed     = cms.vstring('ecalDrivenSeed','I'),
+#    trackerdrivenseed  = cms.vstring('trackerDrivenSeed','I'),
 
     ## track information
     #trackchi2   = cms.vstring('gsfTrack().chi2()','F'),
@@ -30,8 +30,8 @@ electronBranches = commonEgammaBranches.clone(
     #nstriplayers  = cms.vstring('gsfTrack().hitPattern().stripLayersWithMeasurement()','I'),
     # these two things are the same in MC? 
     # user data embedded from ElectronMissingHitsEmbedder
-    nmissinghits  = cms.vstring('userInt("missingHits")','I'),
-    nhitsexpected = cms.vstring('gsfTrack().numberOfLostHits()','I'),
+#    nmissinghits  = cms.vstring('userInt("missingHits")','I'),
+#    nhitsexpected = cms.vstring('gsfTrack().numberOfLostHits()','I'),
 
     # shower information
     #r9   = cms.vstring('r9','F'),
@@ -52,7 +52,7 @@ electronBranches = commonEgammaBranches.clone(
 #    deltaphisuperclustertrack = cms.vstring('deltaPhiSuperClusterTrackAtVtx','F'),
 
     # user data from VIDEmbedder
-    cutBasedVeto         = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-veto")','I'),
+#    cutBasedVeto         = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-veto")','I'),
     cutBasedLoose        = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-loose")','I'),
     cutBasedMedium       = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-medium")','I'),
     cutBasedTight        = cms.vstring('userInt("cutBasedElectronID-Summer16-80X-V1-tight")','I'),

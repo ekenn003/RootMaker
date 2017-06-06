@@ -21,13 +21,13 @@ class HLTMatchEmbedder : public edm::stream::EDProducer<>
   public:
     explicit HLTMatchEmbedder(const edm::ParameterSet&);
     ~HLTMatchEmbedder() {}
-    static void fillDescriptions(edm::ConfigurationDescriptions &descriptions);
+    //static void fillDescriptions(edm::ConfigurationDescriptions &descriptions);
 
   private:
     // methods
-    void beginJob() {}
+    //void beginJob() {}
     virtual void produce(edm::Event &iEvent, const edm::EventSetup &iSetup);
-    void endJob() {}
+    //void endJob() {}
 
     size_t GetTriggerBit(string trigPathString, const edm::TriggerNames &names);
     int MatchToTriggerObject(T obj, string trigPathString, const edm::TriggerNames &names);
@@ -133,24 +133,10 @@ int HLTMatchEmbedder<T>::MatchToTriggerObject(T obj, string trigPathString, cons
     return matched;
 }
 
-template<typename T>
-void HLTMatchEmbedder<T>::fillDescriptions(edm::ConfigurationDescriptions &descriptions)
-{
-    edm::ParameterSetDescription desc;
-    desc.setUnknown();
-    descriptions.addDefault(desc);
-}
-
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
-#include "DataFormats/PatCandidates/interface/Tau.h"
-#include "DataFormats/PatCandidates/interface/Photon.h"
 typedef HLTMatchEmbedder<pat::Electron> ElectronHLTMatchEmbedder;
 typedef HLTMatchEmbedder<pat::Muon> MuonHLTMatchEmbedder;
-typedef HLTMatchEmbedder<pat::Tau> TauHLTMatchEmbedder;
-typedef HLTMatchEmbedder<pat::Photon> PhotonHLTMatchEmbedder;
 
 DEFINE_FWK_MODULE(ElectronHLTMatchEmbedder);
 DEFINE_FWK_MODULE(MuonHLTMatchEmbedder);
-DEFINE_FWK_MODULE(TauHLTMatchEmbedder);
-DEFINE_FWK_MODULE(PhotonHLTMatchEmbedder);

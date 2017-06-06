@@ -54,15 +54,19 @@ void JetIDEmbedder::produce(edm::Event &iEvent, const edm::EventSetup &iSetup)
         bool tightLepVeto = false;
 
         // https://twiki.cern.ch/twiki/bin/view/CMS/JetID
-        if (AbsETA <= 3.) {
+        // https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
+        if (AbsETA <= 2.7) {
             loose        = (NHF < 0.99) && (NEMF < 0.99) && (NumConst > 1);
             tight        = (NHF < 0.90) && (NEMF < 0.90) && (NumConst > 1);
             tightLepVeto = (NHF < 0.90) && (NEMF < 0.90) && (NumConst > 1) && (MUF < 0.8);
             if (AbsETA <= 2.4) {
-                loose = loose && (CHF > 0.) && (CHM > 0) && (CEMF < 0.99);
-                tight = tight && (CHF > 0.) && (CHM > 0) && (CEMF < 0.99);
-                tight = tight && (CHF > 0.) && (CHM > 0) && (CEMF < 0.90);
+                loose        = loose &&        (CHF > 0.) && (CHM > 0) && (CEMF < 0.99);
+                tight        = tight &&        (CHF > 0.) && (CHM > 0) && (CEMF < 0.99);
+                tightLepVeto = tightLepVeto && (CHF > 0.) && (CHM > 0) && (CEMF < 0.90);
             }
+        } else if ((AbsETA > 2.7) && (AbsETA <= 3.)) {
+            loose = (NHF < 0.98) && (NEMF > 0.01) && (NumNeutralParticles > 2);
+            tight = (NHF < 0.98) && (NEMF > 0.01) && (NumNeutralParticles > 2);
         } else {
             loose = (NEMF < 0.90) && (NumNeutralParticles > 10);
             tight = (NEMF < 0.90) && (NumNeutralParticles > 10);

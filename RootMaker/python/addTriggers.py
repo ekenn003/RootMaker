@@ -25,19 +25,19 @@ triggerBranches = cms.PSet(
     IsoTkMu24 = cms.PSet(
         path = cms.string('HLT_IsoTkMu24_v\\[0-9]+'),
     ),
-    IsoMu27 = cms.PSet(
-        path = cms.string('HLT_IsoMu27_v\\[0-9]+'),
-    ),
-    IsoTkMu27 = cms.PSet(
-        path = cms.string('HLT_IsoTkMu27_v\\[0-9]+'),
-    ),
-    # double muon
-    Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ = cms.PSet(
-        path = cms.string('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\[0-9]+'),
-    ),
-    Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.PSet(
-        path = cms.string('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\[0-9]+'),
-    ),
+#    IsoMu27 = cms.PSet(
+#        path = cms.string('HLT_IsoMu27_v\\[0-9]+'),
+#    ),
+#    IsoTkMu27 = cms.PSet(
+#        path = cms.string('HLT_IsoTkMu27_v\\[0-9]+'),
+#    ),
+#    # double muon
+#    Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ = cms.PSet(
+#        path = cms.string('HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\[0-9]+'),
+#    ),
+#    Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.PSet(
+#        path = cms.string('HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\[0-9]+'),
+#    ),
 )
 
 # filters
