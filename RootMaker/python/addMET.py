@@ -30,10 +30,10 @@ def addMET(process, coll, **kwargs):
     #################################
     ### recompute met uncertainty ###
     #################################
-    postfix = "New"
+    postfix = 'New'
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     runMetCorAndUncFromMiniAOD(process,
-        jetCollUnskimmed="slimmedJets",
+        jetCollUnskimmed='slimmedJets',
         photonColl=pSrc,
         electronColl=eSrc,
         muonColl=mSrc,
@@ -46,5 +46,71 @@ def addMET(process, coll, **kwargs):
     getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
     del getattr(process,'slimmedMETs{0}'.format(postfix)).caloMET
 
-    metSrc = "slimmedMETs{0}".format(postfix)
+    metSrc = 'slimmedMETs{0}'.format(postfix)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    ####################
+    ### embed shifts ###
+    ####################
+    print '... Embedding shifts'
+    for shift in ['JetRes','JetEn','MuonEn','ElectronEn','TauEn','UnclusteredEn','PhotonEn']:
+        for sign in ['Up','Down']:
+            mod = cms.EDProducer(
+                'ShiftedMETEmbedder',
+                src = cms.InputTag(metSrc),
+                label = cms.string('{0}{1}'.format(shift,sign)),
+                shiftedSrc = cms.InputTag('patPFMetT1{0}{1}{2}'.format(shift,sign,postfix)),
+            )
+            modName = 'embed{0}{1}'.format(shift,sign)
+            setattr(process,modName,mod)
+            metSrc = modName
+            process.metCustomization += getattr(process,modName)
+
+
+
+    for sign in ['Up','Down']:
+        # muons
+        shift = 'MuonEn'
+        mod = cms.EDProducer(
+            'ShiftedMuonEmbedder',
+            src = cms.InputTag(mSrc),
+            label = cms.string('{0}{1}'.format(shift,sign)),
+            shiftedSrc = cms.InputTag('shiftedPat{0}{1}{2}'.format(shift,sign,postfix)),
+        )
+        modName = 'muonEmbed{0}{1}'.format(shift,sign)
+        setattr(process,modName,mod)
+        mSrc = modName
+        process.metCustomization += getattr(process,modName)
+
+        # jets
+        shift = 'JetEn'
+        mod = cms.EDProducer(
+            'ShiftedJetEmbedder',
+            src = cms.InputTag(jSrc),
+            label = cms.string('{0}{1}'.format(shift,sign)),
+            shiftedSrc = cms.InputTag('shiftedPat{0}{1}{2}'.format(shift,sign,postfix)),
+        )
+        modName = 'jetEmbed{0}{1}'.format(shift,sign)
+        setattr(process,modName,mod)
+        jSrc = modName
+        process.metCustomization += getattr(process,modName)
+
+    process.schedule.append(process.metCustomization)
+
+
+
     return coll

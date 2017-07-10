@@ -11,13 +11,7 @@ muonBranches = commonObjectBranches.clone(
     dxy    = cms.vstring('userFloat("dxy")','F'),
     dxyerr = cms.vstring('dxyError','F'),
 
-    ## user data from MuonInfoEmbedder
-    #trackermuonquality      = cms.vstring('userInt("trackermuonquality")','I'),
-    #numchamberswithsegments = cms.vstring('userInt("numberOfMatches")','I'),
-    #numchambers             = cms.vstring('numberOfChambers','I'),
-    #nummatchedstations      = cms.vstring('numberOfMatchedStations','I'),
-    #numvalidmuonhits = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().hitPattern().numberOfValidMuonHits() : -1', 'I'),
-
+    # energy
     ecalenergy = cms.vstring('calEnergy().em','F'),
     hcalenergy = cms.vstring('calEnergy().had','F'),
 
@@ -26,23 +20,14 @@ muonBranches = commonObjectBranches.clone(
     is_global         = cms.vstring('isGlobalMuon','I'),
     is_tracker        = cms.vstring('isTrackerMuon','I'),
     is_standalone     = cms.vstring('isStandAloneMuon','I'),
-#    is_calo           = cms.vstring('isCaloMuon','I'),
 
     # tracks
-#    hasglobaltrack   = cms.vstring('globalTrack().isNonnull()','I'),
-#    pterror          = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ptError() : 0', 'F'),
+    #hasglobaltrack   = cms.vstring('globalTrack().isNonnull()','I'),
+    #pterror          = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ptError() : 0', 'F'),
     chi2             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().chi2() : -1', 'F'),
     ndof             = cms.vstring('? (globalTrack().isNonnull() ) ? globalTrack().ndof() : -1', 'F'),
 
     # isolation
-#    pfisolationr3_sumchargedhadronpt   = cms.vstring('pfIsolationR03().sumChargedHadronPt','F'),
-#    pfisolationr3_sumchargedparticlept = cms.vstring('pfIsolationR03().sumChargedParticlePt','F'),
-#    pfisolationr3_sumneutralhadronet   = cms.vstring('pfIsolationR03().sumNeutralHadronEt','F'),
-#    pfisolationr3_sumphotonet          = cms.vstring('pfIsolationR03().sumPhotonEt','F'),
-#    pfisolationr3_sumpupt              = cms.vstring('pfIsolationR03().sumPUPt','F'),
-#    pfisolationr3_sumneutralhadronethighthreshold = cms.vstring('pfIsolationR03().sumNeutralHadronEtHighThreshold','F'),
-#    pfisolationr3_sumphotonethighthreshold        = cms.vstring('pfIsolationR03().sumPhotonEtHighThreshold','F'),
-
     pfisolationr4_sumchargedhadronpt   = cms.vstring('pfIsolationR04().sumChargedHadronPt','F'),
     pfisolationr4_sumchargedparticlept = cms.vstring('pfIsolationR04().sumChargedParticlePt','F'),
     pfisolationr4_sumneutralhadronet   = cms.vstring('pfIsolationR04().sumNeutralHadronEt','F'),
@@ -50,11 +35,6 @@ muonBranches = commonObjectBranches.clone(
     pfisolationr4_sumpupt              = cms.vstring('pfIsolationR04().sumPUPt','F'),
     pfisolationr4_sumneutralhadronethighthreshold = cms.vstring('pfIsolationR04().sumNeutralHadronEtHighThreshold','F'),
     pfisolationr4_sumphotonethighthreshold        = cms.vstring('pfIsolationR04().sumPhotonEtHighThreshold','F'),
-
-    #isolationr3track    = cms.vstring('trackIso()','F'),
-    #isolationr3ntrack   = cms.vstring('isolationR03().nTracks','I'),
-    #isolationr3ecal     = cms.vstring('isolationR03().emEt','F'), # same as ecalIso()
-    #isolationr3hcal     = cms.vstring('isolationR03().hadEt','F'), # same as hcalIso()
 
     # muon ID (tight ID embedded from MuonInfoEmbedder)
     is_tight_muon  = cms.vstring('userInt("isTightMuon")','I'),
@@ -68,13 +48,14 @@ muonBranches = commonObjectBranches.clone(
     rochesterPt     = cms.vstring('userFloat("rochesterPt")','F'),
 
     # user data from HLTMatchEmbedder
-#    trigger = cms.vstring('userInt("trigger")','I'),
     matches_IsoMu24                           = cms.vstring('userInt("matches_IsoMu24")','I'),
     matches_IsoTkMu24                         = cms.vstring('userInt("matches_IsoTkMu24")','I'),
-#    matches_IsoMu27                           = cms.vstring('userInt("matches_IsoMu27")','I'),
-#    matches_IsoTkMu27                         = cms.vstring('userInt("matches_IsoTkMu27")','I'),
-#    matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ   = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ")','I'),
-#    matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ = cms.vstring('userInt("matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ")','I'),
+
+    # energy shifts
+    pt_muonEnUp                 = cms.vstring('? hasUserCand("MuonEnUp") ? userCand("MuonEnUp").pt() : 0','F'),
+    energy_muonEnUp             = cms.vstring('? hasUserCand("MuonEnUp") ? userCand("MuonEnUp").energy() : 0','F'),
+    pt_muonEnDown               = cms.vstring('? hasUserCand("MuonEnDown") ? userCand("MuonEnDown").pt() : 0','F'),
+    energy_muonEnDown           = cms.vstring('? hasUserCand("MuonEnDown") ? userCand("MuonEnDown").energy() : 0','F'),
 )
 
 ################################################

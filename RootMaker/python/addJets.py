@@ -7,24 +7,7 @@ from RootMaker.RootMaker.objectBase import commonJetTauBranches
 jetBranches = commonJetTauBranches.clone(
     area = cms.vstring('jetArea','F'),
 
-    # user data embedded with ??? these are all like -1 right now
-    #energycorr      = cms.vstring('userFloat("energycorr")','F'),
-    #energycorrl7uds = cms.vstring('userFloat("energycorrl7uds")','F'),
-    #energycorrl7bottom = cms.vstring('userFloat("energycorrl7bottom")','F'),
-    #energycorrunc   = cms.vstring('userFloat("energycorrunc")','F'),
-    #mcflavour       = cms.vstring('userFloat("mcflavour")','F'),
-
     # user data embedded with BtagEmbedder
-
-
-    # btagging
-#    btag_pfJetProbabilityBJetTags                     = cms.vstring('bDiscriminator("pfJetProbabilityBJetTags")','F'),
-#    btag_pfCombinedInclusiveSecondaryVertexV2BJetTags = cms.vstring('bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")','F'),
-#    btag_pfCombinedMVAV2BJetTags                      = cms.vstring('bDiscriminator("pfCombinedMVAV2BJetTags")','F'),
-
-#    btag_passJPL     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.245 ? 1 : 0','I'),
-#    btag_passJPM     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.515 ? 1 : 0','I'),
-#    btag_passJPT     = cms.vstring('? bDiscriminator("pfJetProbabilityBJetTags") > 0.760 ? 1 : 0','I'),
     # pfCombinedInclusiveSecondaryVertexV2BJetTags
     btag_passCSVv2L  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.5426 ? 1 : 0','I'),
     btag_passCSVv2M  = cms.vstring('? bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") > 0.8484 ? 1 : 0','I'),
@@ -33,29 +16,6 @@ jetBranches = commonJetTauBranches.clone(
     btag_passCMVAv2L = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > -0.5884 ? 1 : 0','I'),
     btag_passCMVAv2M = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.4432 ? 1 : 0','I'),
     btag_passCMVAv2T = cms.vstring('? bDiscriminator("pfCombinedMVAV2BJetTags") > 0.9432 ? 1 : 0','I'),
-
-#    # energies
-#    hadronicenergy        = cms.vstring('chargedHadronEnergy + neutralHadronEnergy','F'),
-#    chargedhadronicenergy = cms.vstring('chargedHadronEnergy','F'),
-#    emenergy              = cms.vstring('chargedEmEnergy + neutralEmEnergy','F'),
-#    chargedemenergy       = cms.vstring('chargedEmEnergy','F'),
-#    hfhadronicenergy      = cms.vstring('HFHadronEnergy','F'),
-#    hfemenergy            = cms.vstring('HFEMEnergy','F'),
-#    electronenergy        = cms.vstring('electronEnergy','F'),
-#    muonenergy            = cms.vstring('muonEnergy','F'),
-#    # multiplicities
-#    chargedmulti    = cms.vstring('chargedMultiplicity','I'),
-#    neutralmulti    = cms.vstring('neutralMultiplicity','I'),
-#    hfhadronicmulti = cms.vstring('HFHadronMultiplicity','I'),
-#    hfemmulti       = cms.vstring('HFEMMultiplicity','I'),
-#    electronmulti   = cms.vstring('electronMultiplicity','I'),
-#    muonmulti       = cms.vstring('muonMultiplicity','I'),
-#    # energy fractions
-#    neutralhadronenergyfraction = cms.vstring('neutralHadronEnergyFraction','F'),
-#    neutralemenergyfraction     = cms.vstring('neutralEmEnergyFraction','F'),
-#    chargedhadronenergyfraction = cms.vstring('chargedHadronEnergyFraction','F'),
-#    muonenergyfraction          = cms.vstring('muonEnergyFraction','F'),
-#    chargedemenergyfraction     = cms.vstring('chargedEmEnergyFraction','F'),
 
     # user data embedded from JetIDEmbedder
     is_loose        = cms.vstring('userInt("idLoose")','I'),
@@ -66,6 +26,12 @@ jetBranches = commonJetTauBranches.clone(
     #puid_loose      = cms.vstring('userInt("puid_loose")','I'),
     #puid_medium     = cms.vstring('userInt("puid_medium")','I'),
     #puid_tight      = cms.vstring('userInt("puid_tight")','I'),
+
+    # energy shifts
+    pt_jetEnUp       = cms.vstring('? hasUserCand("JetEnUp") ? userCand("JetEnUp").pt() : 0','F'),
+    energy_jetEnUp   = cms.vstring('? hasUserCand("JetEnUp") ? userCand("JetEnUp").energy() : 0','F'),
+    pt_jetEnDown     = cms.vstring('? hasUserCand("JetEnDown") ? userCand("JetEnDown").pt() : 0','F'),
+    energy_jetEnDown = cms.vstring('? hasUserCand("JetEnDown") ? userCand("JetEnDown").energy() : 0 ','F'),
 
 )
 
