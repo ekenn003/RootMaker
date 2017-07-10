@@ -10,12 +10,12 @@ metBranches = cms.PSet(
     phi    = cms.vstring('phi()','F'),
 
     ## shifts
-    et_jetResUp           = cms.vstring('userCand("JetResUp").pt()','F'),
-    et_jetResDown         = cms.vstring('userCand("JetResDown").pt()','F'),
-    et_jetEnUp            = cms.vstring('userCand("JetEnUp").pt()','F'),
-    et_jetEnDown          = cms.vstring('userCand("JetEnDown").pt()','F'),
-    et_muonEnUp           = cms.vstring('userCand("MuonEnUp").pt()','F'),
-    et_muonEnDown         = cms.vstring('userCand("MuonEnDown").pt()','F'),
+#    et_jetResUp           = cms.vstring('userCand("JetResUp").pt()','F'),
+#    et_jetResDown         = cms.vstring('userCand("JetResDown").pt()','F'),
+#    et_jetEnUp            = cms.vstring('userCand("JetEnUp").pt()','F'),
+#    et_jetEnDown          = cms.vstring('userCand("JetEnDown").pt()','F'),
+#    et_muonEnUp           = cms.vstring('userCand("MuonEnUp").pt()','F'),
+#    et_muonEnDown         = cms.vstring('userCand("MuonEnDown").pt()','F'),
 )
 
 ################################################

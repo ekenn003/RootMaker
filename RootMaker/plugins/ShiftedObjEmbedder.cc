@@ -54,7 +54,7 @@ void ShiftedObjEmbedder<T>::produce(edm::Event &iEvent, const edm::EventSetup &i
         const auto obj = input->at(c);
         T newObj = obj;
 
-        if (c<shiftedSrc->size()){
+        if (c < shiftedSrc->size()){
             reco::CandidatePtr shiftObj = shiftedSrc->ptrAt(c);
             newObj.addUserCand(label_, shiftObj);
         }

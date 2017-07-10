@@ -117,21 +117,11 @@ def addMuons(process, coll, **kwargs):
             # single muon
             'matches_IsoMu24',
             'matches_IsoTkMu24',
-            'matches_IsoMu27',
-            'matches_IsoTkMu27',
-            # double muon
-            'matches_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
-            'matches_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ',
         ),
         paths = cms.vstring( # needs to match labels
             # single muon
             'HLT_IsoMu24_v\\[0-9]+',
             'HLT_IsoTkMu24_v\\[0-9]+',
-            'HLT_IsoMu27_v\\[0-9]+',
-            'HLT_IsoTkMu27_v\\[0-9]+',
-            # double muon
-            'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\[0-9]+',
-            'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\[0-9]+',
         ),
     )
     mSrc = 'mTrig'
