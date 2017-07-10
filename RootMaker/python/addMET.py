@@ -8,8 +8,14 @@ metBranches = cms.PSet(
     ey     = cms.vstring('py()','F'),
     et     = cms.vstring('pt()','F'),
     phi    = cms.vstring('phi()','F'),
-#    rawet  = cms.vstring('uncorPt','F'),
-#    rawphi = cms.vstring('uncorPhi','F'),
+
+    ## shifts
+    et_jetResUp           = cms.vstring('userCand("JetResUp").pt()','F'),
+    et_jetResDown         = cms.vstring('userCand("JetResDown").pt()','F'),
+    et_jetEnUp            = cms.vstring('userCand("JetEnUp").pt()','F'),
+    et_jetEnDown          = cms.vstring('userCand("JetEnDown").pt()','F'),
+    et_muonEnUp           = cms.vstring('userCand("MuonEnUp").pt()','F'),
+    et_muonEnDown         = cms.vstring('userCand("MuonEnDown").pt()','F'),
 )
 
 ################################################
@@ -49,25 +55,11 @@ def addMET(process, coll, **kwargs):
     metSrc = 'slimmedMETs{0}'.format(postfix)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     ####################
     ### embed shifts ###
     ####################
     print '... Embedding shifts'
-    for shift in ['JetRes','JetEn','MuonEn','ElectronEn','TauEn','UnclusteredEn','PhotonEn']:
+    for shift in ['JetRes','JetEn','MuonEn']:
         for sign in ['Up','Down']:
             mod = cms.EDProducer(
                 'ShiftedMETEmbedder',
