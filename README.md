@@ -12,6 +12,6 @@ Recipe:
     git cms-merge-topic gpetruc:badMuonFilters_80X_v2
     
     # checkout and build
-    git clone -b 80X git@github.com:ekenn003/RootMaker.git
-    scramv1 b -j 20
+    git clone -b 80X git@github.com:ektylr/RootMaker.git
+    scramv1 b -j 8
 
